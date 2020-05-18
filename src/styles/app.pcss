@@ -1,0 +1,75 @@
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/dracula.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100;
+  overflow-y: scroll;
+}
+
+.editor {
+  @apply bg-white rounded shadow p-4 grid grid-cols-2 gap-8;
+}
+
+/* purgecss ignore */
+.editor .CodeMirror.cm-s-dracula {
+  border: none;
+  height: 250px;
+  @apply bg-gray-800 !important;
+}
+
+/* purgecss ignore */
+.editor .CodeMirror.cm-s-dracula .CodeMirror-gutters {
+  @apply bg-gray-800 !important;
+}
+
+.output {
+  @apply text-gray-100 p-4 font-mono text-sm bg-gray-800 bg-gray-800 whitespace-pre;
+}
+
+.error {
+  @apply border text-white bg-red-600 p-4 rounded;
+}
+
+/**
+ * preview styles
+ */
+
+.preview {
+  @apply text-base;
+}
+
+.preview .highlight {
+  @apply shadow-outline;
+}
+
+.preview a {
+  @apply inline-block align-baseline font-bold text-sm text-blue-500;
+}
+
+.preview a:hover {
+  @apply text-blue-800;
+}
+
+.preview label {
+  @apply block text-gray-700 text-sm font-bold mb-2;
+}
+
+.preview input {
+  @apply block appearance-none border rounded w-full py-2 px-3 mb-2 text-gray-700 leading-tight;
+}
+
+.preview input:focus, .preview button:focus {
+  @apply outline-none border border-gray-700;
+}
+
+.preview button {
+  @apply border border-gray-300 bg-gray-300 text-gray-800 text-sm py-2 px-4 rounded;
+}
+
+.preview button:hover {
+  @apply bg-gray-400;
+}
