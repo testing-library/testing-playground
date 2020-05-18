@@ -7,8 +7,7 @@
     "start": "parcel index.html --open",
     "build": "parcel build index.html --no-cache",
     "lint": "eslint 'src/**/*.js' --quiet --fix",
-    "clean": "rimraf ./dist ./.cache",
-    "publish": "npm run clean && npm run build && git checkout gh-pages && find dist -name '*.js.map' -delete && cp -r dist/* . && git add . &&  git commit -m \"update docs\" && git checkout - && git push origin gh-pages"
+    "clean": "rimraf ./dist ./.cache"
   },
   "dependencies": {
     "codemirror": "5.53.2",

@@ -1,13 +1,17 @@
 export const initialValues = {
   html: `
-<label for='username'>Username</label>
-<input id='username' name="username" placeholder="how should I call you?" />
+<label for="username">Username</label>
+<input id="username" name="username" placeholder="how should I call you?" />
 <button name="signup" type="submit">signup</button>
 `.trim(),
 
   js: `
+// Query your elements here, preferably with 
+// \`screen.getBy…(…)\`. If you can't use screen
+// use \`container.querySelector(…)\`.
+
+// container.querySelector('button')
 screen.getByRole('button')
-screen.getByLabelText(/username/i)
 `.trim(),
 };
 
