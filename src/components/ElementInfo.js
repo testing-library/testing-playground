@@ -41,7 +41,8 @@ function getData({ root, element }) {
   const type = element.getAttribute('type');
   const tagName = element.tagName;
 
-  const id = element.getAttribute('id');
+  // prevent querySelector from tripping over corrupted html like <input id="button\n<button>
+  const id = (element.getAttribute('id') || '').split('\n')[0];
   const labelElem = id ? root.querySelector(`[for="${id}"]`) : null;
   const labelText = labelElem ? labelElem.innerText : null;
 
