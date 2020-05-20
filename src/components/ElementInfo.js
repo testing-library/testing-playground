@@ -21,15 +21,19 @@ const queries = [
   // 'container.querySelector'
 ];
 
+function escape(val) {
+  return val.replace(/'/g, `\\'`);
+}
+
 function getExpression({ method, data }) {
   const field = getFieldName(method);
 
   if (method === 'getByRole' && data.role && data.name) {
-    return `screen.getByRole('${data.role}', { name: '${data.name}' })`;
+    return `screen.getByRole('${data.role}', { name: '${escape(data.name)}' })`;
   }
 
   if (data[field]) {
-    return `screen.${method}('${data[field]}')`;
+    return `screen.${method}('${escape(data[field])}')`;
   }
 
   return '';
