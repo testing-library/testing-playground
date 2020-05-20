@@ -19,7 +19,7 @@ screen.getByRole('button')
 export const messages = [
   {
     heading: 'Queries Accessible to Everyone',
-    description: `queries that reflect the experience of visual/mouse users as well as those that use assistive technology. These should be your top preference.`,
+    description: `Queries that reflect the experience of visual/mouse users as well as those that use assistive technology. These should be your top preference.`,
   },
   {
     heading: 'Semantic Queries',
@@ -35,14 +35,20 @@ export const messages = [
   },
 ];
 
-export const faq = [
-  {
-    title: 'common mistakes',
+export const links = {
+  testing_library_docs: {
+    title: 'Docs',
+    url: 'https://testing-library.com/docs/dom-testing-library/intro',
+  },
+
+  common_mistakes: {
+    title: 'Common Mistakes',
     url:
       'https://kentcdodds.com/blog/common-mistakes-with-react-testing-library',
   },
-  {
-    title: 'priority',
+
+  which_query: {
+    title: 'Query Priority',
     url: 'https://testing-library.com/docs/guide-which-query',
   },
-];
+};

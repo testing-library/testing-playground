@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Editor from './Editor';
 import ElementInfo from './ElementInfo';
-import Title from './Title';
+import Header from './Header';
+import Footer from './Footer';
 import parser from '../parser';
 
 import { initialValues } from '../constants';
@@ -36,7 +37,9 @@ function App() {
 
   return (
     <div>
-      <Title />
+      <div className="mb-8">
+        <Header />
+      </div>
 
       <div className="space-y-8 px-8 pb-8">
         <div className="editor">
@@ -73,6 +76,10 @@ function App() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mx-8 pb-8">
+        <Footer />
       </div>
     </div>
   );

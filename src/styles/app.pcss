@@ -10,6 +10,14 @@ body {
   overflow-y: scroll;
 }
 
+.footer {
+  transition: opacity 0.2s ease 0s;
+}
+
+.footer:not(:hover) {
+  opacity: .3;
+}
+
 .editor {
   @apply bg-white rounded shadow p-4 grid grid-cols-2 gap-8;
 }
