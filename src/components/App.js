@@ -7,19 +7,21 @@ import parser from '../parser';
 
 import { initialValues } from '../constants';
 import ensureArray from '../lib/ensureArray';
+import { AppContextProvider, useAppContext } from './Context';
 
 let cycle = 0;
 
 function App() {
   const [html, setHtml] = useState(initialValues.html);
   const [js, setJs] = useState(initialValues.js);
-  const htmlRoot = useRef();
+
+  const { htmlEditorRef, htmlPreviewRef, jsEditorRef } = useAppContext();
 
   const [result, setResult] = useState({});
   const [elements, setElements] = useState([]);
 
   useEffect(() => {
-    const parsed = parser.parse(htmlRoot.current, js);
+    const parsed = parser.parse(htmlPreviewRef.current, js);
     setResult(parsed);
 
     const elements = ensureArray(parsed.code).filter(
@@ -33,7 +35,7 @@ function App() {
     return () => {
       elements.forEach((el) => el.classList.remove('highlight'));
     };
-  }, [html, js, htmlRoot.current]);
+  }, [html, js, htmlPreviewRef.current]);
 
   return (
     <div>
@@ -43,10 +45,15 @@ function App() {
 
       <div className="space-y-8 px-8 pb-8">
         <div className="editor">
-          <Editor mode="html" initialValue={html} onChange={setHtml} />
+          <Editor
+            mode="html"
+            initialValue={html}
+            onChange={setHtml}
+            ref={htmlEditorRef}
+          />
           <div
             className="preview"
-            ref={htmlRoot}
+            ref={htmlPreviewRef}
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>
@@ -57,6 +64,7 @@ function App() {
               mode="javascript"
               initialValue={initialValues.js}
               onChange={setJs}
+              ref={jsEditorRef}
             />
             <div className="output">
               <span className="text-blue-600">&gt; </span>
@@ -67,11 +75,7 @@ function App() {
           <div>
             <div>
               {elements.map((x, idx) => (
-                <ElementInfo
-                  key={`${cycle}-${idx}`}
-                  root={htmlRoot.current}
-                  element={x}
-                />
+                <ElementInfo key={`${cycle}-${idx}`} element={x} />
               ))}
             </div>
           </div>

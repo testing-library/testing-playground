@@ -30,9 +30,10 @@ const options = {
   },
 };
 
-function Editor({ onChange, mode, initialValue }) {
+function Editor({ onChange, mode, initialValue }, forwardRef) {
   const elem = useRef();
-  const editor = useRef();
+  const localRef = useRef();
+  const editor = forwardRef || localRef;
 
   useEffect(() => {
     editor.current = CodeMirror.fromTextArea(
@@ -56,4 +57,4 @@ function Editor({ onChange, mode, initialValue }) {
   return <textarea ref={elem} />;
 }
 
-export default Editor;
+export default React.forwardRef(Editor);
