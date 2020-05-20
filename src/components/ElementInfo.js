@@ -1,6 +1,8 @@
 import React from 'react';
 import { getRole, computeAccessibleName } from 'dom-accessibility-api';
-import { messages } from '../constants';
+import { links, messages } from '../constants';
+import SetLike from 'dom-accessibility-api/dist/polyfills/SetLike';
+import { useAppContext } from './Context';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -23,11 +25,11 @@ function getExpression({ method, data }) {
   const field = getFieldName(method);
 
   if (method === 'getByRole' && data.role && data.name) {
-    return `getByRole('${data.role}', { name: '${data.name}' })`;
+    return `screen.getByRole('${data.role}', { name: '${data.name}' })`;
   }
 
   if (data[field]) {
-    return `${method}('${data[field]}')`;
+    return `screen.${method}('${data[field]}')`;
   }
 
   return '';
@@ -67,25 +69,37 @@ function getData({ root, element }) {
   };
 }
 
-function Row({ method, data }) {
-  const field = getFieldName(method);
-  const value = data[field];
-
-  return (
-    <tr>
-      <td className="px-4 text-xs">{field}</td>
-      <td className="px-4 text-xs">{value}</td>
-    </tr>
-  );
+function Section({ children }) {
+  return <div className="space-y-3">{children}</div>;
 }
 
-function Section({ children }) {
+function Heading({ children }) {
+  return <h3 className="font-bold text-xs">{children}</h3>;
+}
+
+function Field({ method, data }) {
+  const { jsEditorRef } = useAppContext();
+
+  const field = getFieldName(method);
+  const value = data[field];
+  const handleClick = value
+    ? () => {
+        const expr = getExpression({ method, data });
+        jsEditorRef.current.setValue(expr);
+      }
+    : undefined;
+
   return (
-    <tr>
-      <td colSpan="2" className="pt-4 text-xs">
-        <strong>{children}</strong>
-      </td>
-    </tr>
+    <div
+      className="text-xs field"
+      data-clickable={!!handleClick}
+      onClick={handleClick}
+    >
+      <div className="text-gray-800 font-light">{field}</div>
+      <div className="truncate">
+        {value || <span className="text-gray-400">n/a</span>}
+      </div>
+    </div>
   );
 }
 
@@ -98,47 +112,64 @@ function getQueryAdvise(data) {
       ...messages[3],
     };
   }
-  const expression = `screen.${getExpression({ method: query.method, data })}`;
+  const expression = getExpression({ method: query.method, data });
   return { expression, level: query.level, ...messages[query.level] };
 }
 
 // for inputs, the role will only work if there is also a type attribute
-function ElementInfo({ root, element }) {
-  const data = getData({ root, element });
+function ElementInfo({ element }) {
+  const { htmlPreviewRef } = useAppContext();
+  const data = getData({ root: htmlPreviewRef.current, element });
   const advise = getQueryAdvise(data);
 
   return (
     <div>
       <div
-        className={['border text-white p-4 rounded', colors[advise.level]].join(
-          ' ',
-        )}
+        className={[
+          'border text-white p-4 rounded mb-8',
+          colors[advise.level],
+        ].join(' ')}
       >
         <div className="font-bold text-xs mb-2">suggested query:</div>
         {advise.expression && (
           <div className="font-mono text-sm">&gt; {advise.expression}</div>
         )}
-        {/*<div className="font-bold text-xs mb-2">{advise.heading}:</div>*/}
-        {/*{advise.description && <div className="text-sm mb-4">{advise.description}</div>}*/}
       </div>
 
-      <table className="table-auto text-sm w-full">
-        <tbody>
-          <Section>Queries Accessible to Everyone</Section>
-          <Row method="getByRole" data={data} />
-          <Row method="getByLabelText" data={data} />
-          <Row method="getByPlaceholderText" data={data} />
-          <Row method="getByText" data={data} />
-          <Row method="getByDisplayValue" data={data} />
+      {/*disabled for the time being*/}
+      {false && advise.description && (
+        <blockquote className="text-sm mb-4 italic">
+          <p className="font-bold text-xs mb-2">{advise.heading}:</p>
+          <p>{advise.description}</p>
+          <cite>
+            <a href={links.which_query.url}>Testing Library</a>
+          </cite>
+        </blockquote>
+      )}
 
-          <Section>Semantic Queries</Section>
-          <Row method="getByAltText" data={data} />
-          <Row method="getByTitle" data={data} />
+      <div className="grid grid-cols-2 gap-4">
+        <Section>
+          <Heading>Queries Accessible to Everyone</Heading>
+          <Field method="getByRole" data={data} />
+          <Field method="getByLabelText" data={data} />
+          <Field method="getByPlaceholderText" data={data} />
+          <Field method="getByText" data={data} />
+          <Field method="getByDisplayValue" data={data} />
+        </Section>
 
-          <Section>TestId</Section>
-          <Row method="getByTestId" data={data} />
-        </tbody>
-      </table>
+        <div className="space-y-8">
+          <Section>
+            <Heading>Semantic Queries</Heading>
+            <Field method="getByAltText" data={data} />
+            <Field method="getByTitle" data={data} />
+          </Section>
+
+          <Section>
+            <Heading>TestId</Heading>
+            <Field method="getByTestId" data={data} />
+          </Section>
+        </div>
+      </div>
     </div>
   );
 }

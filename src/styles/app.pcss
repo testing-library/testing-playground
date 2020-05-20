@@ -22,6 +22,70 @@ body {
   @apply bg-white rounded shadow p-4 grid grid-cols-2 gap-8;
 }
 
+blockquote {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-style: italic;
+  width: 500px;
+  margin: 0.25em 0;
+  padding: 0.35em 40px;
+  line-height: 1.45;
+  position: relative;
+  color: #383838;
+}
+
+blockquote:before {
+  @apply text-gray-400;
+
+  font-size: 80px;
+  display: block;
+  padding-left: 10px;
+  content: "\201C";
+  position: absolute;
+  left: -20px;
+  top: -32px;
+}
+
+blockquote cite {
+  @apply text-gray-400 text-sm mt-2 block;
+}
+
+blockquote cite:before {
+  content: "\2014 \2009";
+}
+
+.field {
+  @apply relative cursor-default;
+  z-index: 1;
+}
+
+.field[data-clickable="true"]:hover {
+  @apply cursor-pointer;
+}
+
+.field:before {
+  @apply block absolute rounded;
+  z-index: -1;
+  content: '';
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  transition: background-color .2s ease;
+}
+
+.field[data-clickable="false"]:hover:before {
+  @apply bg-gray-100;
+}
+
+.field[data-clickable="true"]:before {
+  @apply bg-blue-100;
+}
+
+.field[data-clickable="true"]:hover:before {
+  @apply bg-blue-200;
+}
+
 /* purgecss ignore */
 .editor .CodeMirror.cm-s-dracula {
   border: none;
@@ -35,7 +99,7 @@ body {
 }
 
 .output {
-  @apply text-gray-100 p-4 font-mono text-sm bg-gray-800 bg-gray-800 whitespace-pre;
+  @apply text-gray-100 p-4 font-mono text-sm bg-gray-800 bg-gray-800 whitespace-pre-wrap;
   overflow-x: auto;
 }
 
