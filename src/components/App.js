@@ -8,6 +8,7 @@ import parser from '../parser';
 import { initialValues } from '../constants';
 import ensureArray from '../lib/ensureArray';
 import { AppContextProvider, useAppContext } from './Context';
+import HtmlPreview from './HtmlPreview';
 
 let cycle = 0;
 
@@ -51,11 +52,7 @@ function App() {
             onChange={setHtml}
             ref={htmlEditorRef}
           />
-          <div
-            className="preview"
-            ref={htmlPreviewRef}
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
+          <HtmlPreview html={html} ref={htmlPreviewRef} />
         </div>
 
         <div className="editor">
