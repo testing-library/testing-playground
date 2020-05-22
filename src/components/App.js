@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Editor from './Editor';
 import ElementInfo from './ElementInfo';
 import Header from './Header';
@@ -6,35 +6,29 @@ import Footer from './Footer';
 import parser from '../parser';
 
 import { initialValues } from '../constants';
-import ensureArray from '../lib/ensureArray';
-import { AppContextProvider, useAppContext } from './Context';
+import { useAppContext } from './Context';
 import HtmlPreview from './HtmlPreview';
-
-let cycle = 0;
 
 function App() {
   const [html, setHtml] = useState(initialValues.html);
   const [js, setJs] = useState(initialValues.js);
 
-  const { htmlEditorRef, htmlPreviewRef, jsEditorRef } = useAppContext();
-
-  const [result, setResult] = useState({});
-  const [elements, setElements] = useState([]);
+  const {
+    htmlEditorRef,
+    htmlPreviewRef,
+    jsEditorRef,
+    parsed,
+    setParsed,
+  } = useAppContext();
 
   useEffect(() => {
     const parsed = parser.parse(htmlPreviewRef.current, js);
-    setResult(parsed);
+    setParsed(parsed);
 
-    const elements = ensureArray(parsed.code).filter(
-      (x) => x?.nodeType === Node.ELEMENT_NODE,
-    );
-
-    cycle++;
-    setElements(elements);
-    elements.forEach((el) => el.classList.add('highlight'));
+    parsed.targets?.forEach((el) => el.classList.add('highlight'));
 
     return () => {
-      elements.forEach((el) => el.classList.remove('highlight'));
+      parsed.targets?.forEach((el) => el.classList.remove('highlight'));
     };
   }, [html, js, htmlPreviewRef.current]);
 
@@ -65,17 +59,11 @@ function App() {
             />
             <div className="output">
               <span className="text-blue-600">&gt; </span>
-              {result.text || result.error || 'undefined'}
+              {parsed.text || parsed.error || 'undefined'}
             </div>
           </div>
 
-          <div>
-            <div>
-              {elements.map((x, idx) => (
-                <ElementInfo key={`${cycle}-${idx}`} element={x} />
-              ))}
-            </div>
-          </div>
+          <ElementInfo />
         </div>
       </div>
 

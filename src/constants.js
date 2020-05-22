@@ -1,7 +1,16 @@
 export const initialValues = {
   html: `
 <label for="username">Username</label>
-<input id="username" name="username" placeholder="how should I call you?" />
+<input 
+  id="username"
+  name="username"
+  placeholder="how should I call you?" 
+  data-testid="uname"
+  title="enter your username"
+  alt="enter your username"
+  value="john-doe"
+  type="text"
+/>
 <button name="signup" type="submit">signup</button>
 `.trim(),
 
@@ -10,10 +19,25 @@ export const initialValues = {
 // \`screen.getBy…(…)\`. If you can't use screen
 // use \`container.querySelector(…)\`.
 
-// container.querySelector('button')
+// container.querySelector('input')
 screen.getByRole('button')
 `.trim(),
 };
+
+export const queries = [
+  { method: 'getByRole', level: 0 },
+  { method: 'getByLabelText', level: 0 },
+  { method: 'getByPlaceholderText', level: 0 },
+  { method: 'getByText', level: 0 },
+  { method: 'getByDisplayValue', level: 0 },
+
+  { method: 'getByAltText', level: 1 },
+  { method: 'getByTitle', level: 1 },
+
+  { method: 'getByTestId', level: 2 },
+
+  { method: 'querySelector', level: 3 },
+];
 
 // some quotes from https://testing-library.com/docs/guide-which-query
 export const messages = [

@@ -1,4 +1,6 @@
 import prettyFormat from 'pretty-format';
+import { ensureArray } from './lib';
+import { queries as supportedQueries } from './constants';
 
 // this is not the way I want it to be, but I can't get '@testing-library/dom'
 // to build with Parcel. Something with "Incompatible receiver, Map required".
@@ -23,29 +25,109 @@ function scopedEval(context, expr) {
     'expr',
     'return eval(expr)',
   ]);
+
   return evaluator.apply(null, [...Object.values(context), expr.trim()]);
 }
 
+function unQuote(string = '') {
+  // first and last char of a quoted string should be the same
+  if (string[0] !== string[string.length - 1]) {
+    return string;
+  }
+
+  // I only know of 3 valid quote chars, ` ' and "
+  if (string[0] === `'` || string[0] === `"` || string[0] === '`') {
+    return string.substr(1, string.length - 2);
+  }
+
+  // return as is, if string wasn't (properly) quoted
+  return string;
+}
+
+function getLastExpression(code) {
+  const minified = (code || '')
+    // remove comments
+    .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
+    // remove all white space
+    .replace(/\s/g, '');
+
+  const start = supportedQueries.reduce(
+    (idx, qry) => Math.max(idx, minified.lastIndexOf(qry.method)),
+    -1,
+  );
+
+  if (start === -1) {
+    return '';
+  }
+
+  const end = minified.indexOf(')', start);
+  const call = minified
+    .substr(start, end - start + 1)
+    // add back some spaces that were removed previously
+    .replace(/{/g, '{ ')
+    .replace(/}/g, ' }')
+    .replace(/:/g, ': ')
+    .replace(/,/g, ', ');
+
+  // call now holds something like getByRole('button'), but we also want to know
+  // if the user was calling the method on screen, view, or container
+  const leading = minified.substr(0, start);
+  let scope = leading.match(/([a-zA-Z_$][0-9a-zA-Z_$]+)\.$/)?.[1] || '';
+
+  // and let's break up the various parts (['getByRole', 'button', '{ name: `input` }'])
+  const [method, ...args] = call
+    .split(/[(),]/)
+    .filter(Boolean)
+    .map((x) => unQuote(x.trim()));
+
+  const expression = [scope, call].filter(Boolean).join('.');
+  const level = supportedQueries.find((x) => x.method === method)?.level ?? 3;
+
+  return {
+    expression,
+    scope,
+    method,
+    level,
+    args,
+    call,
+  };
+}
+
+let id = 0;
 function parse(root, string) {
+  let result = {
+    // increment the id every time we call parse, so we can use
+    // it for react keys, when iterating over targets
+    id: ++id,
+  };
+
   try {
     const context = Object.assign({}, queries, {
       screen: getScreen(root),
       container: root,
     });
 
-    let code = scopedEval(context, string);
-    return {
-      code,
-      text: prettyFormat(code, {
-        plugins: [
-          prettyFormat.plugins.DOMElement,
-          prettyFormat.plugins.DOMCollection,
-        ],
-      }),
-    };
+    result.code = scopedEval(context, string);
   } catch (e) {
-    return { error: e.message.split('\n')[0] };
+    result.error = e.message.split('\n')[0];
+    result.errorBody = e.message.split('\n').slice(1);
   }
+
+  result.targets = ensureArray(result.code).filter(
+    (x) => x?.nodeType === Node.ELEMENT_NODE,
+  );
+
+  result.target = result.targets[0];
+
+  result.expression = getLastExpression(string);
+  result.text = prettyFormat(result.code, {
+    plugins: [
+      prettyFormat.plugins.DOMElement,
+      prettyFormat.plugins.DOMCollection,
+    ],
+  });
+
+  return result;
 }
 
 export default {

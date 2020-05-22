@@ -1,47 +1,9 @@
 import React from 'react';
 import { getRole, computeAccessibleName } from 'dom-accessibility-api';
-import { links, messages } from '../constants';
-import SetLike from 'dom-accessibility-api/dist/polyfills/SetLike';
 import { useAppContext } from './Context';
+import QueryAdvise from './QueryAdvise';
 
-const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
-
-const queries = [
-  { method: 'getByRole', level: 0 },
-  { method: 'getByLabelText', level: 0 },
-  { method: 'getByPlaceholderText', level: 0 },
-  { method: 'getByText', level: 0 },
-  { method: 'getByDisplayValue', level: 0 },
-
-  { method: 'getByAltText', level: 1 },
-  { method: 'getByTitle', level: 1 },
-
-  { method: 'getByTestId', level: 2 },
-
-  // 'container.querySelector'
-];
-
-function escape(val) {
-  return val.replace(/'/g, `\\'`);
-}
-
-function getExpression({ method, data }) {
-  const field = getFieldName(method);
-
-  if (method === 'getByRole' && data.role && data.name) {
-    return `screen.getByRole('${data.role}', { name: '${escape(data.name)}' })`;
-  }
-
-  if (data[field]) {
-    return `screen.${method}('${escape(data[field])}')`;
-  }
-
-  return '';
-}
-
-function getFieldName(method) {
-  return method[5].toLowerCase() + method.substr(6);
-}
+import { getExpression, getFieldName } from '../lib';
 
 function getData({ root, element }) {
   const type = element.getAttribute('type');
@@ -53,11 +15,10 @@ function getData({ root, element }) {
   const labelText = labelElem ? labelElem.innerText : null;
 
   return {
-    // input's require a type for the role
     role:
-      element.getAttribute('role') || (tagName === 'INPUT' && !type)
-        ? ''
-        : getRole(element),
+      element.getAttribute('role') ||
+      // input's require a type for the role
+      (tagName === 'INPUT' && type !== 'text' ? '' : getRole(element)),
     name: computeAccessibleName(element),
     tagName: tagName,
     type: type,
@@ -82,10 +43,12 @@ function Heading({ children }) {
 }
 
 function Field({ method, data }) {
-  const { jsEditorRef } = useAppContext();
+  const { jsEditorRef, parsed } = useAppContext();
 
+  const isActive = parsed.expression?.method === method;
   const field = getFieldName(method);
   const value = data[field];
+
   const handleClick = value
     ? () => {
         const expr = getExpression({ method, data });
@@ -95,7 +58,7 @@ function Field({ method, data }) {
 
   return (
     <div
-      className="text-xs field"
+      className={`text-xs field ${isActive ? 'active' : ''}`}
       data-clickable={!!handleClick}
       onClick={handleClick}
     >
@@ -107,53 +70,26 @@ function Field({ method, data }) {
   );
 }
 
-function getQueryAdvise(data) {
-  const query = queries.find(({ method }) => getExpression({ method, data }));
-  if (!query) {
-    return {
-      level: 3,
-      expression: 'container.querySelector(…)',
-      ...messages[3],
-    };
-  }
-  const expression = getExpression({ method: query.method, data });
-  return { expression, level: query.level, ...messages[query.level] };
-}
-
 // for inputs, the role will only work if there is also a type attribute
-function ElementInfo({ element }) {
-  const { htmlPreviewRef } = useAppContext();
-  const data = getData({ root: htmlPreviewRef.current, element });
-  const advise = getQueryAdvise(data);
+function ElementInfo() {
+  const { htmlPreviewRef, parsed } = useAppContext();
+  const element = parsed.target;
+
+  const data = element && getData({ root: htmlPreviewRef.current, element });
+
+  if (!data) {
+    return <div />;
+  }
 
   return (
     <div>
-      <div
-        className={[
-          'border text-white p-4 rounded mb-8',
-          colors[advise.level],
-        ].join(' ')}
-      >
-        <div className="font-bold text-xs mb-2">suggested query:</div>
-        {advise.expression && (
-          <div className="font-mono text-sm">&gt; {advise.expression}</div>
-        )}
-      </div>
+      <QueryAdvise data={data} />
 
-      {/*disabled for the time being*/}
-      {false && advise.description && (
-        <blockquote className="text-sm mb-4 italic">
-          <p className="font-bold text-xs mb-2">{advise.heading}:</p>
-          <p>{advise.description}</p>
-          <cite>
-            <a href={links.which_query.url}>Testing Library</a>
-          </cite>
-        </blockquote>
-      )}
+      <div className="my-6 border-b" />
 
       <div className="grid grid-cols-2 gap-4">
         <Section>
-          <Heading>Queries Accessible to Everyone</Heading>
+          <Heading>1. Queries Accessible to Everyone</Heading>
           <Field method="getByRole" data={data} />
           <Field method="getByLabelText" data={data} />
           <Field method="getByPlaceholderText" data={data} />
@@ -163,13 +99,13 @@ function ElementInfo({ element }) {
 
         <div className="space-y-8">
           <Section>
-            <Heading>Semantic Queries</Heading>
+            <Heading>2. Semantic Queries</Heading>
             <Field method="getByAltText" data={data} />
             <Field method="getByTitle" data={data} />
           </Section>
 
           <Section>
-            <Heading>TestId</Heading>
+            <Heading>3. TestId</Heading>
             <Field method="getByTestId" data={data} />
           </Section>
         </div>

@@ -64,7 +64,7 @@ blockquote cite:before {
 }
 
 .field:before {
-  @apply block absolute rounded;
+  @apply block absolute rounded border border-transparent;
   z-index: -1;
   content: '';
   top: -4px;
@@ -75,15 +75,19 @@ blockquote cite:before {
 }
 
 .field[data-clickable="false"]:hover:before {
-  @apply bg-gray-100;
+  @apply bg-gray-100 border-gray-100;
 }
 
 .field[data-clickable="true"]:before {
-  @apply bg-blue-100;
+  @apply bg-blue-100 border-blue-100;
 }
 
 .field[data-clickable="true"]:hover:before {
   @apply bg-blue-200;
+}
+
+.field.active:before {
+  @apply border-blue-300;
 }
 
 /* purgecss ignore */
