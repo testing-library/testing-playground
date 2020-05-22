@@ -8,10 +8,13 @@ import parser from '../parser';
 import { initialValues } from '../constants';
 import { useAppContext } from './Context';
 import HtmlPreview from './HtmlPreview';
+import state from '../lib/state';
+
+const savedState = state.load();
 
 function App() {
-  const [html, setHtml] = useState(initialValues.html);
-  const [js, setJs] = useState(initialValues.js);
+  const [html, setHtml] = useState(savedState.html || initialValues.html);
+  const [js, setJs] = useState(savedState.js || initialValues.js);
 
   const {
     htmlEditorRef,
@@ -26,6 +29,7 @@ function App() {
     setParsed(parsed);
 
     parsed.targets?.forEach((el) => el.classList.add('highlight'));
+    state.save({ html, js });
 
     return () => {
       parsed.targets?.forEach((el) => el.classList.remove('highlight'));
@@ -53,7 +57,7 @@ function App() {
           <div>
             <Editor
               mode="javascript"
-              initialValue={initialValues.js}
+              initialValue={js}
               onChange={setJs}
               ref={jsEditorRef}
             />

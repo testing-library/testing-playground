@@ -13,6 +13,7 @@
     "codemirror": "5.53.2",
     "dom-accessibility-api": "^0.4.3",
     "lodash.debounce": "4.0.8",
+    "lz-string": "^1.4.4",
     "pretty-format": "26.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
