@@ -3,8 +3,8 @@ import React from 'react';
 function Footer() {
   return (
     <div className="footer flex justify-between">
-      <div className="text-sm text-gray-800">
-        Copyright © 2020 S. Meijer and contributors
+      <div className="text-xs text-gray-800">
+        Copyright © 2020 Stephan Meijer & Contributors
       </div>
       <div className="flex space-x-4">
         <a
@@ -35,7 +35,6 @@ function Footer() {
           className="github-button"
           href="https://github.com/smeijer/testing-playground"
           data-icon="octicon-star"
-          data-show-count="true"
           aria-label="Star smeijer/testing-playground on GitHub"
         >
           Star
