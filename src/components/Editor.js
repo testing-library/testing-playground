@@ -21,7 +21,7 @@ const baseOptions = {
 const options = {
   html: {
     ...baseOptions,
-    mode: 'text/html',
+    mode: { name: 'text/html', multilineTagIndentPastTag: false },
   },
 
   javascript: {
