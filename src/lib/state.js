@@ -21,17 +21,28 @@ function load() {
     .slice(1)
     .split('&');
 
-  console.log('load', { htmlCompressed, jsCompressed });
-
   return {
     html: htmlCompressed && decompressFromEncodedURIComponent(htmlCompressed),
     js: jsCompressed && decompressFromEncodedURIComponent(jsCompressed),
   };
 }
 
+function updateTitle(text) {
+  const title = document.title.split(':')[0];
+
+  if (!text || text.length === 0) {
+    document.title = title;
+    return;
+  }
+
+  const suffix = text.replace(/\s+/g, ' ').substring(0, 1000).trim();
+  document.title = title + ': ' + suffix;
+}
+
 const state = {
   save,
   load,
+  updateTitle,
 };
 
 export default state;

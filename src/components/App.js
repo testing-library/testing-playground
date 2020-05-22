@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import debounce from 'lodash/debounce';
 import Editor from './Editor';
 import ElementInfo from './ElementInfo';
 import Header from './Header';
@@ -30,6 +31,7 @@ function App() {
 
     parsed.targets?.forEach((el) => el.classList.add('highlight'));
     state.save({ html, js });
+    state.updateTitle(parsed.expression?.expression);
 
     return () => {
       parsed.targets?.forEach((el) => el.classList.remove('highlight'));
