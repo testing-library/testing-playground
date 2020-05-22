@@ -21,6 +21,16 @@ function Header() {
           </a>
         </div>
 
+        <div>
+          <a
+            href="https://github.com/smeijer/testing-playground"
+            className="hover:underline"
+            target="_blank"
+          >
+            GitHub
+          </a>
+        </div>
+
         <div className="flex space-x-8">
           {headerLinks.map((x) => (
             <a
