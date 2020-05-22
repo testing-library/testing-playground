@@ -114,7 +114,7 @@ function QueryAdvise({ data }) {
           </div>
         )}
       </div>
-      <div className="h-8">{suggestion}</div>
+      <div className="min-h-8">{suggestion}</div>
     </div>
   );
 }
