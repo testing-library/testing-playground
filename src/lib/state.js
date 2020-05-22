@@ -3,6 +3,8 @@ import {
   decompressFromEncodedURIComponent,
 } from 'lz-string';
 
+import beautify from 'js-beautify';
+
 function unindent(string) {
   return string.replace(/[ \t]*[\n][ \t]*/g, '\n');
 }
@@ -16,16 +18,34 @@ function save({ html, js }) {
   history.replaceState(null, '', window.location.pathname + '#' + state);
 }
 
+const beautifyOptions = {
+  indent_size: 2,
+  wrap_line_length: 72,
+  wrap_attributes: 'force-expand-multiline',
+};
+
 function load() {
   const [htmlCompressed, jsCompressed] = window.location.hash
     .slice(1)
     .split('&');
 
   return {
-    html: htmlCompressed && decompressFromEncodedURIComponent(htmlCompressed),
-    js: jsCompressed && decompressFromEncodedURIComponent(jsCompressed),
+    html:
+      htmlCompressed &&
+      beautify.html(
+        decompressFromEncodedURIComponent(htmlCompressed),
+        beautifyOptions,
+      ),
+    js:
+      jsCompressed &&
+      beautify.js(
+        decompressFromEncodedURIComponent(jsCompressed),
+        beautifyOptions,
+      ),
   };
 }
+
+window.beautify = beautify;
 
 function updateTitle(text) {
   const title = document.title.split(':')[0];
