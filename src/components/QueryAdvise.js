@@ -96,6 +96,13 @@ function QueryAdvise({ data }) {
         by adding the name option.
       </p>
     );
+  } else if (used.level > 0) {
+    suggestion = (
+      <p>
+        This isn't great, but we can't do better with the current markup. Extend
+        your html to improve accessibility and unlock better queries.
+      </p>
+    );
   } else {
     suggestion = <p>This is great. Ship it!</p>;
   }
