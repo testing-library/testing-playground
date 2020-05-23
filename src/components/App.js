@@ -29,13 +29,8 @@ function App() {
     const parsed = parser.parse(htmlPreviewRef.current, js);
     setParsed(parsed);
 
-    parsed.targets?.forEach((el) => el.classList.add('highlight'));
     state.save({ html, js });
     state.updateTitle(parsed.expression?.expression);
-
-    return () => {
-      parsed.targets?.forEach((el) => el.classList.remove('highlight'));
-    };
   }, [html, js, htmlPreviewRef.current]);
 
   return (
