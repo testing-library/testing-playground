@@ -1,6 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppContext } from './Context.js';
-import prettyFormat from 'pretty-format';
 import { getQueryAdvise } from '../lib';
 
 function HtmlPreview({ html }, forwardRef) {
@@ -74,9 +73,16 @@ function HtmlPreview({ html }, forwardRef) {
         onMouseMove={handleMove}
       />
       <div className="p-2 bg-gray-200 rounded text-gray-800 font-mono text-xs">
-        {advise.expression
-          ? `> ${advise.expression}`
-          : '💡 try pointing and clicking at elements'}
+        {advise.expression && `> ${advise.expression}`}
+
+        {!advise.expression && forwardRef.current && (
+          <>
+            <span className="font-bold">roles: </span>
+            {Object.keys(TestingLibraryDom.getRoles(forwardRef.current))
+              .sort()
+              .join(', ')}
+          </>
+        )}
       </div>
     </div>
   );
