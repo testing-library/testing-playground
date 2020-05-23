@@ -7,7 +7,8 @@
     "start": "parcel index.html --open",
     "build": "parcel build index.html --no-cache",
     "lint": "eslint 'src/**/*.js' --quiet --fix",
-    "clean": "rimraf ./dist ./.cache"
+    "clean": "rimraf ./dist ./.cache",
+    "ci:lint": "eslint 'src/**/*.js' -c ./.eslintrc.js"
   },
   "dependencies": {
     "codemirror": "5.53.2",
