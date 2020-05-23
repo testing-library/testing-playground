@@ -43,6 +43,8 @@ export function getQueryAdvise({ root, element }) {
     return {
       level: 3,
       expression: 'container.querySelector(…)',
+      advise: {},
+      data,
       ...messages[3],
     };
   }

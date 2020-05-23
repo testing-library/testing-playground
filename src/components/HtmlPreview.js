@@ -31,7 +31,10 @@ function HtmlPreview({ html }, forwardRef) {
     }
 
     event.preventDefault();
-    jsEditorRef.current.setValue(advise.expression);
+    const expression =
+      advise.expression ||
+      '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
+    jsEditorRef.current.setValue(expression);
   };
 
   useEffect(() => {
