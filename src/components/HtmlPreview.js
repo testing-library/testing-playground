@@ -25,8 +25,12 @@ function HtmlPreview({ html }, forwardRef) {
     element: highlighted,
   });
 
-  const handleClick = (e) => {
-    e.preventDefault();
+  const handleClick = (event) => {
+    if (event.target === forwardRef.current) {
+      return;
+    }
+
+    event.preventDefault();
     jsEditorRef.current.setValue(advise.expression);
   };
 
