@@ -43,6 +43,9 @@
   },
   "jest": {
     "verbose": true,
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|svg)$": "<rootDir>/src/__mocks__/fileMock.js"
+    },
     "setupFilesAfterEnv": [
       "./tests/setupTests.js"
     ]
