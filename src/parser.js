@@ -115,7 +115,7 @@ function parse(root, string) {
       ],
     });
   } catch (e) {
-    result.error = `Error: ${e.message.split('\n')[0]}`;
+    result.error = e.message.split('\n')[0];
     result.errorBody = e.message.split('\n').slice(1);
   }
 

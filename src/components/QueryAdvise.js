@@ -38,17 +38,25 @@ function QueryAdvise({ data, advise }) {
   const { parsed, jsEditorRef } = useAppContext();
 
   const used = parsed?.expression || {};
+  const hasError = !!parsed?.error;
 
   const usingAdvisedMethod = advise.method === used.method;
   const hasNameArg = data.name && used.args?.[1]?.includes('name');
 
-  const color = usingAdvisedMethod ? 'bg-green-600' : colors[advise.level];
+  const color = hasError
+    ? 'bg-red-600'
+    : usingAdvisedMethod
+    ? 'bg-green-600'
+    : colors[advise.level];
 
   const target = parsed.target || {};
 
+  const title = hasError ? 'error!' : 'suggested query';
   let suggestion;
 
-  if (advise.level < used.level) {
+  if (hasError) {
+    suggestion = <></>;
+  } else if (advise.level < used.level) {
     suggestion = (
       <p>
         You're using <Code>{used.method}</Code>, which falls under{' '}
@@ -113,13 +121,18 @@ function QueryAdvise({ data, advise }) {
   return (
     <div className="space-y-4 text-sm">
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
-        <div className="font-bold text-xs">suggested query</div>
+        <div className="font-bold text-xs">{title}</div>
         {advise.expression && (
           <div
             className="font-mono cursor-pointer text-xs"
             onClick={handleClick}
           >
             &gt; {advise.expression}
+          </div>
+        )}
+        {parsed.error && (
+          <div className="font-mono cursor-pointer text-xs">
+            &gt; {parsed.error}
           </div>
         )}
       </div>
