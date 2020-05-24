@@ -10,3 +10,12 @@ Testing-Playground provides you with direct feedback. Trying to visualize the di
 
 [testing-library/dom]: https://testing-library.com/docs/dom-testing-library/example-intro
 [demo]: https://testing-playground.com
+
+# Roadmap
+
+Future ideas are maintained in the [roadmap]. Please use the [issue tracker] to discuss any questions or suggestions you have.
+
+Every section in the roadmap is accompanied by one or more issues. Contributions are most welcome!
+
+[roadmap]: https://github.com/smeijer/testing-playground/blob/master/ROADMAP.md
+[issue tracker]: https://github.com/smeijer/testing-playground/issues
