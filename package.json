@@ -9,7 +9,7 @@
     "lint": "eslint 'src/**/*.js' --quiet --fix",
     "clean": "rimraf ./dist ./.cache",
     "ci:lint": "eslint 'src/**/*.js' -c ./.eslintrc.js",
-    "ci:test": "jest --ci" ,
+    "ci:test": "jest --ci",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -24,6 +24,7 @@
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "@testing-library/dom": "^7.5.7",
