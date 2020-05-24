@@ -1,38 +1,8 @@
 import React from 'react';
-import { getRole, computeAccessibleName } from 'dom-accessibility-api';
 import { useAppContext } from './Context';
 import QueryAdvise from './QueryAdvise';
 
-import { getExpression, getFieldName } from '../lib';
-
-function getData({ root, element }) {
-  const type = element.getAttribute('type');
-  const tagName = element.tagName;
-
-  // prevent querySelector from tripping over corrupted html like <input id="button\n<button>
-  const id = (element.getAttribute('id') || '').split('\n')[0];
-  const labelElem = id ? root.querySelector(`[for="${id}"]`) : null;
-  const labelText = labelElem ? labelElem.innerText : null;
-
-  return {
-    role:
-      element.getAttribute('role') ||
-      // input's require a type for the role
-      (tagName === 'INPUT' && type !== 'text' ? '' : getRole(element)),
-    name: computeAccessibleName(element),
-    tagName: tagName,
-    type: type,
-    labelText: labelText,
-    placeholderText: element.getAttribute('placeholder'),
-    text: element.innerText,
-    displayValue: element.getAttribute('value'),
-
-    altText: element.getAttribute('alt'),
-    title: element.getAttribute('title'),
-
-    testId: element.getAttribute('data-testid'),
-  };
-}
+import { getExpression, getFieldName, getQueryAdvise } from '../lib';
 
 function Section({ children }) {
   return <div className="space-y-3">{children}</div>;
@@ -75,7 +45,10 @@ function ElementInfo() {
   const { htmlPreviewRef, parsed } = useAppContext();
   const element = parsed.target;
 
-  const data = element && getData({ root: htmlPreviewRef.current, element });
+  const { data, advise } = getQueryAdvise({
+    root: htmlPreviewRef.current,
+    element,
+  });
 
   if (!data) {
     return <div />;
@@ -83,7 +56,7 @@ function ElementInfo() {
 
   return (
     <div>
-      <QueryAdvise data={data} />
+      <QueryAdvise data={data} advise={advise} />
 
       <div className="my-6 border-b" />
 

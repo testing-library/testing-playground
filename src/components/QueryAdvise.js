@@ -34,9 +34,8 @@ function Quote({ heading, content, source, href }) {
   );
 }
 
-function QueryAdvise({ data }) {
+function QueryAdvise({ data, advise }) {
   const { parsed, jsEditorRef } = useAppContext();
-  const advise = getQueryAdvise(data);
 
   const used = parsed?.expression || {};
 
@@ -116,7 +115,10 @@ function QueryAdvise({ data }) {
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
         <div className="font-bold text-xs">suggested query</div>
         {advise.expression && (
-          <div className="font-mono cursor-pointer" onClick={handleClick}>
+          <div
+            className="font-mono cursor-pointer text-xs"
+            onClick={handleClick}
+          >
             &gt; {advise.expression}
           </div>
         )}

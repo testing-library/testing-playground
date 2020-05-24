@@ -10,6 +10,10 @@ body {
   overflow-y: scroll;
 }
 
+nav a:not(.title):hover {
+  text-decoration: underline;
+}
+
 .footer {
   transition: opacity 0.2s ease 0s;
 }
@@ -120,7 +124,7 @@ blockquote cite:before {
 }
 
 .preview .highlight {
-  @apply shadow-outline;
+  @apply shadow-outline rounded;
 }
 
 .preview a {
