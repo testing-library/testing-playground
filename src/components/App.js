@@ -40,7 +40,7 @@ function App() {
       </div>
 
       <div className="space-y-8 px-8 pb-8">
-        <div className="editor">
+        <div className="editor lg:grid-cols-2 sm:grid-cols-1">
           <Editor
             mode="html"
             initialValue={html}
@@ -50,7 +50,7 @@ function App() {
           <HtmlPreview html={html} ref={htmlPreviewRef} />
         </div>
 
-        <div className="editor">
+        <div className="editor lg:grid-cols-2 sm:grid-cols-1">
           <div>
             <Editor
               mode="javascript"
