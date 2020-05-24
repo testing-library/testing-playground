@@ -61,7 +61,9 @@ function App() {
             />
             <div className="output">
               <span className="text-blue-600">&gt; </span>
-              {parsed.error || parsed.text || 'undefined'}
+              {parsed.error
+                ? `Error: ${parsed.error}`
+                : parsed.text || 'undefined'}
             </div>
           </div>
 
