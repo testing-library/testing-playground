@@ -108,15 +108,9 @@ function parse(root, string) {
     });
 
     result.code = scopedEval(context, string);
-    result.text = prettyFormat(result.code, {
-      plugins: [
-        prettyFormat.plugins.DOMElement,
-        prettyFormat.plugins.DOMCollection,
-      ],
-    });
   } catch (e) {
     result.error = e.message.split('\n')[0];
-    result.errorBody = e.message.split('\n').slice(1);
+    result.errorBody = e.message.split('\n').slice(1).join('\n').trim();
   }
 
   result.targets = ensureArray(result.code).filter(
@@ -126,6 +120,12 @@ function parse(root, string) {
   result.target = result.targets[0];
 
   result.expression = getLastExpression(string);
+  result.text = prettyFormat(result.code, {
+    plugins: [
+      prettyFormat.plugins.DOMElement,
+      prettyFormat.plugins.DOMCollection,
+    ],
+  });
 
   return result;
 }

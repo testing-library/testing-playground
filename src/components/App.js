@@ -10,6 +10,7 @@ import { initialValues } from '../constants';
 import { useAppContext } from './Context';
 import HtmlPreview from './HtmlPreview';
 import state from '../lib/state';
+import ErrorBox from './ErrorBox';
 
 const savedState = state.load();
 
@@ -60,11 +61,15 @@ function App() {
             />
             <div className="output">
               <span className="text-blue-600">&gt; </span>
-              {parsed.text || parsed.error || 'undefined'}
+              {parsed.error || parsed.text || 'undefined'}
             </div>
           </div>
 
-          <ElementInfo />
+          {parsed.error ? (
+            <ErrorBox caption={parsed.error} body={parsed.errorBody} />
+          ) : (
+            <ElementInfo />
+          )}
         </div>
       </div>
 
