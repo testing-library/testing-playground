@@ -2,15 +2,17 @@
 
 ## Interactive HTML Preview
 
-_Status: Shipped at May 23, 2020_
+_Status: Shipped at May 23, 2020 ([#2](https://github.com/smeijer/testing-playground/issues/2))_
 
 The html preview tab should be made interactive. In such a way that one can hover elements and see the recommended query. When clicking on the link, the query should applied to the editor, like the various query buttons do.
 
 ## Update Readme.md
 
-_Status: In backlog ([#5](https://github.com/smeijer/testing-playground/issues/5), [#6](https://github.com/smeijer/testing-playground/issues/6))_
+_Status: In backlog ([#5](https://github.com/smeijer/testing-playground/issues/5))_
 
 We don't have any instructions on how to get the thing started at localhost, or how to contribute. This should be made crystal clear.
+
+_Status: Shipped at May 24, 2020 ([#14](https://github.com/smeijer/testing-playground/issues/4))_
 
 Also, I have no idea how it works, but I know we need to use emoji-key to list contributors in the readme. Is that an automated thing?
 
