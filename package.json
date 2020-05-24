@@ -9,6 +9,7 @@
     "lint": "eslint 'src/**/*.js' --quiet --fix",
     "clean": "rimraf ./dist ./.cache",
     "ci:lint": "eslint 'src/**/*.js' -c ./.eslintrc.js",
+    "ci:test": "jest --ci" ,
     "test": "jest",
     "test:watch": "jest --watch"
   },
