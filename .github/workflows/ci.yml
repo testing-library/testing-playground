@@ -54,7 +54,7 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: ESLint
+      - name: Run Eslint
         run: npm run ci:lint -- $(git diff --diff-filter d --name-only origin/${{ github.base_ref }}...HEAD -- '*.js' '*.ts' '*.tsx')
 
   tests:
@@ -75,5 +75,5 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: unit tests
+      - name: Run Tests
         run: npm run ci:test
