@@ -19,9 +19,20 @@ Testing-Playground provides you with direct feedback. Trying to visualize the di
 
 ## Roadmap
 
-Future ideas are maintained in the [roadmap]. Please use the [issue tracker] to discuss any questions or suggestions you have.
+Future ideas are maintained in [roadmap.md]. Please use the [issue tracker] to discuss any questions or suggestions you have.
 
 Every section in the roadmap is accompanied by one or more issues. Contributions are most welcome!
+
+## Contributing
+
+Please see [contributing.md] for more details. If you just want to run the playground on your own machine, go to your terminal and enter the following commands:
+
+```bash
+git clone git@github.com:smeijer/testing-playground.git
+cd testing-playground
+npm ci
+npm run start
+```
 
 ## Contributors
 
@@ -46,7 +57,8 @@ Thanks goes to these people ([emoji key][emojis]):
 This project follows the [all-contributors][all-contributors] specification.
 Contributions of any kind welcome!
 
-[roadmap]: https://github.com/smeijer/testing-playground/blob/master/ROADMAP.md
+[roadmap.md]: https://github.com/smeijer/testing-playground/blob/master/ROADMAP.md
+[contributing.md]: https://github.com/smeijer/testing-playground/blob/master/ONTRIBUTING.md
 [issue tracker]: https://github.com/smeijer/testing-playground/issues
 [all-contributors]: https://github.com/all-contributors/all-contributors
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key
