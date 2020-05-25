@@ -10,6 +10,7 @@ import { initialValues } from '../constants';
 import { useAppContext } from './Context';
 import HtmlPreview from './HtmlPreview';
 import state from '../lib/state';
+import ErrorBox from './ErrorBox';
 
 const savedState = state.load();
 
@@ -40,7 +41,7 @@ function App() {
       </div>
 
       <div className="space-y-8 px-8 pb-8">
-        <div className="editor">
+        <div className="editor grid-cols-1 md:grid-cols-2">
           <Editor
             mode="html"
             initialValue={html}
@@ -50,7 +51,7 @@ function App() {
           <HtmlPreview html={html} ref={htmlPreviewRef} />
         </div>
 
-        <div className="editor">
+        <div className="editor grid-cols-1 md:grid-cols-2">
           <div>
             <Editor
               mode="javascript"
@@ -60,11 +61,17 @@ function App() {
             />
             <div className="output">
               <span className="text-blue-600">&gt; </span>
-              {parsed.text || parsed.error || 'undefined'}
+              {parsed.error
+                ? `Error: ${parsed.error}`
+                : parsed.text || 'undefined'}
             </div>
           </div>
 
-          <ElementInfo />
+          {parsed.error ? (
+            <ErrorBox caption={parsed.error} body={parsed.errorBody} />
+          ) : (
+            <ElementInfo />
+          )}
         </div>
       </div>
 
