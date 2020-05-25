@@ -1,8 +1,9 @@
 describe('App initialization', () => {
   it('Displays from API on load', () => {
-    cy.visit('http://localhost:1234 ');
-    //   cy.seedAndVisit()
+    cy.seedAndVisit();
 
-    expect(true).to.equal(true);
+    cy.get('.CodeMirror textarea').first().type(`<div>Hello World </div>`, {
+      force: true,
+    });
   });
 });

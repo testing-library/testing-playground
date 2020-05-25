@@ -4,5 +4,5 @@ Cypress.Commands.add('seedAndVisit', (seedData) => {
 
   cy.visit('/');
 
-  cy.wait('@load');
+  //   cy.wait('@load');
 });

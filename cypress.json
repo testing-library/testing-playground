@@ -1,1 +1,5 @@
-{}
+{
+        "baseUrl": "http://localhost:1234",
+        "$schema": "https://on.cypress.io/cypress.schema.json"
+}
+
