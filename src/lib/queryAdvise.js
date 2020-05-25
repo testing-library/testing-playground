@@ -6,8 +6,12 @@ export function getData({ root, element }) {
   const type = element.getAttribute('type');
   const tagName = element.tagName;
 
-  // prevent querySelector from tripping over corrupted html like <input id="button\n<button>
-  const id = (element.getAttribute('id') || '').split('\n')[0];
+  // escape id to prevent querySelector from tripping over corrupted html like:
+  //   <input id="button\n<button> & <input id=\ntype="text" />
+  const id = (element.getAttribute('id') || '')
+    .replace(/\s/g, '')
+    .replace(/"/g, '\\"');
+
   const labelElem = id ? root.querySelector(`[for="${id}"]`) : null;
   const labelText = labelElem ? labelElem.innerText : null;
 
