@@ -1,9 +1,9 @@
 import React from 'react';
 import App from './App';
-import { renderWithContext } from '../../tests/utils/render';
+import { renderIntoContext } from '../../tests/utils/react-render';
 
 describe('App', () => {
   it('should not throw on render', () => {
-    renderWithContext(<App />);
+    renderIntoContext(<App />);
   });
 });
