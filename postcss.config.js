@@ -18,14 +18,9 @@ if (!IS_DEVELOPMENT) {
     purgecss({
       content: ['src/*.html', 'src/**/*.js'],
       whitelist: ['body'],
-      extractors: [
-        {
-          extractor: TailwindExtractor,
-          extensions: ['html']
-        }
-      ],
-    })
+      defaultExtractor: TailwindExtractor.extract,
+    }),
   );
 }
 
-module.exports = { plugins }
+module.exports = { plugins };
