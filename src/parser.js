@@ -7,8 +7,8 @@ import { queries as supportedQueries } from './constants';
 // It works when running parcel in dev mode, but not in build mode. Seems to
 // have something to do with a core-js Map polyfill being used?
 // It's now loaded from unpkg.com via ./index.html
-// import {getQueriesForElement, queries, logDOM} from "@testing-library/dom";
-const { getQueriesForElement, queries, logDOM } = window.TestingLibraryDom;
+import { getQueriesForElement, queries, logDOM } from '@testing-library/dom';
+//const { getQueriesForElement, queries, logDOM } = window.TestingLibraryDom;
 
 const debug = (element, maxLength, options) =>
   Array.isArray(element)
@@ -48,8 +48,8 @@ function getLastExpression(code) {
   const minified = (code || '')
     // remove comments
     .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
-    // remove all white space
-    .replace(/\s/g, '');
+    // remove all white space outside quotes
+    .replace(/[ ]+(?=[^"]*(?:"[^"]*"[^"]*)*$)/g, '');
 
   const start = supportedQueries.reduce(
     (idx, qry) => Math.max(idx, minified.lastIndexOf(qry.method)),
