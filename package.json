@@ -55,7 +55,8 @@
     },
     "setupFilesAfterEnv": [
       "./tests/setupTests.js"
-    ]
+    ],
+    "testPathIgnorePatterns": ["/node_modules/", "/cypress/"]
   },
   "keywords": [],
   "husky": {
