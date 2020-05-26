@@ -118,6 +118,7 @@ function QueryAdvise({ data, advise }) {
           <div
             className="font-mono cursor-pointer text-xs"
             onClick={handleClick}
+            data-cy="suggested-query"
           >
             &gt; {advise.expression}
           </div>
