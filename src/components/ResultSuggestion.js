@@ -1,22 +1,8 @@
 import React from 'react';
-import { messages, queries } from '../constants';
+import { messages } from '../constants';
 import { useAppContext } from './Context';
-import { getExpression } from '../lib';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
-
-function getQueryAdvise(data) {
-  const query = queries.find(({ method }) => getExpression({ method, data }));
-  if (!query) {
-    return {
-      level: 3,
-      expression: 'container.querySelector(…)',
-      ...messages[3],
-    };
-  }
-  const expression = getExpression({ method: query.method, data });
-  return { expression, ...query, ...messages[query.level] };
-}
 
 function Code({ children }) {
   return <span className="font-bold font-mono">{children}</span>;
@@ -34,7 +20,7 @@ function Quote({ heading, content, source, href }) {
   );
 }
 
-function QueryAdvise({ data, advise }) {
+function ResultSuggestion({ data, advise }) {
   const { parsed, jsEditorRef } = useAppContext();
 
   const used = parsed?.expression || {};
@@ -128,4 +114,4 @@ function QueryAdvise({ data, advise }) {
   );
 }
 
-export default QueryAdvise;
+export default ResultSuggestion;

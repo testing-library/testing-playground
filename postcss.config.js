@@ -17,7 +17,7 @@ if (!IS_DEVELOPMENT) {
   plugins.push(
     purgecss({
       content: ['src/*.html', 'src/**/*.js'],
-      whitelist: ['body'],
+      whitelist: ['body', /CodeMirror/],
       defaultExtractor: TailwindExtractor.extract,
     }),
   );

@@ -2,10 +2,11 @@
   "name": "testing-playground",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "src/index.html",
   "scripts": {
-    "start": "parcel index.html --open",
-    "build": "parcel build index.html --no-cache",
+    "start": "parcel src/index.html --open",
+    "start:embed": "parcel src/embed.html --open",
+    "build": "parcel build src/index.html src/embed.js --no-cache",
     "lint": "eslint 'src/**/*.js' --quiet --fix",
     "clean": "rimraf ./dist ./.cache",
     "ci:lint": "eslint 'src/**/*.js' -c ./.eslintrc.js",
@@ -20,8 +21,12 @@
     "lodash.debounce": "4.0.8",
     "lz-string": "^1.4.4",
     "pretty-format": "26.0.1",
+    "query-string": "^6.12.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-custom-scrollbars": "^4.2.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-virtualized-auto-sizer": "^1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

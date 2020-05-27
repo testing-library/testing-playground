@@ -2,11 +2,11 @@ import React from 'react';
 
 function Footer() {
   return (
-    <div className="footer flex justify-between">
+    <div className="footer flex justify-between items-center py-4 px-8">
       <div className="text-xs text-gray-800">
         Copyright © 2020 Stephan Meijer & Contributors
       </div>
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 items-center">
         <a
           className="github-button"
           href="https://github.com/sponsors/smeijer"
