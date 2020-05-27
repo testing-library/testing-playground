@@ -18,6 +18,7 @@ if (!IS_DEVELOPMENT) {
     purgecss({
       content: ['src/*.html', 'src/**/*.js'],
       whitelist: ['body', /CodeMirror/],
+      whitelistPatternsChildren: [/CodeMirror/],
       defaultExtractor: TailwindExtractor.extract,
     }),
   );
