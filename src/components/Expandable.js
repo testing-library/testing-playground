@@ -25,13 +25,6 @@ function ChevronDown() {
   );
 }
 
-const styles = {
-  expandedContent: {
-    height: 'calc(100% - 1rem)',
-    width: 'calc(100% - 1rem)',
-  },
-};
-
 function Expandable({ children, className, variant }) {
   const [expanded, setExpanded] = useState(false);
 

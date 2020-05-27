@@ -15,7 +15,7 @@ function Footer() {
         >
           Sponsor
         </a>
-        <a target="_blank" href="https://twitter.com/meijer_s">
+        <a href="https://twitter.com/meijer_s">
           <img
             alt="Follow me on Twitter"
             src="https://img.shields.io/twitter/url?label=Follow&style=social&url=https%3A%2F%2Ftwitter.com%2Fmeijer_s"

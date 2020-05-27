@@ -1,8 +1,6 @@
 import React from 'react';
 import { useAppContext } from './Context';
-import ResultSuggestion from './ResultSuggestion';
-import Scrollable from './Scrollable';
-import { getExpression, getFieldName, getQueryAdvise } from '../lib';
+import { getExpression, getFieldName } from '../lib';
 
 function Section({ children }) {
   return <div className="space-y-3">{children}</div>;
@@ -41,7 +39,7 @@ function Field({ method, data }) {
 }
 
 // for inputs, the role will only work if there is also a type attribute
-function ResultQueries({ data, advise }) {
+function ResultQueries({ data }) {
   return (
     <div className="grid grid-cols-2 gap-4 pt-4">
       <Section>

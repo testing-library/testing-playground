@@ -1,7 +1,7 @@
 import React from 'react';
 import Expandable from './Expandable';
 
-function PreviewHint({ roles, advise, active }) {
+function PreviewHint({ roles, advise }) {
   const expression = advise.expression ? (
     `> ${advise.expression}`
   ) : (

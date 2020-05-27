@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Editor from './Editor';
-import ResultQueries from './ResultQueries';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
@@ -24,10 +22,6 @@ const styles = {
   },
 };
 
-function iif(truthy, result) {
-  return !!truthy ? result : undefined;
-}
-
 const SUPPORTED_AREAS = {
   markup: true,
   preview: true,
@@ -35,7 +29,7 @@ const SUPPORTED_AREAS = {
   result: true,
 };
 // TODO: we should support readonly mode
-function Embedded({}) {
+function Embedded() {
   const [html, setHtml] = useState(savedState.html || initialValues.html);
   const [js, setJs] = useState(savedState.js || initialValues.js);
   const { setParsed, htmlRoot } = useAppContext();

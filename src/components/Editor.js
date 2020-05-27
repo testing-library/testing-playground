@@ -1,3 +1,4 @@
+/* global TestingLibraryDom */
 import React, { useRef, useEffect } from 'react';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/xml/xml';
@@ -7,7 +8,6 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/hint/show-hint';
 
 import CodeMirror from 'codemirror';
-
 import debounce from 'lodash/debounce';
 
 const baseOptions = {
@@ -42,7 +42,7 @@ const suggestions = {
   container: ['querySelector', 'querySelectorAll'],
 };
 
-function getQueryHints(cm, option) {
+function getQueryHints(cm) {
   const cursor = cm.getCursor();
   const line = cm.getLine(cursor.line);
   // const words = line.split(/\s/);

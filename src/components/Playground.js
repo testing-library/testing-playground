@@ -4,8 +4,6 @@ import parser from '../parser';
 import { useAppContext } from './Context';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
-import QueryEditor from './QueryEditor';
-import QueryOutput from './QueryOutput';
 import Result from './Result';
 
 import { initialValues } from '../constants';

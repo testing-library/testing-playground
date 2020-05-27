@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppContext } from './Context';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
@@ -18,12 +18,11 @@ function Preview({ html }) {
   //    back to... true. Not to false! To indicate that we still want to use
   //    the mouse position to control the highlight.
   // 4. Once the mouse leaves the preview area, `highlighted` switches to false.
-  //    Indiating that the `parsed` element can be highlighted again.
+  //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
   const [roles, setRoles] = useState([]);
 
   const { parsed, jsEditorRef, htmlRoot, setHtmlRootRef } = useAppContext();
-  const ref = useRef();
 
   const { advise } = getQueryAdvise({
     root: htmlRoot ? htmlRoot.firstChild : null,

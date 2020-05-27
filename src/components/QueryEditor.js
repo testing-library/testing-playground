@@ -2,7 +2,7 @@ import React from 'react';
 import Editor from './Editor';
 import { useAppContext } from './Context';
 
-function QueryEditor({ initialValue, onChange }, ref) {
+function QueryEditor({ initialValue, onChange }) {
   const { jsEditorRef } = useAppContext();
 
   return (
@@ -15,4 +15,4 @@ function QueryEditor({ initialValue, onChange }, ref) {
   );
 }
 
-export default React.forwardRef(QueryEditor);
+export default QueryEditor;
