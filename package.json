@@ -6,7 +6,9 @@
   "scripts": {
     "start": "parcel src/index.html --open",
     "start:embed": "parcel src/embed.html --open",
-    "build": "parcel build src/index.html src/embed.js --no-cache",
+    "build": "run-s build:app build:statics",
+    "build:app": "parcel build src/index.html src/embed.js --no-cache",
+    "build:statics": "cp _redirects dist",
     "lint": "eslint 'src/**/*.js' --quiet --fix",
     "clean": "rimraf ./dist ./.cache",
     "ci:lint": "eslint 'src/**/*.js' -c ./.eslintrc.js",
@@ -43,6 +45,7 @@
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.2",
+    "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.6.1",
     "postcss-easy-import": "^3.0.0",
     "postcss-modules": "^2.0.0",
