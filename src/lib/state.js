@@ -6,16 +6,37 @@ import {
 import beautify from 'js-beautify';
 
 function unindent(string) {
-  return string.replace(/[ \t]*[\n][ \t]*/g, '\n');
+  return (string || '').replace(/[ \t]*[\n][ \t]*/g, '\n');
 }
 
-function save({ html, js }) {
-  const state = [
+export function compress({ html, js }) {
+  return [
     compressToEncodedURIComponent(unindent(html)),
     compressToEncodedURIComponent(unindent(js)),
   ].join('&');
+}
 
-  history.replaceState(null, '', window.location.pathname + '#' + state);
+export function decompress({ html, js }) {
+  return {
+    html: beautify.html(
+      decompressFromEncodedURIComponent(html || ''),
+      beautifyOptions,
+    ),
+    js: beautify.js(
+      decompressFromEncodedURIComponent(js || ''),
+      beautifyOptions,
+    ),
+  };
+}
+
+function save({ html, js }) {
+  const state = compress({ html, js });
+  const { search, pathname } = window.location;
+  history.replaceState(
+    null,
+    '',
+    pathname + (search ? search : '') + '#' + state,
+  );
 }
 
 const beautifyOptions = {
@@ -25,27 +46,10 @@ const beautifyOptions = {
 };
 
 function load() {
-  const [htmlCompressed, jsCompressed] = window.location.hash
-    .slice(1)
-    .split('&');
+  const [html, js] = window.location.hash.slice(1).split('&');
 
-  return {
-    html:
-      htmlCompressed &&
-      beautify.html(
-        decompressFromEncodedURIComponent(htmlCompressed),
-        beautifyOptions,
-      ),
-    js:
-      jsCompressed &&
-      beautify.js(
-        decompressFromEncodedURIComponent(jsCompressed),
-        beautifyOptions,
-      ),
-  };
+  return decompress({ html, js });
 }
-
-window.beautify = beautify;
 
 function updateTitle(text) {
   const title = document.title.split(':')[0];

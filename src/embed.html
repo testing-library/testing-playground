@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TL Embedded</title>
+  </head>
+
+  <style>
+    body {
+      background: #ccc;
+    }
+  </style>
+  <body>
+    <!--
+    This is a test file to test the embed mode,
+    to try this run `npm run start`, and after that run
+    `npm run start:embed` in a second terminal
+
+  -->
+
+    <div
+      data-testing-playground="DwIwrgLhD2B2AEB6AfAKFJGDYEMC2ApgLwBEAzgJYDmsYADifBAJ53Hlgh4UQnKU16wROChxkQA&MYewdgLghglmCmAnAdARwK5IJ4GV4Bt5gIREAKAcjgAd0IKBKIA"
+      data-areas="markup,preview"
+    ></div>
+
+    <template data-testing-playground data-areas="markup,query,result">
+      <script type="text/html">
+        <button>one</button>
+      </script>
+
+      <script type="text/javascript">
+        screen.getByRole('button');
+      </script>
+      ;
+    </template>
+
+    <template
+            data-testing-playground
+            data-areas="query, result, markup"
+            data-height="250"
+            data-width="80%"
+    >
+      <script type="text/html">
+        <button>one</button>
+      </script>
+
+      <script type="text/javascript">
+        screen.getByRole('button');
+      </script>
+      ;
+    </template>
+
+    <template data-testing-playground data-areas="result, query, markup">
+      <script type="text/html">
+        <button>one</button>
+      </script>
+
+      <script type="text/javascript">
+        screen.getByRole('button');
+      </script>
+      ;
+    </template>
+
+    <script async src="embed.js"></script>
+  </body>
+</html>
