@@ -7,8 +7,8 @@ describe('App initialization Smoke Test', () => {
         editor[0].CodeMirror.setValue('');
       });
 
-    cy.fixture('profile.json').then((ele) =>
-      cy.get('.CodeMirror textarea').first().type(ele.helloworld, {
+    cy.fixture('userStubs.json').then((stub) =>
+      cy.get('.CodeMirror textarea').first().type(stub.html.helloWorld, {
         force: true,
       }),
     );
@@ -19,9 +19,11 @@ describe('App initialization Smoke Test', () => {
         editor.prevObject[1].CodeMirror.setValue('');
       });
 
-    cy.get('.CodeMirror textarea').eq(1).type(`screen.getByTestId('hello')`, {
-      force: true,
-    });
+    cy.fixture('userStubs.json').then((stub) =>
+      cy.get('.CodeMirror textarea').eq(1).type(stub.query.helloWorld, {
+        force: true,
+      }),
+    );
   });
 
   it('Gives a suggested query more specific than the used data-testid', () => {

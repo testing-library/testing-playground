@@ -1,0 +1,8 @@
+{
+  "html": {
+    "helloWorld": "<div data-testid='hello'>Hello World"
+  },
+  "query": {
+    "helloWorld": "screen.getByTestId('hello')"
+  }
+}
