@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parser should return getByPlaceholderText as expression 1`] = `
+Object {
+  "args": Array [
+    "I'm a placeholder",
+  ],
+  "call": "getByPlaceholderText(\\"I'm a placeholder\\")",
+  "expression": "screen.getByPlaceholderText(\\"I'm a placeholder\\")",
+  "level": 0,
+  "method": "getByPlaceholderText",
+  "scope": "screen",
+}
+`;
