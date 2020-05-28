@@ -1,23 +1,12 @@
-describe('App initialization Smoke Test', () => {
+describe('App Initialization Smoke Test', () => {
   beforeEach(() => {
     cy.seedAndVisit();
-    cy.get('.CodeMirror')
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue('');
-      });
 
     cy.fixture('userStubs.json').then((stub) =>
       cy.get('.CodeMirror textarea').first().type(stub.html.helloWorld, {
         force: true,
       }),
     );
-
-    cy.get('.CodeMirror')
-      .first()
-      .then((editor) => {
-        editor.prevObject[1].CodeMirror.setValue('');
-      });
 
     cy.fixture('userStubs.json').then((stub) =>
       cy.get('.CodeMirror textarea').eq(1).type(stub.query.helloWorld, {
@@ -29,7 +18,7 @@ describe('App initialization Smoke Test', () => {
   it('Gives a suggested query more specific than the used data-testid', () => {
     cy.get('[data-cy=suggested-query]').should(
       'contain',
-      `> screen.getByText('Hello World')`,
+      `screen.getByText('Hello World')`,
     );
     cy.get(
       '.space-y-8.px-8 > :nth-child(2) > :nth-child(1) > .CodeMirror > .CodeMirror-scroll > .CodeMirror-sizer > [style="position: relative; top: 0px;"] > .CodeMirror-lines > [style="position: relative; outline: none;"] > .CodeMirror-code > [style="position: relative;"] > .CodeMirror-line',
@@ -40,7 +29,7 @@ describe('App initialization Smoke Test', () => {
     cy.get('[data-cy=suggested-query]').click();
     cy.get('[data-cy=suggested-query]').should(
       'contain',
-      `> screen.getByText('Hello World')`,
+      `screen.getByText('Hello World')`,
     );
     cy.get(
       '.space-y-8.px-8 > :nth-child(2) > :nth-child(1) > .CodeMirror > .CodeMirror-scroll > .CodeMirror-sizer > [style="position: relative; top: 0px;"] > .CodeMirror-lines > [style="position: relative; outline: none;"] > .CodeMirror-code > [style="position: relative;"] > .CodeMirror-line',

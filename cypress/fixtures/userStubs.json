@@ -1,8 +1,13 @@
 {
   "html": {
-    "helloWorld": "<div data-testid='hello'>Hello World"
+    "helloWorld": "<div data-testid='hello'>Hello World",
+    "example": "<label for='username'>Username</label> <input id='username' name='username' placeholder='Enter Name' data-testid='uname-testid' title='enter your username' alt='enter your username' value='john-doe' type='text'/> <button name='signup' type='submit' data-testid='button-testid'>signup"
   },
   "query": {
-    "helloWorld": "screen.getByTestId('hello')"
+    "helloWorld": "screen.getByTestId('hello')",
+    "example": {
+      "usernameTestId": "screen.getByTestId('uname-testid')",
+      "buttonTestId": "screen.getByTestId('button-testid')"
+     }
   }
 }
