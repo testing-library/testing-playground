@@ -7,16 +7,16 @@ describe('App initialization Smoke Test', () => {
         editor[0].CodeMirror.setValue('');
       });
 
-    cy.get('.CodeMirror textarea')
-      .first()
-      .type(`<div data-testid="hello">Hello World`, {
+    cy.fixture('profile.json').then((ele) =>
+      cy.get('.CodeMirror textarea').first().type(ele.helloworld, {
         force: true,
-      });
+      }),
+    );
 
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
-        console.log(editor.prevObject[1].CodeMirror.setValue(''));
+        editor.prevObject[1].CodeMirror.setValue('');
       });
 
     cy.get('.CodeMirror textarea').eq(1).type(`screen.getByTestId('hello')`, {
