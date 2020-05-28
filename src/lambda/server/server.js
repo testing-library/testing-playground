@@ -10,17 +10,15 @@ function getHostname(event, context) {
     return `http://${event.headers.host}`;
   }
 
-  const netlify = (context.clientContext.custom || {}).netlify;
-  const decoded = JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8'));
-  return decoded.site_url;
+  const { netlify } = context.clientContext.custom || {};
+
+  return JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8')).site_url;
 }
 
 function handler(event, context, callback) {
-  const params = event.queryStringParameters;
-
+  const { panes, markup, query } = event.queryStringParameters;
   const host = getHostname(event, context);
 
-  const { panes, markup, query } = params;
   const oembedSearch = queryString.stringify({
     url: `${host}/embed?${queryString.stringify({ panes, markup, query })}`,
     format: 'json',
