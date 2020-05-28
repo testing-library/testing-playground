@@ -13,20 +13,23 @@ function initPlaygrounds() {
   for (let i = 0; i < playgrounds.length; i++) {
     const playground = playgrounds[i];
 
-    let data = playground.dataset.testingPlayground.trim();
+    let markup = playground.dataset.markup;
+    let query = playground.dataset.query;
 
-    if (data.length === 0 && playground.tagName === 'TEMPLATE') {
-      const html = playground.content
+    if ((!markup || !query) && playground.tagName === 'TEMPLATE') {
+      markup = playground.content
         .querySelector('script[type="text/html"]')
         ?.innerText.trim();
-      const js = playground.content
+      query = playground.content
         .querySelector('script[type="text/javascript"]')
         ?.innerText.trim();
 
-      data = compress({ html, js });
+      const compressed = compress({ markup, query });
+      markup = compressed.markup;
+      query = compressed.query;
     }
 
-    const { areas, ...options } = Object.assign(
+    const { panes, ...options } = Object.assign(
       {
         height: 300,
         width: '100%',
@@ -46,8 +49,13 @@ function initPlaygrounds() {
       },
     );
 
-    const query = queryString.stringify({ areas });
-    const src = `${host}/embed?${query}#${data}`;
+    const search = queryString.stringify({
+      panes,
+      markup,
+      query,
+    });
+
+    const src = `${host}/embed?${search}`;
 
     const fragment = document.createDocumentFragment();
     const iframe = document.createElement('iframe');

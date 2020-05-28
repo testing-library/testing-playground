@@ -22,29 +22,30 @@ const styles = {
   },
 };
 
-const SUPPORTED_AREAS = {
+const SUPPORTED_PANES = {
   markup: true,
   preview: true,
   query: true,
   result: true,
 };
+
 // TODO: we should support readonly mode
 function Embedded() {
-  const [html, setHtml] = useState(savedState.html || initialValues.html);
-  const [js, setJs] = useState(savedState.js || initialValues.js);
+  const [html, setHtml] = useState(savedState.markup || initialValues.html);
+  const [js, setJs] = useState(savedState.query || initialValues.js);
   const { setParsed, htmlRoot } = useAppContext();
 
   const location = useLocation();
   const params = queryString.parse(location.search);
 
-  const areas = params.areas
-    ? Array.from(new Set(params.areas.split(',')))
+  const panes = params.panes
+    ? Array.from(new Set(params.panes.split(',')))
         .map((x) => x.trim())
-        .filter((x) => SUPPORTED_AREAS[x])
+        .filter((x) => SUPPORTED_PANES[x])
     : ['markup', 'preview', 'query', 'result'];
 
-  // TODO: we should add tabs to handle > 2 areas
-  const areaCount = areas.length;
+  // TODO: we should add tabs to handle > 2 panes
+  const areaCount = panes.length;
 
   // Yes, it looks like we could compose this like `grid-cols-${n}`, but that way it isn't detectable by purgeCss
   const columnClass =
@@ -64,7 +65,7 @@ function Embedded() {
     const parsed = parser.parse({ htmlRoot, js });
     setParsed(parsed);
 
-    state.save({ html, js });
+    state.save({ markup: html, query: js });
     state.updateTitle(parsed.expression?.expression);
   }, [html, js, htmlRoot]);
 
@@ -78,13 +79,13 @@ function Embedded() {
       className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
     >
       {/*the markup preview must always be rendered!*/}
-      {!areas.includes('preview') && (
+      {!panes.includes('preview') && (
         <div style={styles.offscreen}>
           <Preview html={html} />
         </div>
       )}
 
-      {areas.map((area) => {
+      {panes.map((area) => {
         switch (area) {
           case 'preview':
             return <Preview key={area} html={html} />;

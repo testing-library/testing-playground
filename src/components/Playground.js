@@ -13,8 +13,8 @@ import Query from './Query';
 const savedState = state.load();
 
 function Playground() {
-  const [html, setHtml] = useState(savedState.html || initialValues.html);
-  const [js, setJs] = useState(savedState.js || initialValues.js);
+  const [html, setHtml] = useState(savedState.markup || initialValues.html);
+  const [js, setJs] = useState(savedState.query || initialValues.js);
 
   const { setParsed, htmlRoot } = useAppContext();
 
@@ -26,7 +26,7 @@ function Playground() {
     const parsed = parser.parse({ htmlRoot, js });
     setParsed(parsed);
 
-    state.save({ html, js });
+    state.save({ markup: html, query: js });
     state.updateTitle(parsed.expression?.expression);
   }, [htmlRoot, html, js]);
 
