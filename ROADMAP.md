@@ -32,7 +32,7 @@ Do we need some instructions on how to use the tool? I'm not sure about this yet
 
 ## Embeddable
 
-_Status: In backlog ([#9](https://github.com/smeijer/testing-playground/issues/9))_
+_Status: Shipped at May 28, 2020 ([#9](https://github.com/smeijer/testing-playground/issues/9))_
 
 How awesome would it be if we had an embed-mode, so users can embed the playground in the blogs they write about testing / testing-library?
 
