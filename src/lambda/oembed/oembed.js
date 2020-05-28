@@ -19,12 +19,12 @@ function getHostname(event, context) {
 function handler(event, context, callback) {
   const host = getHostname(event, context);
   const params = event.queryStringParameters;
-  
-  if (params.format === 'xml') {	
-    return callback(	
-      null,	
-      incorrectParams('unsupported format, only json is supported'),	
-    );	
+
+  if (params.format === 'xml') {
+    return callback(
+      null,
+      incorrectParams('unsupported format, only json is supported'),
+    );
   }
 
   if (!params.url) {
