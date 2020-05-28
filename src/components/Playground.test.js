@@ -1,9 +1,9 @@
 import React from 'react';
-import App from './App';
+import Playground from './App';
 import { renderWithContext } from '../../tests/utils/render';
 
 describe('App', () => {
   it('should not throw on render', () => {
-    renderWithContext(<App />);
+    renderWithContext(<Playground />);
   });
 });

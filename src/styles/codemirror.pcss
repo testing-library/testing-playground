@@ -1,0 +1,70 @@
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/dracula.css';
+@import 'codemirror/addon/scroll/simplescrollbars.css';
+@import 'codemirror/addon/hint/show-hint.css';
+
+.CodeMirror.cm-s-dracula {
+    /* border-radius doesn't work on CM without a border :( */
+    @apply bg-gray-800 border-solid border-4 border-gray-800 !important;
+    border-radius: 4px;
+
+    /* this shouldn't be required but I can't get the thing to accept height:100% */
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    height: 100%;
+}
+
+.query-editor .CodeMirror.cm-s-dracula {
+    border-radius: 4px 4px 0 0;
+}
+
+.query-result {
+    border-radius: 0 0 4px 4px;
+}
+
+.query-result.expanded {
+    border-radius: 4px;
+}
+
+.CodeMirror.cm-s-dracula .CodeMirror-gutters {
+    @apply bg-gray-800 !important;
+}
+
+.CodeMirror-overlayscroll-horizontal,
+.CodeMirror-simplescroll-horizontal {
+    background: transparent;
+    height: 5px;
+}
+
+.CodeMirror-overlayscroll-vertical,
+.CodeMirror-simplescroll-vertical {
+    background: transparent;
+    width: 5px;
+}
+
+.CodeMirror-scrollbar-filler {
+    background: transparent;
+}
+
+.CodeMirror-overlayscroll-horizontal div, .CodeMirror-overlayscroll-vertical div,
+.CodeMirror-simplescroll-horizontal div, .CodeMirror-simplescroll-vertical div {
+    @apply bg-gray-600;
+    background-clip: padding-box !important;
+    border: none;
+    border-radius: 4px;
+}
+
+.CodeMirror-simplescroll-horizontal div {
+    width: 100%;
+}
+
+.CodeMirror-simplescroll-vertical div {
+    height: 100%;
+}
+
+.embedded .CodeMirror.cm-s-dracula {
+    height: 100%;
+}

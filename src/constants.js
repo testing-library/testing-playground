@@ -16,8 +16,8 @@ export const initialValues = {
 
   js: `
 // Query your elements here, preferably with 
-// \`screen.getBy…(…)\`. If you can't use screen
-// use \`container.querySelector(…)\`.
+// \`screen.getBy…(…)\`. If you can't use
+// screen use \`container.querySelector(…)\`.
 
 // container.querySelector('input')
 screen.getByRole('button')

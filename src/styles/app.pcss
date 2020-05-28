@@ -1,13 +1,20 @@
-@import 'codemirror/lib/codemirror.css';
-@import 'codemirror/theme/dracula.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
+@import './codemirror.pcss';
+
+html {
+  @apply h-full;
+}
+
+body:not(.embedded) {
   @apply bg-gray-100;
-  overflow-y: scroll;
+}
+
+/* purgecss ignore */
+body.embedded, body.embedded #app {
+  @apply h-full overflow-hidden p-1;
 }
 
 nav a:not(.title):hover {
@@ -22,8 +29,25 @@ nav a:not(.title):hover {
   opacity: .3;
 }
 
+.footer > div > span {
+  display: inline-block;
+  line-height: 0;
+}
+
+.bg-inherit {
+  background-color: inherit;
+}
+
+.rounded-inherit {
+  border-radius: inherit;
+}
+
 .editor {
-  @apply bg-white rounded shadow p-4 grid gap-8;
+  @apply bg-white rounded shadow p-4 grid relative;
+}
+
+.editor > .h-full-within {
+  height: calc(100% - 2rem);
 }
 
 blockquote {
@@ -59,56 +83,32 @@ blockquote cite:before {
 }
 
 .field {
-  @apply relative cursor-default;
-  z-index: 1;
-}
-
-.field[data-clickable="true"]:hover {
-  @apply cursor-pointer;
-}
-
-.field:before {
-  @apply block absolute rounded border border-transparent;
-  z-index: -1;
-  content: '';
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
+  @apply relative cursor-default p-1 rounded border border-transparent;
+  z-index: 0;
   transition: background-color .2s ease;
 }
 
-.field[data-clickable="false"]:hover:before {
-  @apply bg-gray-100 border-gray-100;
+.field[data-clickable="false"]:hover {
+  @apply bg-gray-100;
 }
 
-.field[data-clickable="true"]:before {
-  @apply bg-blue-100 border-blue-100;
+.field[data-clickable="true"] {
+  @apply cursor-pointer bg-blue-100;
 }
 
-.field[data-clickable="true"]:hover:before {
+.field[data-clickable="true"]:hover {
   @apply bg-blue-200;
 }
 
-.field.active:before {
+.field.active {
   @apply border-blue-300;
-}
-
-/* purgecss ignore */
-.editor .CodeMirror.cm-s-dracula {
-  border: none;
-  height: 250px;
-  @apply bg-gray-800 !important;
-}
-
-/* purgecss ignore */
-.editor .CodeMirror.cm-s-dracula .CodeMirror-gutters {
-  @apply bg-gray-800 !important;
 }
 
 .output {
   @apply text-gray-100 p-4 font-mono text-sm bg-gray-800 bg-gray-800 whitespace-pre-wrap;
   overflow-x: auto;
+  margin-top: -4px; /* compensate CM border */
+  border-radius: 0 0 4px 4px;
 }
 
 .error {
@@ -120,8 +120,7 @@ blockquote cite:before {
  */
 
 .preview {
-  @apply text-base;
-  margin-bottom: 15px;
+  @apply text-base p-1 mb-2;
 }
 
 .preview .highlight {

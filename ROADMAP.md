@@ -8,7 +8,7 @@ The html preview tab should be made interactive. In such a way that one can hove
 
 ## Update Readme.md
 
-_Status: In backlog ([#5](https://github.com/smeijer/testing-playground/issues/5))_
+_Status: Shipped at May 25, 2020 ([#23](https://github.com/smeijer/testing-playground/pull/23))_
 
 We don't have any instructions on how to get the thing started at localhost, or how to contribute. This should be made crystal clear.
 
@@ -32,7 +32,7 @@ Do we need some instructions on how to use the tool? I'm not sure about this yet
 
 ## Embeddable
 
-_Status: In backlog ([#9](https://github.com/smeijer/testing-playground/issues/9))_
+_Status: Shipped at May 28, 2020 ([#9](https://github.com/smeijer/testing-playground/issues/9))_
 
 How awesome would it be if we had an embed-mode, so users can embed the playground in the blogs they write about testing / testing-library?
 
