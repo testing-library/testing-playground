@@ -33,8 +33,6 @@ function handler(event, context, callback) {
     oembedLink,
   );
 
-  body += '<!-- server rendered -->';
-
   return callback(null, {
     statusCode: 200,
     body: body,

@@ -1,6 +1,6 @@
 function incorrectParams(error) {
   return {
-    statusCode: 422, // Unprocessable Entity
+    statusCode: 501, // oembed status // 422, // Unprocessable Entity
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ error }),
   };
@@ -34,7 +34,7 @@ function handler(event, context, callback) {
     );
   }
 
-  const { url, maxwidth = '100%', maxheight = '400px' } = params;
+  const { url, referrer, maxwidth = 900, maxheight = 300 } = params;
 
   callback(null, {
     statusCode: 200,
@@ -50,7 +50,7 @@ function handler(event, context, callback) {
         author_name: 'Testing Playground',
         author_url: host,
 
-        html: `<iframe src="${url}" width="${maxwidth}" height="${maxheight}" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" title="Testing Playground" style="overflow: hidden; display: block;" loading="lazy" name="testing-playground-${Date.now()}"></iframe>`,
+        html: `<iframe src="${url}" width=${maxwidth} height=${maxheight} scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" title="Testing Playground" style="overflow: hidden; display: block;" loading="lazy" name="testing-playground-${Date.now()}"></iframe>`,
         width: maxwidth,
         height: maxheight,
 
@@ -58,7 +58,7 @@ function handler(event, context, callback) {
         thumbnail_width: 512,
         thumbnail_height: 512,
 
-        referrer: '',
+        referrer: referrer,
         cache_age: 3600,
       },
       '',
