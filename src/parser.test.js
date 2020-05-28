@@ -13,28 +13,34 @@ const setup = () => {
 describe('parser', () => {
   it('should give an error if the query is not valid', () => {
     const container = setup();
-    const result = parser.parse(container, 'invalidquery');
+    const result = parser.parse({ htmlRoot: container, js: 'invalidquery' });
     expect(result.error).toBeDefined();
     expect(result.errorBody).toBeDefined();
   });
 
   it('should return targets as array', () => {
     const container = setup();
-    let result = parser.parse(container, "screen.getAllByRole('button')");
+    let result = parser.parse({
+      htmlRoot: container,
+      js: "screen.getAllByRole('button')",
+    });
     expect(result.targets).toBeArray();
     expect(result.targets).toHaveLength(2);
-    result = parser.parse(container, 'screen.getByText("I\'m a label")');
+    result = parser.parse({
+      htmlRoot: container,
+      js: 'screen.getByText("I\'m a label")',
+    });
     expect(result.targets).toBeArray();
     expect(result.targets).toHaveLength(1);
   });
 
   it('should return getByPlaceholderText as expression', () => {
     const container = setup();
-    let result = parser.parse(
-      container,
-      `screen.getAllByRole('button');
+    let result = parser.parse({
+      htmlRoot: container,
+      js: `screen.getAllByRole('button');
         screen.getByPlaceholderText("I'm a placeholder");`,
-    );
+    });
     expect(result.expression).toMatchSnapshot();
   });
 });
