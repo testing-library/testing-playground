@@ -19,7 +19,11 @@ function handler(event, context, callback) {
   const { panes, markup, query } = event.queryStringParameters;
   const host = getHostname(event, context);
 
-  const frameSrc = `${host}/embed?${queryString.stringify({ panes, markup, query })}`;
+  const frameSrc = `${host}/embed?${queryString.stringify({
+    panes,
+    markup,
+    query,
+  })}`;
 
   const oembedSearch = queryString.stringify({ url: frameSrc });
 
