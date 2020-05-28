@@ -1,4 +1,4 @@
 module.exports = {
-  '**/*.js': (files) => [`eslint --quiet --fix ${files.join(' ')}`],
-  '**/*.md': (files) => [`prettier --write ${files.join(' ')}`],
-}
+  '**/*.js': (files) => [`eslint --quiet --fix ${files.join(' ')}`,`jest --passWithNoTests`],
+  '**/*.{md,js}': (files) => [`prettier --write ${files.join(' ')}`],
+};
