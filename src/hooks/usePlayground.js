@@ -6,8 +6,8 @@ import parser from '../parser';
 const savedState = state.load();
 
 function usePlayground() {
-  const [html, setHtml] = useState(savedState.markup || initialValues.html);
-  const [js, setJs] = useState(savedState.query || initialValues.js);
+  const [markup, setMarkup] = useState(savedState.markup || initialValues.html);
+  const [query, setQuery] = useState(savedState.query || initialValues.js);
   const { setParsed, htmlRoot } = useAppContext();
 
   useEffect(() => {
@@ -15,14 +15,14 @@ function usePlayground() {
       return;
     }
 
-    const parsed = parser.parse({ htmlRoot, js });
+    const parsed = parser.parse({ htmlRoot, query });
     setParsed(parsed);
 
-    state.save({ markup: html, query: js });
+    state.save({ markup: markup, query: query });
     state.updateTitle(parsed.expression?.expression);
-  }, [htmlRoot, html, js]);
+  }, [htmlRoot, markup, query]);
 
-  return [js, setJs, html, setHtml];
+  return [query, setQuery, markup, setMarkup];
 }
 
 export default usePlayground;

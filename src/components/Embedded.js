@@ -26,7 +26,7 @@ const SUPPORTED_PANES = {
 
 // TODO: we should support readonly mode
 function Embedded() {
-  const [js, setJs, html, setHtml] = usePlayground();
+  const [query, setQuery, markup, setMarkup] = usePlayground();
 
   const location = useLocation();
   const params = queryString.parse(location.search);
@@ -62,20 +62,26 @@ function Embedded() {
       {/*the markup preview must always be rendered!*/}
       {!panes.includes('preview') && (
         <div style={styles.offscreen}>
-          <Preview html={html} />
+          <Preview html={markup} />
         </div>
       )}
 
       {panes.map((area) => {
         switch (area) {
           case 'preview':
-            return <Preview key={area} html={html} />;
+            return <Preview key={area} html={markup} />;
           case 'markup':
             return (
-              <MarkupEditor key={area} onChange={setHtml} initialValue={html} />
+              <MarkupEditor
+                key={area}
+                onChange={setMarkup}
+                initialValue={markup}
+              />
             );
           case 'query':
-            return <Query key={area} initialValue={js} onChange={setJs} />;
+            return (
+              <Query key={area} initialValue={query} onChange={setQuery} />
+            );
           case 'result':
             return <Result key={area} />;
           default:
