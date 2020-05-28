@@ -5,13 +5,20 @@ const queryString = require('query-string');
 const filename = path.join(__dirname, './index.html');
 const indexHtml = fs.readFileSync(filename, 'utf8');
 
+function getHostname(event, context) {
+  if (event.headers.host) {
+    return `http://${event.headers.host}`;
+  }
+
+  const netlify = (context.clientContext.custom || {}).netlify;
+  const decoded = JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8'));
+  return decoded.site_url;
+}
+
 function handler(event, context, callback) {
   const params = event.queryStringParameters;
 
-  const host =
-    event.headers.host && event.headers.host.includes(':')
-      ? `http://${event.headers.host}`
-      : `https://testing-playground.com`;
+  const host = getHostname(event, context);
 
   const { panes, markup, query } = params;
   const oembedSearch = queryString.stringify({
