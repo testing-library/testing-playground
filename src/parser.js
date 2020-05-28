@@ -49,7 +49,7 @@ function getLastExpression(code) {
     // remove comments
     .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
     // remove all white space outside quotes
-    .replace(/[ ]+(?=[^"]*(?:"[^"]*"[^"]*)*$)/g, '');
+    .replace(/[ ]+(?=[^"\'`]*(?:["\'`][^"\'`]*["\'`][^"\'`]*)*$)/g, '');
 
   const start = supportedQueries.reduce(
     (idx, qry) => Math.max(idx, minified.lastIndexOf(qry.method)),
