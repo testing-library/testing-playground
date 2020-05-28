@@ -46,6 +46,7 @@ function Header() {
               href="https://github.com/smeijer/testing-playground"
               className="hover:underline"
               target="_blank"
+              rel="noopener noreferrer"
             >
               GitHub
             </a>
