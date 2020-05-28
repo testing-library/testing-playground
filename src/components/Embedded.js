@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
-import { initialValues } from '../constants';
-import parser from '../parser';
-import state from '../lib/state';
+import usePlayground from '../hooks/usePlayground';
 
-import { useAppContext } from './Context';
 import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
-
-const savedState = state.load();
 
 const styles = {
   offscreen: {
@@ -31,9 +26,7 @@ const SUPPORTED_PANES = {
 
 // TODO: we should support readonly mode
 function Embedded() {
-  const [html, setHtml] = useState(savedState.markup || initialValues.html);
-  const [js, setJs] = useState(savedState.query || initialValues.js);
-  const { setParsed, htmlRoot } = useAppContext();
+  const [js, setJs, html, setHtml] = usePlayground();
 
   const location = useLocation();
   const params = queryString.parse(location.search);
@@ -56,18 +49,6 @@ function Embedded() {
       : areaCount === 2
       ? 'grid-cols-2'
       : 'grid-cols-1';
-
-  useEffect(() => {
-    if (!htmlRoot) {
-      return;
-    }
-
-    const parsed = parser.parse({ htmlRoot, js });
-    setParsed(parsed);
-
-    state.save({ markup: html, query: js });
-    state.updateTitle(parsed.expression?.expression);
-  }, [html, js, htmlRoot]);
 
   useEffect(() => {
     document.body.classList.add('embedded');

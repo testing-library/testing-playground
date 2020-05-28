@@ -1,34 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import parser from '../parser';
+import React from 'react';
 
-import { useAppContext } from './Context';
+import usePlayground from '../hooks/usePlayground';
+
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import Result from './Result';
-
-import { initialValues } from '../constants';
-import state from '../lib/state';
 import Query from './Query';
 
-const savedState = state.load();
-
 function Playground() {
-  const [html, setHtml] = useState(savedState.markup || initialValues.html);
-  const [js, setJs] = useState(savedState.query || initialValues.js);
-
-  const { setParsed, htmlRoot } = useAppContext();
-
-  useEffect(() => {
-    if (!htmlRoot) {
-      return;
-    }
-
-    const parsed = parser.parse({ htmlRoot, js });
-    setParsed(parsed);
-
-    state.save({ markup: html, query: js });
-    state.updateTitle(parsed.expression?.expression);
-  }, [htmlRoot, html, js]);
+  const [js, setJs, html, setHtml] = usePlayground();
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
