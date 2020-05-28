@@ -20,13 +20,6 @@ function handler(event, context, callback) {
   const host = getHostname(event, context);
   const params = event.queryStringParameters;
 
-  if (params.format !== 'json') {
-    return callback(
-      null,
-      incorrectParams('unsupported format, only json is supported'),
-    );
-  }
-
   if (!params.url) {
     return callback(
       null,
