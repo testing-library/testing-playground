@@ -5,7 +5,7 @@ import Footer from './Footer';
 function Layout({ children }) {
   return (
     <div className="flex flex-col h-screen">
-      <div className="h-16 mb-8 flex-none">
+      <div className="mb-8 flex-none">
         <Header />
       </div>
 
