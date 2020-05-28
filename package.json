@@ -76,7 +76,7 @@
     "*.js": [
       "npm run lint",
       "npm run prettier",
-      "npm run ci:test"
+      "npm run ci:test -- --passWithNoTests"
     ]
   }
 }
