@@ -11,9 +11,9 @@ function getHostname(event, context) {
     return `http://${event.headers.host}`;
   }
 
-  const netlify = (context.clientContext.custom || {}).netlify;
-  const decoded = JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8'));
-  return decoded.site_url;
+  const { netlify } = context.clientContext.custom || {};
+
+  return JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8')).site_url;
 }
 
 function handler(event, context, callback) {
@@ -58,7 +58,7 @@ function handler(event, context, callback) {
         thumbnail_width: 512,
         thumbnail_height: 512,
 
-        referrer: referrer,
+        referrer,
         cache_age: 3600,
       },
       '',
