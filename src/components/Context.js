@@ -1,16 +1,30 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useCallback, useRef, useState } from 'react';
 
 export const AppContext = React.createContext();
 
 function AppContextProvider(props) {
   const jsEditorRef = useRef();
   const htmlEditorRef = useRef();
-  const htmlPreviewRef = useRef();
+  const [htmlRoot, setHtmlRoot] = useState();
   const [parsed, setParsed] = useState({});
+
+  const setHtmlRootRef = useCallback(
+    (node) => {
+      setHtmlRoot(node);
+    },
+    [setHtmlRoot],
+  );
 
   return (
     <AppContext.Provider
-      value={{ jsEditorRef, htmlEditorRef, htmlPreviewRef, parsed, setParsed }}
+      value={{
+        jsEditorRef,
+        htmlEditorRef,
+        htmlRoot,
+        setHtmlRootRef,
+        parsed,
+        setParsed,
+      }}
       {...props}
     />
   );
