@@ -8,19 +8,9 @@ const headerLinks = [
   links.common_mistakes,
 ];
 
-function displayLinks(itemClasses) {
+function displayLinks(itemClasses = '') {
   return (
     <React.Fragment>
-      <div className={itemClasses}>
-        <a
-          href="https://github.com/smeijer/testing-playground"
-          className="hover:underline"
-          target="_blank"
-        >
-          GitHub
-        </a>
-      </div>
-
       <div className={`flex space-x-8 ${itemClasses}`}>
         {headerLinks.map((x) => (
           <a
@@ -51,10 +41,19 @@ function Header() {
               </h1>
             </a>
           </div>
-          {displayLinks('invisible md:visible')}
+          <div className="">
+            <a
+              href="https://github.com/smeijer/testing-playground"
+              className="hover:underline"
+              target="_blank"
+            >
+              GitHub
+            </a>
+          </div>
+          {displayLinks('hidden md:block')}
         </div>
-        <div className="flex items-center justify-between bg-gray-800 px-8 h-10 md:hidden ">
-          {displayLinks()}
+        <div className="flex justify-center bg-gray-800 px-8 h-10 md:hidden ">
+          {displayLinks('items-center')}
         </div>
       </nav>
     </div>
