@@ -1,0 +1,10 @@
+.cache
+dist
+.github
+.lintstagedrc.js
+.babelrc
+.eslintrc.js
+.prettierrc.js
+package-lock.json
+package.json
+postcss.config.js

@@ -18,7 +18,7 @@
     "ci:test": "jest --ci",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prettier": "prettier 'src/**/*.js' --write"
+    "prettier": "prettier . --write"
   },
   "dependencies": {
     "codemirror": "5.53.2",
