@@ -14,7 +14,7 @@
     "postbuild:server": "mkdir -p dist/server/server && mv dist/client/index.html dist/server/server/",
     "lint": "eslint . --quiet --fix",
     "clean": "rimraf ./dist ./.cache",
-    "ci:lint": "eslint . -c ./.eslintrc.js",
+    "ci:lint": "eslint .",
     "ci:test": "jest --ci",
     "test": "jest",
     "test:watch": "jest --watch",
