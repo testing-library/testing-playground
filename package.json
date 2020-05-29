@@ -20,7 +20,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "codemirror": "5.53.2",
+    "codemirror": "5.54.0",
     "dom-accessibility-api": "^0.4.3",
     "js-beautify": "^1.11.0",
     "lodash.debounce": "4.0.8",
