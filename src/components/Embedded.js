@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
 import usePlayground from '../hooks/usePlayground';
+import { initialValues } from '../constants';
+import state from '../lib/state';
 
 import Preview from './Preview';
 import Query from './Query';
@@ -24,9 +26,17 @@ const SUPPORTED_PANES = {
   result: true,
 };
 
+const savedState = state.load();
+
 // TODO: we should support readonly mode
 function Embedded() {
-  const [query, setQuery, markup, setMarkup] = usePlayground();
+  const [query, setQuery, markup, setMarkup] = usePlayground({
+    initialMarkup: initialValues.html || savedState.markup,
+    initialQuery: initialValues.js || savedState.js,
+  });
+  useEffect(() => {
+    state.save({ markup, query });
+  }, [markup, query]);
 
   const location = useLocation();
   const params = queryString.parse(location.search);

@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import usePlayground from '../hooks/usePlayground';
+import state from '../lib/state';
+import { initialValues } from '../constants';
 
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import Result from './Result';
 import Query from './Query';
 
+const savedState = state.load();
+
 function Playground() {
-  const [query, setQuery, markup, setMarkup] = usePlayground();
+  const [query, setQuery, markup, setMarkup] = usePlayground({
+    initialMarkup: initialValues.html || savedState.markup,
+    initialQuery: initialValues.js || savedState.js,
+  });
+  useEffect(() => {
+    state.save({ markup, query });
+  }, [markup, query]);
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">

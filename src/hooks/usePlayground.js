@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
-import { initialValues } from '../constants';
 import state from '../lib/state';
 import { useAppContext } from '../components/Context';
 import parser from '../parser';
-const savedState = state.load();
 
-function usePlayground() {
-  const [markup, setMarkup] = useState(savedState.markup || initialValues.html);
-  const [query, setQuery] = useState(savedState.query || initialValues.js);
+function usePlayground({ initialMarkup, initialQuery }) {
+  const [markup, setMarkup] = useState(initialMarkup);
+  const [query, setQuery] = useState(initialQuery);
   const { setParsed, htmlRoot } = useAppContext();
 
   useEffect(() => {
@@ -18,7 +16,6 @@ function usePlayground() {
     const parsed = parser.parse({ htmlRoot, query });
     setParsed(parsed);
 
-    state.save({ markup: markup, query: query });
     state.updateTitle(parsed.expression?.expression);
   }, [htmlRoot, markup, query]);
 
