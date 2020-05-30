@@ -1,6 +1,6 @@
 describe('App Initialization Smoke Test', () => {
   beforeEach(() => {
-    cy.seedAndVisit();
+    cy.visitAndClear();
 
     cy.fixture('userStubs.json').then((stub) =>
       cy.get('.CodeMirror textarea').first().type(stub.html.helloWorld, {

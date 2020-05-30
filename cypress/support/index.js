@@ -1,2 +1,2 @@
 /// <reference types="cypress" />
-import './init-seed';
+import './init-clear';

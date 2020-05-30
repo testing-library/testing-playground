@@ -1,4 +1,4 @@
-Cypress.Commands.add('seedAndVisit', () => {
+Cypress.Commands.add('visitAndClear', () => {
   cy.visit('/');
   cy.get('.CodeMirror')
     .first()
