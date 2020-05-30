@@ -1,6 +1,102 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`parser should parse query successfully 1`] = `
+Object {
+  "code": <span>
+    I'm a label
+  </span>,
+  "expression": Object {
+    "args": Array [
+      "I'm a label",
+    ],
+    "call": "getByText(\\"I'm a label\\")",
+    "expression": "screen.getByText(\\"I'm a label\\")",
+    "level": 0,
+    "method": "getByText",
+    "scope": "screen",
+  },
+  "id": 1,
+  "roles": Object {
+    "button": Array [
+      <button>
+        btn1
+      </button>,
+      <button>
+        btn2
+      </button>,
+    ],
+    "document": Array [
+      <body>
+        
+    
+        <div>
+          
+      
+          <button>
+            btn1
+          </button>
+          
+      
+          <button>
+            btn2
+          </button>
+          
+      
+          <span>
+            I'm a label
+          </span>
+          
+      
+          <input
+            placeholder="I'm a placeholder"
+          />
+          
+    
+        </div>
+      </body>,
+    ],
+  },
+  "target": <span>
+    I'm a label
+  </span>,
+  "targets": Array [
+    <span>
+      I'm a label
+    </span>,
+  ],
+  "text": "<span>
+  I'm a label
+</span>",
+}
+`;
+
+exports[`parser should remove all comments from parsed expression 1`] = `
+Object {
+  "args": Array [
+    "button",
+  ],
+  "call": "getByRole('button')",
+  "expression": "getByRole('button')",
+  "level": 0,
+  "method": "getByRole",
+  "scope": "",
+}
+`;
+
 exports[`parser should return getByPlaceholderText as expression 1`] = `
+Object {
+  "args": Array [
+    "I'm a placeholder",
+  ],
+  "call": "getByPlaceholderText(\\"I'm a placeholder\\")",
+  "expression": "screen.getByPlaceholderText(\\"I'm a placeholder\\")",
+  "level": 0,
+  "method": "getByPlaceholderText",
+  "scope": "screen",
+}
+`;
+
+exports[`parser should return getByPlaceholderText as expression because is the last one in the sentence 1`] = `
 Object {
   "args": Array [
     "I'm a placeholder",

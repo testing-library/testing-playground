@@ -11,6 +11,15 @@ const setup = () => {
     </div>`);
 };
 describe('parser', () => {
+  it('should parse query successfully', () => {
+    const container = setup();
+    const result = parser.parse({
+      htmlRoot: container,
+      js: 'screen.getByText("I\'m a label")',
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it('should give an error if the query is not valid', () => {
     const container = setup();
     const result = parser.parse({ htmlRoot: container, js: 'invalidquery' });
@@ -34,7 +43,7 @@ describe('parser', () => {
     expect(result.targets).toHaveLength(1);
   });
 
-  it('should return getByPlaceholderText as expression', () => {
+  it('should return getByPlaceholderText as expression because is the last one in the sentence', () => {
     const container = setup();
     let result = parser.parse({
       htmlRoot: container,
@@ -42,5 +51,40 @@ describe('parser', () => {
         screen.getByPlaceholderText("I'm a placeholder");`,
     });
     expect(result.expression).toMatchSnapshot();
+  });
+
+  it('should remove all comments from parsed expression', () => {
+    const container = setup();
+    let result = parser.parse({
+      htmlRoot: container,
+      js: `
+      // comment1
+      /*
+      comment2
+      */
+      getByRole('button');`,
+    });
+    expect(result.expression).toMatchSnapshot();
+  });
+
+  it('should remove all spaces outside of quotes/tick/single quote', () => {
+    const container = setup();
+    let result = parser.parse({
+      htmlRoot: container,
+      js: ` get ByRol e('button');`,
+    });
+    expect(result.expression.expression).toEqual("getByRole('button')");
+
+    result = parser.parse({
+      htmlRoot: container,
+      js: ` get ByRol e("button");`,
+    });
+    expect(result.expression.expression).toEqual('getByRole("button")');
+
+    result = parser.parse({
+      htmlRoot: container,
+      js: ' get ByRol e(`button`);',
+    });
+    expect(result.expression.expression).toEqual('getByRole(`button`)');
   });
 });
