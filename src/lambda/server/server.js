@@ -19,12 +19,21 @@ function handler(event, context, callback) {
   const { panes, markup, query } = event.queryStringParameters;
   const host = getHostname(event, context);
 
+  const frameSrc = `${host}/embed?${queryString.stringify({
+    panes,
+    markup,
+    query,
+  })}`;
+
   const oembedSearch = queryString.stringify({
-    url: `${host}/embed?${queryString.stringify({ panes, markup, query })}`,
+    url: frameSrc,
     format: 'json',
   });
 
-  const oembedLink = `<link type="application/json+oembed" href="${host}/oembed?${oembedSearch}" title="Testing Playground" />`;
+  const oembedLink = [
+    `<link rel="alternate" type="application/json+oembed" href="${host}/oembed?${oembedSearch}" title="Testing Playground" />`,
+    `<link rel="iframely player" type="text/html" href="${frameSrc}" media="height: 300" />`,
+  ].join('');
 
   let body = indexHtml.replace(
     /<(\w+)\s[^>]*type="application\/json\+oembed".*?>/g,

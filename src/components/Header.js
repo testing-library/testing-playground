@@ -10,28 +10,42 @@ const headerLinks = [
 
 function Header() {
   return (
-    <nav className="flex items-center justify-between bg-gray-900 px-8 text-white w-full h-full">
-      <div className="flex items-center flex-shrink-0 text-white">
-        <a className="title" href="/">
-          <h1 className="font-light text-xl tracking-tight flex space-x-4 items-center justify-start">
-            <img width={24} height={24} src={icon} />️{' '}
-            <span>Testing Playground</span>
-          </h1>
-        </a>
+    <nav className="text-white w-full h-20 md:h-16">
+      <div className="flex items-center justify-between bg-gray-900 px-8 h-10 md:h-16">
+        <div className="flex items-center flex-shrink-0 text-white">
+          <a className="title" href="/">
+            <h1 className="font-light text-xl tracking-tight flex space-x-4 items-center justify-start">
+              <img width={24} height={24} src={icon} />️{' '}
+              <span>Testing Playground</span>
+            </h1>
+          </a>
+        </div>
+
+        <div className="flex items-center space-x-8">
+          <a
+            href="https://github.com/smeijer/testing-playground"
+            className="hover:underline"
+          >
+            GitHub
+          </a>
+
+          <div className="border-r border-gray-600 mx-4 h-8 hidden md:block" />
+
+          {headerLinks.map((x) => (
+            <a
+              className="hover:underline hidden md:block"
+              key={x.title}
+              href={x.url}
+            >
+              {x.title}
+            </a>
+          ))}
+        </div>
       </div>
 
-      <div>
-        <a
-          href="https://github.com/smeijer/testing-playground"
-          className="hover:underline"
-        >
-          GitHub
-        </a>
-      </div>
-
-      <div className="flex space-x-8">
+      <div className="flex justify-between sm:justify-end items-center bg-gray-800 px-8 h-10 md:hidden space-x-8">
         {headerLinks.map((x) => (
-          <a className="hover:underline" key={x.title} href={x.url}>
+          <a className="hover:underline truncate" key={x.title} href={x.url}>
             {x.title}
           </a>
         ))}
