@@ -10,14 +10,15 @@ if (!IS_DEVELOPMENT) {
 
   class TailwindExtractor {
     static extract(content) {
-      return content.match(/[A-z0-9-:\/]+/g) || [];
+      return content.match(/[A-z0-9-:/]+/g) || [];
     }
   }
 
   plugins.push(
     purgecss({
       content: ['src/*.html', 'src/**/*.js'],
-      whitelist: ['body'],
+      whitelist: ['body', /CodeMirror/],
+      whitelistPatternsChildren: [/CodeMirror/],
       defaultExtractor: TailwindExtractor.extract,
     }),
   );

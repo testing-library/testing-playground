@@ -2,20 +2,48 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent,
 } from 'lz-string';
+import queryString from 'query-string';
 
 import beautify from 'js-beautify';
 
 function unindent(string) {
-  return string.replace(/[ \t]*[\n][ \t]*/g, '\n');
+  return (string || '').replace(/[ \t]*[\n][ \t]*/g, '\n');
 }
 
-function save({ html, js }) {
-  const state = [
-    compressToEncodedURIComponent(unindent(html)),
-    compressToEncodedURIComponent(unindent(js)),
-  ].join('&');
+export function compress({ markup, query }) {
+  const result = {
+    markup: compressToEncodedURIComponent(unindent(markup)),
+    query: compressToEncodedURIComponent(unindent(query)),
+  };
 
-  history.replaceState(null, '', window.location.pathname + '#' + state);
+  return result;
+}
+
+export function decompress({ markup, query }) {
+  const result = {
+    markup: beautify.html(
+      decompressFromEncodedURIComponent(markup || ''),
+      beautifyOptions,
+    ),
+    query: beautify.js(
+      decompressFromEncodedURIComponent(query || ''),
+      beautifyOptions,
+    ),
+  };
+
+  return result;
+}
+
+function save({ markup, query }) {
+  const state = compress({ markup, query });
+
+  const params = queryString.parse(window.location.search);
+  const search = queryString.stringify({
+    ...params,
+    ...state,
+  });
+
+  history.replaceState(null, '', window.location.pathname + '?' + search);
 }
 
 const beautifyOptions = {
@@ -25,27 +53,21 @@ const beautifyOptions = {
 };
 
 function load() {
-  const [htmlCompressed, jsCompressed] = window.location.hash
-    .slice(1)
-    .split('&');
+  const { hash, search } = window.location;
 
-  return {
-    html:
-      htmlCompressed &&
-      beautify.html(
-        decompressFromEncodedURIComponent(htmlCompressed),
-        beautifyOptions,
-      ),
-    js:
-      jsCompressed &&
-      beautify.js(
-        decompressFromEncodedURIComponent(jsCompressed),
-        beautifyOptions,
-      ),
-  };
+  // try to migrate old hash based format
+  if (hash.includes('&')) {
+    const [markup, query] = hash.slice(1).split('&');
+    const decompressed = decompress({ markup, query });
+
+    if (decompressed.markup && decompressed.query) {
+      save(decompressed);
+    }
+  }
+
+  const { markup, query } = queryString.parse(search);
+  return decompress({ markup, query });
 }
-
-window.beautify = beautify;
 
 function updateTitle(text) {
   const title = document.title.split(':')[0];

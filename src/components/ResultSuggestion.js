@@ -1,40 +1,14 @@
 import React from 'react';
-import { messages, queries } from '../constants';
+import { messages } from '../constants';
 import { useAppContext } from './Context';
-import { getExpression } from '../lib';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
-
-function getQueryAdvise(data) {
-  const query = queries.find(({ method }) => getExpression({ method, data }));
-  if (!query) {
-    return {
-      level: 3,
-      expression: 'container.querySelector(…)',
-      ...messages[3],
-    };
-  }
-  const expression = getExpression({ method: query.method, data });
-  return { expression, ...query, ...messages[query.level] };
-}
 
 function Code({ children }) {
   return <span className="font-bold font-mono">{children}</span>;
 }
 
-function Quote({ heading, content, source, href }) {
-  return (
-    <blockquote className="text-sm mb-4 italic w-full">
-      <p className="font-bold text-xs mb-2">{heading}:</p>
-      <p>{content}</p>
-      <cite>
-        <a href={href}>{source}</a>
-      </cite>
-    </blockquote>
-  );
-}
-
-function QueryAdvise({ data, advise }) {
+function ResultSuggestion({ data, advise }) {
   const { parsed, jsEditorRef } = useAppContext();
 
   const used = parsed?.expression || {};
@@ -51,7 +25,7 @@ function QueryAdvise({ data, advise }) {
   if (advise.level < used.level) {
     suggestion = (
       <p>
-        You're using <Code>{used.method}</Code>, which falls under{' '}
+        You&apos;re using <Code>{used.method}</Code>, which falls under{' '}
         <Code>{messages[used.level].heading}</Code>. Upgrading to{' '}
         <Code>{advise.method}</Code> is recommended.
       </p>
@@ -67,8 +41,8 @@ function QueryAdvise({ data, advise }) {
     suggestion = (
       <p>
         You can unlock <Code>getByRole</Code> by adding the{' '}
-        <Code>type="text"</Code> attribute explicitly. Accessibility will
-        benefit from it.
+        <Code>type=&quot;text&quot;</Code> attribute explicitly. Accessibility
+        will benefit from it.
       </p>
     );
   } else if (
@@ -80,7 +54,7 @@ function QueryAdvise({ data, advise }) {
       <p>
         Awesome! This is great already! You could still make the query a bit
         more specific by adding the name option. This would require to add some
-        markup though, as your element isn't named properly.
+        markup though, as your element isn&apos;t named properly.
       </p>
     );
   } else if (
@@ -98,8 +72,9 @@ function QueryAdvise({ data, advise }) {
   } else if (used.level > 0) {
     suggestion = (
       <p>
-        This isn't great, but we can't do better with the current markup. Extend
-        your html to improve accessibility and unlock better queries.
+        This isn&apos;t great, but we can&apos;t do better with the current
+        markup. Extend your html to improve accessibility and unlock better
+        queries.
       </p>
     );
   } else {
@@ -129,4 +104,4 @@ function QueryAdvise({ data, advise }) {
   );
 }
 
-export default QueryAdvise;
+export default ResultSuggestion;

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useAppContext } from './Context.js';
+import { useAppContext } from './Context';
+import Scrollable from './Scrollable';
+import PreviewHint from './PreviewHint';
 import { getQueryAdvise } from '../lib';
 
-function HtmlPreview({ html }, forwardRef) {
+function Preview({ html }) {
   // Okay, listen up. `highlighted` can be a number of things, as I wanted to
   // keep a single variable to represent the state. This to reduce bug count
   // by creating out-of-sync states.
@@ -16,26 +18,20 @@ function HtmlPreview({ html }, forwardRef) {
   //    back to... true. Not to false! To indicate that we still want to use
   //    the mouse position to control the highlight.
   // 4. Once the mouse leaves the preview area, `highlighted` switches to false.
-  //    Indiating that the `parsed` element can be highlighted again.
+  //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
-  const { parsed, jsEditorRef } = useAppContext();
+  const [roles, setRoles] = useState([]);
+
+  const { parsed, jsEditorRef, htmlRoot, setHtmlRootRef } = useAppContext();
 
   const { advise } = getQueryAdvise({
-    root: forwardRef.current,
+    root: htmlRoot ? htmlRoot.firstChild : null,
     element: highlighted,
   });
 
-  const handleClick = (event) => {
-    if (event.target === forwardRef.current) {
-      return;
-    }
-
-    event.preventDefault();
-    const expression =
-      advise.expression ||
-      '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
-    jsEditorRef.current.setValue(expression);
-  };
+  useEffect(() => {
+    setRoles(Object.keys(parsed.roles || {}).sort());
+  }, [parsed.roles]);
 
   useEffect(() => {
     if (highlighted) {
@@ -52,13 +48,25 @@ function HtmlPreview({ html }, forwardRef) {
     return () => highlighted?.classList?.remove('highlight');
   }, [highlighted, parsed.targets]);
 
+  const handleClick = (event) => {
+    if (event.target === htmlRoot) {
+      return;
+    }
+
+    event.preventDefault();
+    const expression =
+      advise.expression ||
+      '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
+    jsEditorRef.current.setValue(expression);
+  };
+
   const handleMove = (event) => {
     const target = document.elementFromPoint(event.clientX, event.clientY);
     if (target === highlighted) {
       return;
     }
 
-    if (target === forwardRef.current) {
+    if (target === htmlRoot) {
       setHighlighted(true);
       return;
     }
@@ -68,31 +76,25 @@ function HtmlPreview({ html }, forwardRef) {
 
   return (
     <div
-      className="relative flex flex-col"
+      className="w-full h-full flex flex-col relative overflow-hidden"
       onMouseEnter={() => setHighlighted(true)}
       onMouseLeave={() => setHighlighted(false)}
     >
-      <div
-        className="preview flex-auto"
-        ref={forwardRef}
-        dangerouslySetInnerHTML={{ __html: html }}
-        onClick={handleClick}
-        onMouseMove={handleMove}
-      />
-      <div className="p-2 bg-gray-200 rounded text-gray-800 font-mono text-xs">
-        {advise.expression && `> ${advise.expression}`}
-
-        {!advise.expression && forwardRef.current && (
-          <>
-            <span className="font-bold">roles: </span>
-            {Object.keys(TestingLibraryDom.getRoles(forwardRef.current))
-              .sort()
-              .join(', ')}
-          </>
-        )}
+      <div className="flex-auto relative overflow-hidden h-1">
+        <Scrollable>
+          <div
+            className="preview"
+            ref={setHtmlRootRef}
+            onClick={handleClick}
+            onMouseMove={handleMove}
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        </Scrollable>
       </div>
+
+      <PreviewHint roles={roles} advise={advise} />
     </div>
   );
 }
 
-export default React.forwardRef(HtmlPreview);
+export default Preview;

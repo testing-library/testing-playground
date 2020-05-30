@@ -7,8 +7,13 @@ import { queries as supportedQueries } from './constants';
 // It works when running parcel in dev mode, but not in build mode. Seems to
 // have something to do with a core-js Map polyfill being used?
 // It's now loaded from unpkg.com via ./index.html
-// import {getQueriesForElement, queries, logDOM} from "@testing-library/dom";
-const { getQueriesForElement, queries, logDOM } = window.TestingLibraryDom;
+//import { getQueriesForElement, queries, logDOM } from '@testing-library/dom';
+const {
+  getQueriesForElement,
+  queries,
+  getRoles,
+  logDOM,
+} = window.TestingLibraryDom;
 
 const debug = (element, maxLength, options) =>
   Array.isArray(element)
@@ -48,8 +53,8 @@ function getLastExpression(code) {
   const minified = (code || '')
     // remove comments
     .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
-    // remove all white space
-    .replace(/\s/g, '');
+    // remove all white space outside quotes
+    .replace(/[ ]+(?=[^"'`]*(?:["'`][^"'`]*["'`][^"'`]*)*$)/g, '');
 
   const start = supportedQueries.reduce(
     (idx, qry) => Math.max(idx, minified.lastIndexOf(qry.method)),
@@ -94,7 +99,8 @@ function getLastExpression(code) {
 }
 
 let id = 0;
-function parse(root, string) {
+
+function parse({ htmlRoot, js }) {
   let result = {
     // increment the id every time we call parse, so we can use
     // it for react keys, when iterating over targets
@@ -103,11 +109,11 @@ function parse(root, string) {
 
   try {
     const context = Object.assign({}, queries, {
-      screen: getScreen(root),
-      container: root,
+      screen: getScreen(htmlRoot),
+      container: htmlRoot,
     });
 
-    result.code = scopedEval(context, string);
+    result.code = scopedEval(context, js);
   } catch (e) {
     result.error = e.message.split('\n')[0];
     result.errorBody = e.message.split('\n').slice(1).join('\n').trim();
@@ -119,13 +125,15 @@ function parse(root, string) {
 
   result.target = result.targets[0];
 
-  result.expression = getLastExpression(string);
+  result.expression = getLastExpression(js);
   result.text = prettyFormat(result.code, {
     plugins: [
       prettyFormat.plugins.DOMElement,
       prettyFormat.plugins.DOMCollection,
     ],
   });
+
+  result.roles = getRoles(htmlRoot);
 
   return result;
 }

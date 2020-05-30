@@ -10,8 +10,8 @@ const headerLinks = [
 
 function Header() {
   return (
-    <div className="w-100 h-16">
-      <nav className="flex items-center justify-between bg-gray-900 h-16 px-8 text-white fixed z-10 top-0 w-full">
+    <nav className="text-white w-full h-20 md:h-16">
+      <div className="flex items-center justify-between bg-gray-900 px-8 h-10 md:h-16">
         <div className="flex items-center flex-shrink-0 text-white">
           <a className="title" href="/">
             <h1 className="font-light text-xl tracking-tight flex space-x-4 items-center justify-start">
@@ -21,31 +21,36 @@ function Header() {
           </a>
         </div>
 
-        <div>
+        <div className="flex items-center space-x-8">
           <a
             href="https://github.com/smeijer/testing-playground"
             className="hover:underline"
-            target="_blank"
           >
             GitHub
           </a>
-        </div>
 
-        <div className="flex space-x-8">
+          <div className="border-r border-gray-600 mx-4 h-8 hidden md:block" />
+
           {headerLinks.map((x) => (
             <a
-              className="hover:underline"
+              className="hover:underline hidden md:block"
               key={x.title}
               href={x.url}
-              target="_blank"
-              rel="noopener noreferrer"
             >
               {x.title}
             </a>
           ))}
         </div>
-      </nav>
-    </div>
+      </div>
+
+      <div className="flex justify-between sm:justify-end items-center bg-gray-800 px-8 h-10 md:hidden space-x-8">
+        {headerLinks.map((x) => (
+          <a className="hover:underline truncate" key={x.title} href={x.url}>
+            {x.title}
+          </a>
+        ))}
+      </div>
+    </nav>
   );
 }
 
