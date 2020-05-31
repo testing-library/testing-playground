@@ -98,14 +98,8 @@ function getLastExpression(code) {
   };
 }
 
-let id = 0;
-
 function parse({ htmlRoot, js }) {
-  let result = {
-    // increment the id every time we call parse, so we can use
-    // it for react keys, when iterating over targets
-    id: ++id,
-  };
+  let result = {};
 
   try {
     const context = Object.assign({}, queries, {
@@ -138,6 +132,4 @@ function parse({ htmlRoot, js }) {
   return result;
 }
 
-export default {
-  parse,
-};
+export default { parse };
