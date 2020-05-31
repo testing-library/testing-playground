@@ -72,7 +72,7 @@ function load() {
 function updateTitle(text) {
   const title = document.title.split(':')[0];
 
-  if (!text || text.length === 0) {
+  if (!text || typeof text !== 'string' || text.length === 0) {
     document.title = title;
     return;
   }
