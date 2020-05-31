@@ -14,14 +14,6 @@ import MarkupEditor from './MarkupEditor';
 
 const savedState = state.load();
 
-const styles = {
-  offscreen: {
-    position: 'absolute',
-    left: -300,
-    width: 100,
-  },
-};
-
 const SUPPORTED_PANES = {
   markup: true,
   preview: true,
@@ -33,7 +25,7 @@ const SUPPORTED_PANES = {
 function Embedded() {
   const [html, setHtml] = useState(savedState.markup || initialValues.html);
   const [js, setJs] = useState(savedState.query || initialValues.js);
-  const { setParsed, htmlRoot } = useAppContext();
+  const { setParsed } = useAppContext();
 
   const location = useLocation();
   const params = queryString.parse(location.search);
@@ -58,16 +50,12 @@ function Embedded() {
       : 'grid-cols-1';
 
   useEffect(() => {
-    if (!htmlRoot) {
-      return;
-    }
-
-    const parsed = parser.parse({ htmlRoot, js });
+    const parsed = parser.parse({ markup: html, query: js });
     setParsed(parsed);
 
     state.save({ markup: html, query: js });
     state.updateTitle(parsed.expression?.expression);
-  }, [html, js, htmlRoot]);
+  }, [html, js]);
 
   useEffect(() => {
     document.body.classList.add('embedded');
@@ -78,13 +66,6 @@ function Embedded() {
     <div
       className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
     >
-      {/*the markup preview must always be rendered!*/}
-      {!panes.includes('preview') && (
-        <div style={styles.offscreen}>
-          <Preview html={html} />
-        </div>
-      )}
-
       {panes.map((area) => {
         switch (area) {
           case 'preview':
