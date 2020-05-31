@@ -20,8 +20,9 @@ function initPlaygrounds() {
       markup = playground.content
         .querySelector('script[type="text/html"]')
         ?.innerText.trim();
+
       query = playground.content
-        .querySelector('script[type="text/javascript"]')
+        .querySelector('script[type="text/javascript"], script:not([type])')
         ?.innerText.trim();
 
       const compressed = compress({ markup, query });
