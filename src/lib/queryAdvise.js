@@ -2,7 +2,7 @@ import { messages, queries } from '../constants';
 import { getExpression } from './getExpression';
 import { computeAccessibleName, getRole } from 'dom-accessibility-api';
 
-export function getData({ root, element }) {
+export function getData({ rootNode, element }) {
   const type = element.getAttribute('type');
   const tagName = element.tagName;
 
@@ -12,7 +12,7 @@ export function getData({ root, element }) {
     .replace(/\s/g, '')
     .replace(/"/g, '\\"');
 
-  const labelElem = id ? root.querySelector(`[for="${id}"]`) : null;
+  const labelElem = id ? rootNode.querySelector(`[for="${id}"]`) : null;
   const labelText = labelElem ? labelElem.innerText : null;
 
   return {
@@ -35,29 +35,29 @@ export function getData({ root, element }) {
   };
 }
 
-export function getQueryAdvise({ root, element }) {
-  if (!root || element?.nodeType !== Node.ELEMENT_NODE) {
-    return { data: {}, advise: {} };
+export function getQueryAdvise({ rootNode, element }) {
+  if (!rootNode || element?.nodeType !== Node.ELEMENT_NODE) {
+    return { data: {}, suggestion: {} };
   }
 
-  const data = getData({ root, element });
+  const data = getData({ rootNode, element });
   const query = queries.find(({ method }) => getExpression({ method, data }));
 
   if (!query) {
     return {
       level: 3,
       expression: 'container.querySelector(…)',
-      advise: {},
+      suggestion: {},
       data,
       ...messages[3],
     };
   }
 
   const expression = getExpression({ method: query.method, data });
-  const advise = { expression, ...query, ...messages[query.level] };
+  const suggestion = { expression, ...query, ...messages[query.level] };
 
   return {
     data,
-    advise,
+    suggestion,
   };
 }

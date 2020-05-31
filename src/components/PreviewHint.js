@@ -1,9 +1,9 @@
 import React from 'react';
 import Expandable from './Expandable';
 
-function PreviewHint({ roles, advise }) {
-  const expression = advise.expression ? (
-    `> ${advise.expression}`
+function PreviewHint({ roles, suggestion }) {
+  const expression = suggestion.expression ? (
+    `> ${suggestion.expression}`
   ) : (
     <>
       <span className="font-bold">accessible roles: </span>

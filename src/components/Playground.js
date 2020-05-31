@@ -16,19 +16,15 @@ function Playground() {
   const [html, setHtml] = useState(savedState.markup || initialValues.html);
   const [js, setJs] = useState(savedState.query || initialValues.js);
 
-  const { setParsed, htmlRoot } = useAppContext();
+  const { setParsed } = useAppContext();
 
   useEffect(() => {
-    if (!htmlRoot) {
-      return;
-    }
-
-    const parsed = parser.parse({ htmlRoot, js });
+    const parsed = parser.parse({ markup: html, query: js });
     setParsed(parsed);
 
     state.save({ markup: html, query: js });
     state.updateTitle(parsed.expression?.expression);
-  }, [htmlRoot, html, js]);
+  }, [html, js]);
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
