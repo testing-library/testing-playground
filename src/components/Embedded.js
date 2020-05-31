@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
+import usePlayground from '../hooks/usePlayground';
 import { initialValues } from '../constants';
-import parser from '../parser';
 import state from '../lib/state';
 
-import { useAppContext } from './Context';
 import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
@@ -23,9 +22,15 @@ const SUPPORTED_PANES = {
 
 // TODO: we should support readonly mode
 function Embedded() {
-  const [html, setHtml] = useState(savedState.markup || initialValues.html);
-  const [js, setJs] = useState(savedState.query || initialValues.js);
-  const { setParsed } = useAppContext();
+  const [query, setQuery, markup, setMarkup, parsed] = usePlayground({
+    initialMarkup: initialValues.html || savedState.markup,
+    initialQuery: initialValues.js || savedState.js,
+  });
+
+  useEffect(() => {
+    state.save({ markup, query });
+    state.updateTitle(parsed?.expression?.expression);
+  }, [markup, query]);
 
   const location = useLocation();
   const params = queryString.parse(location.search);
@@ -50,14 +55,6 @@ function Embedded() {
       : 'grid-cols-1';
 
   useEffect(() => {
-    const parsed = parser.parse({ markup: html, query: js });
-    setParsed(parsed);
-
-    state.save({ markup: html, query: js });
-    state.updateTitle(parsed.expression?.expression);
-  }, [html, js]);
-
-  useEffect(() => {
     document.body.classList.add('embedded');
     return () => document.body.classList.remove('embedded');
   }, []);
@@ -69,13 +66,19 @@ function Embedded() {
       {panes.map((area) => {
         switch (area) {
           case 'preview':
-            return <Preview key={area} html={html} />;
+            return <Preview key={area} html={markup} />;
           case 'markup':
             return (
-              <MarkupEditor key={area} onChange={setHtml} initialValue={html} />
+              <MarkupEditor
+                key={area}
+                onChange={setMarkup}
+                initialValue={markup}
+              />
             );
           case 'query':
-            return <Query key={area} initialValue={js} onChange={setJs} />;
+            return (
+              <Query key={area} initialValue={query} onChange={setQuery} />
+            );
           case 'result':
             return <Result key={area} />;
           default:
