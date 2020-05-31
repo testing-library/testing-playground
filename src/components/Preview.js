@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAppContext } from './Context';
+import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import { getQueryAdvise } from '../lib';
@@ -25,7 +25,7 @@ function Preview() {
   //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
   const [roles, setRoles] = useState([]);
-  const { parsed, jsEditorRef } = useAppContext();
+  const { state, dispatch } = usePlayground();
   const htmlRoot = useRef();
 
   const { suggestion } = getQueryAdvise({
@@ -36,12 +36,12 @@ function Preview() {
   // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
 
   useEffect(() => {
-    setRoles(Object.keys(parsed.accessibleRoles || {}).sort());
-  }, [parsed.accessibleRoles]);
+    setRoles(Object.keys(state.result.accessibleRoles || {}).sort());
+  }, [state.result.accessibleRoles]);
 
   useEffect(() => {
     if (highlighted) {
-      parsed.elements?.forEach((el) => {
+      state.result.elements?.forEach((el) => {
         const target = selectByCssPath(htmlRoot.current, el.cssPath);
         target?.classList.remove('highlight');
       });
@@ -50,7 +50,7 @@ function Preview() {
       highlighted?.classList?.remove('highlight');
 
       if (highlighted === false) {
-        parsed.elements?.forEach((el) => {
+        state.result.elements?.forEach((el) => {
           const target = selectByCssPath(htmlRoot.current, el.cssPath);
           target?.classList.add('highlight');
         });
@@ -58,7 +58,7 @@ function Preview() {
     }
 
     return () => highlighted?.classList?.remove('highlight');
-  }, [highlighted, parsed.elements]);
+  }, [highlighted, state.result.elements]);
 
   const handleClick = (event) => {
     if (event.target === htmlRoot.current) {
@@ -69,7 +69,7 @@ function Preview() {
     const expression =
       suggestion.expression ||
       '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
-    jsEditorRef.current.setValue(expression);
+    dispatch({ type: 'SET_QUERY', query: expression });
   };
 
   const handleMove = (event) => {
@@ -99,7 +99,7 @@ function Preview() {
             onClick={handleClick}
             onMouseMove={handleMove}
             ref={htmlRoot}
-            dangerouslySetInnerHTML={{ __html: parsed.markup }}
+            dangerouslySetInnerHTML={{ __html: state.markup }}
           />
         </Scrollable>
       </div>

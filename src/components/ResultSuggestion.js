@@ -1,6 +1,6 @@
 import React from 'react';
 import { messages } from '../constants';
-import { useAppContext } from './Context';
+import { usePlayground } from './Context';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -9,16 +9,16 @@ function Code({ children }) {
 }
 
 function ResultSuggestion({ data, suggestion }) {
-  const { parsed, jsEditorRef } = useAppContext();
+  const { state, dispatch } = usePlayground();
 
-  const used = parsed?.expression || {};
+  const used = state.result?.expression || {};
 
   const usingAdvisedMethod = suggestion.method === used.method;
   const hasNameArg = data.name && used.args?.[1]?.includes('name');
 
   const color = usingAdvisedMethod ? 'bg-green-600' : colors[suggestion.level];
 
-  const target = parsed.target || {};
+  const target = state.result.target || {};
 
   let message;
 
@@ -81,10 +81,6 @@ function ResultSuggestion({ data, suggestion }) {
     message = <p>This is great. Ship it!</p>;
   }
 
-  const handleClick = () => {
-    jsEditorRef.current.setValue(suggestion.expression);
-  };
-
   return (
     <div className="space-y-4 text-sm">
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
@@ -92,7 +88,12 @@ function ResultSuggestion({ data, suggestion }) {
         {suggestion.expression && (
           <div
             className="font-mono cursor-pointer text-xs"
-            onClick={handleClick}
+            onClick={() =>
+              dispatch({
+                type: 'SET_QUERY',
+                query: suggestion.expression,
+              })
+            }
           >
             &gt; {suggestion.expression}
             <br />

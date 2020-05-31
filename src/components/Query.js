@@ -1,10 +1,10 @@
 import React from 'react';
 import QueryEditor from './QueryEditor';
 import QueryOutput from './QueryOutput';
-import { useAppContext } from './Context';
+import { usePlayground } from './Context';
 
 function Query({ onChange, initialValue }) {
-  const { parsed } = useAppContext();
+  const { state } = usePlayground();
 
   return (
     <div className="relative h-full w-full flex flex-col">
@@ -12,7 +12,10 @@ function Query({ onChange, initialValue }) {
         <QueryEditor initialValue={initialValue} onChange={onChange} />
       </div>
 
-      <QueryOutput error={parsed.error?.message} result={parsed.formatted} />
+      <QueryOutput
+        error={state.result.error?.message}
+        result={state.result.formatted}
+      />
     </div>
   );
 }

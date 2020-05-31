@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppContext } from './Context';
+import { usePlayground } from './Context';
 import { getExpression, getFieldName } from '../lib';
 
 function Section({ children }) {
@@ -11,16 +11,16 @@ function Heading({ children }) {
 }
 
 function Field({ method, data }) {
-  const { jsEditorRef, parsed } = useAppContext();
+  const { state, dispatch } = usePlayground();
 
-  const isActive = parsed.expression?.method === method;
+  const isActive = state.result.expression?.method === method;
   const field = getFieldName(method);
   const value = data[field];
 
   const handleClick = value
     ? () => {
-        const expr = getExpression({ method, data });
-        jsEditorRef.current.setValue(expr);
+        const expression = getExpression({ method, data });
+        dispatch({ type: 'SET_QUERY', query: expression });
       }
     : undefined;
 

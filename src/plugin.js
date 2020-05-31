@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Embedded from './components/Embedded.js';
-import { AppContextProvider } from './components/Context';
+import { PlaygroundProvider } from './components/Context';
 import '../src/styles/app.pcss';
 
 async function initPlaygrounds() {
@@ -20,7 +20,7 @@ async function initPlaygrounds() {
         height: 300,
       }}
     >
-      <AppContextProvider htmlRoot={document.body}>
+      <PlaygroundProvider htmlRoot={document.body}>
         <Router>
           <Embedded
             mode="devtool"
@@ -28,7 +28,7 @@ async function initPlaygrounds() {
             initialValues={{ markup: '<div />', query: '// foo' }}
           />
         </Router>
-      </AppContextProvider>
+      </PlaygroundProvider>
     </div>,
     root,
   );
