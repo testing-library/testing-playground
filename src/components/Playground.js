@@ -12,12 +12,14 @@ import Query from './Query';
 const savedState = state.load();
 
 function Playground() {
-  const [query, setQuery, markup, setMarkup] = usePlayground({
+  const [query, setQuery, markup, setMarkup, parsed] = usePlayground({
     initialMarkup: initialValues.html || savedState.markup,
     initialQuery: initialValues.js || savedState.js,
   });
+
   useEffect(() => {
     state.save({ markup, query });
+    state.updateTitle(parsed?.expression?.expression);
   }, [markup, query]);
 
   return (

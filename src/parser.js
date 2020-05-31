@@ -1,6 +1,7 @@
 import prettyFormat from 'pretty-format';
-import { ensureArray } from './lib';
+import { ensureArray, getQueryAdvise } from './lib';
 import { queries as supportedQueries } from './constants';
+import cssPath from './lib/cssPath';
 
 // this is not the way I want it to be, but I can't get '@testing-library/dom'
 // to build with Parcel. Something with "Incompatible receiver, Map required".
@@ -22,16 +23,6 @@ const debug = (element, maxLength, options) =>
 
 function getScreen(root) {
   return getQueriesForElement(root, queries, { debug });
-}
-
-function scopedEval(context, expr) {
-  const evaluator = Function.apply(null, [
-    ...Object.keys(context),
-    'expr',
-    'return eval(expr)',
-  ]);
-
-  return evaluator.apply(null, [...Object.values(context), expr.trim()]);
 }
 
 function unQuote(string = '') {
@@ -98,42 +89,147 @@ function getLastExpression(code) {
   };
 }
 
-let id = 0;
-
-function parse({ htmlRoot, js }) {
-  let result = {
-    // increment the id every time we call parse, so we can use
-    // it for react keys, when iterating over targets
-    id: ++id,
-  };
-
-  try {
-    const context = Object.assign({}, queries, {
-      screen: getScreen(htmlRoot),
-      container: htmlRoot,
-    });
-
-    result.code = scopedEval(context, js);
-  } catch (e) {
-    result.error = e.message.split('\n')[0];
-    result.errorBody = e.message.split('\n').slice(1).join('\n').trim();
-  }
-
-  result.targets = ensureArray(result.code).filter(
-    (x) => x?.nodeType === Node.ELEMENT_NODE,
+function createSandbox({ markup }) {
+  // render the frame in a container, so we can set "display: none". If the
+  // hiding would be done in the frame itself, testing-library would mark the
+  // entire dom as being inaccessible. Now we don't have this problem :)
+  const container = document.createElement('div');
+  container.setAttribute(
+    'style',
+    'width: 1px; height: 1px; overflow: hidden; display: none;',
   );
 
-  result.target = result.targets[0];
+  const frame = document.createElement('iframe');
+  frame.setAttribute('security', 'restricted');
+  frame.setAttribute('scrolling', 'no');
+  frame.setAttribute('frameBorder', '0');
+  frame.setAttribute('allowTransparency', 'true');
+  frame.setAttribute(
+    'sandbox',
+    'allow-same-origin allow-scripts allow-popups allow-forms',
+  );
+  frame.setAttribute(
+    'style',
+    'width: 800px; height: 600px; top: 0; left: 0px; border: 3px solid red;',
+  );
+  container.appendChild(frame);
+  document.body.appendChild(container);
 
-  result.expression = getLastExpression(js);
-  result.text = prettyFormat(result.code, {
+  const sandbox = frame.contentDocument || frame.contentWindow.document;
+
+  const context = Object.assign({}, queries, {
+    screen: getScreen(sandbox.body),
+    container: sandbox.body,
+  });
+
+  const evaluator = Function.apply(null, [
+    ...Object.keys(context),
+    'expr',
+    'return eval(expr)',
+  ]);
+
+  const script = sandbox.createElement('script');
+  script.setAttribute('type', 'text/javascript');
+  script.innerHTML = `
+    window.exec = function exec(context, expr) {
+      const evaluator = ${evaluator};
+      
+      return evaluator.apply(null, [...Object.values(context), expr.trim()]);
+    }
+  `;
+
+  sandbox.head.appendChild(script);
+  sandbox.body.innerHTML = markup;
+
+  let body = markup;
+
+  return {
+    rootNode: sandbox.body,
+    ensureMarkup: (html) => {
+      if (body !== html) {
+        sandbox.body.innerHTML = html;
+        body = html;
+      }
+    },
+    eval: (script) => {
+      try {
+        return {
+          data: frame.contentWindow.exec(context, script),
+        };
+      } catch (e) {
+        const error = e.message.split('\n');
+
+        return {
+          error: {
+            message: error[0],
+            details: error.slice(1).join('\n').trim(),
+          },
+        };
+      }
+    },
+    destroy: () => document.body.removeChild(container),
+  };
+}
+
+const sandboxes = {};
+
+/**
+ * runInSandbox
+ *
+ * Create a sandbox in which the body element is populated with the
+ * provided html `markup`. The javascript `query` is injected into
+ * the document for evaluation.
+ *
+ * By providing a `cacheId`, the sandbox can be persisted. This
+ * allows one to reuse an instance, and thereby speed up successive
+ * queries.
+ */
+function runInSandbox({ markup, query, cacheId }) {
+  const sandbox = sandboxes[cacheId] || createSandbox({ markup });
+  sandbox.ensureMarkup(markup);
+
+  const result = sandbox.eval(query);
+  result.markup = markup;
+  result.query = query;
+
+  result.elements = ensureArray(result.data)
+    .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
+    .map((element) => {
+      const { suggestion, data } = getQueryAdvise({
+        rootNode: sandbox.rootNode,
+        element,
+      });
+
+      return {
+        suggestion,
+        data,
+        target: result.data,
+        cssPath: cssPath(result.data, true),
+      };
+    });
+
+  result.accessibleRoles = getRoles(sandbox.rootNode);
+
+  if (cacheId && !sandboxes[cacheId]) {
+    sandboxes[cacheId] = sandbox;
+  } else {
+    sandbox.destroy();
+  }
+
+  return result;
+}
+
+function parse({ markup, query, cacheId }) {
+  const result = runInSandbox({ markup, query, cacheId });
+
+  result.expression = getLastExpression(query);
+
+  result.formatted = prettyFormat(result.data, {
     plugins: [
       prettyFormat.plugins.DOMElement,
       prettyFormat.plugins.DOMCollection,
     ],
   });
-
-  result.roles = getRoles(htmlRoot);
 
   return result;
 }

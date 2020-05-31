@@ -11,13 +11,7 @@ import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
 
-const styles = {
-  offscreen: {
-    position: 'absolute',
-    left: -300,
-    width: 100,
-  },
-};
+const savedState = state.load();
 
 const SUPPORTED_PANES = {
   markup: true,
@@ -26,16 +20,16 @@ const SUPPORTED_PANES = {
   result: true,
 };
 
-const savedState = state.load();
-
 // TODO: we should support readonly mode
 function Embedded() {
-  const [query, setQuery, markup, setMarkup] = usePlayground({
+  const [query, setQuery, markup, setMarkup, parsed] = usePlayground({
     initialMarkup: initialValues.html || savedState.markup,
     initialQuery: initialValues.js || savedState.js,
   });
+
   useEffect(() => {
     state.save({ markup, query });
+    state.updateTitle(parsed?.expression?.expression);
   }, [markup, query]);
 
   const location = useLocation();
@@ -69,13 +63,6 @@ function Embedded() {
     <div
       className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
     >
-      {/*the markup preview must always be rendered!*/}
-      {!panes.includes('preview') && (
-        <div style={styles.offscreen}>
-          <Preview html={markup} />
-        </div>
-      )}
-
       {panes.map((area) => {
         switch (area) {
           case 'preview':

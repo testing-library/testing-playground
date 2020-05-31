@@ -12,7 +12,7 @@ function Query({ onChange, initialValue }) {
         <QueryEditor initialValue={initialValue} onChange={onChange} />
       </div>
 
-      <QueryOutput error={parsed.error} result={parsed.text} />
+      <QueryOutput error={parsed.error?.message} result={parsed.formatted} />
     </div>
   );
 }

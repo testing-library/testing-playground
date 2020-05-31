@@ -25,10 +25,7 @@ function handler(event, context, callback) {
     query,
   })}`;
 
-  const oembedSearch = queryString.stringify({
-    url: frameSrc,
-    format: 'json',
-  });
+  const oembedSearch = queryString.stringify({ url: frameSrc });
 
   const oembedLink = [
     `<link rel="alternate" type="application/json+oembed" href="${host}/oembed?${oembedSearch}" title="Testing Playground" />`,
@@ -42,7 +39,7 @@ function handler(event, context, callback) {
 
   return callback(null, {
     statusCode: 200,
-    body: body,
+    body,
     headers: {
       'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=300',
       'Content-Type': 'text/html; charset=UTF-8',
