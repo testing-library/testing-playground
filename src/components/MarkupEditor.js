@@ -7,7 +7,8 @@ function MarkupEditor() {
 
   const onLoad = (editor) => dispatch({ type: 'SET_MARKUP_EDITOR', editor });
 
-  const onChange = (markup) => dispatch({ type: 'SET_MARKUP', markup, updateEditor: false });
+  const onChange = (markup) =>
+    dispatch({ type: 'SET_MARKUP', markup, updateEditor: false });
 
   return (
     <div className="h-full w-full flex flex-col">
