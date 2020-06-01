@@ -7,11 +7,12 @@
     "start": "run-s start:client",
     "start:client": "parcel src/index.html --out-dir dist/client",
     "start:embed": "parcel src/embed.html --open",
-    "build": "run-s clean build:client build:server",
+    "build": "run-s clean build:client build:server build:sw",
     "build:client": "parcel build src/index.html src/embed.js --out-dir dist/client",
     "postbuild:client": "mkdir -p dist/client/public && cp _redirects dist/client/_redirects && cp public/favicon.ico dist/client/favicon.ico && cp public/android-chrome-512x512.png dist/client/public/icon.png && cp -r .well-known dist/client/.well-known",
     "build:server": "cp -r src/lambda/ dist/server",
     "postbuild:server": "mkdir -p dist/server/server && mv dist/client/index.html dist/server/server/",
+    "build:sw": "workbox generateSW",
     "lint": "eslint . --quiet --fix",
     "clean": "rimraf ./dist ./.cache",
     "ci:lint": "eslint .",
@@ -55,7 +56,8 @@
     "postcss-modules": "^2.0.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
-    "tailwindcss": "^1.4.6"
+    "tailwindcss": "^1.4.6",
+    "workbox-cli": "^5.1.3"
   },
   "jest": {
     "verbose": true,

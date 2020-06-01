@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Testing Playground</title>
     <link rel="stylesheet" href="styles/app.pcss" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="../public/apple-touch-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="../public/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="../public/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../public/favicon-16x16.png">
-    <link rel="manifest" href="../public/site.webmanifest">
-    
-    <link rel="alternate" type="application/json+oembed"
-    href="http://testing-playground.com/oembed?url=http%3A%2F%2Ftesting-playground.com&format=json"
-    title="Testing Playground" />
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../public/apple-touch-icon.png"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="../public/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../public/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="../public/favicon-16x16.png"
+    />
+    <link rel="manifest" href="../public/site.webmanifest" />
+
+    <link
+      rel="alternate"
+      type="application/json+oembed"
+      href="http://testing-playground.com/oembed?url=http%3A%2F%2Ftesting-playground.com&format=json"
+      title="Testing Playground"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
     <meta name="theme-color" content="#ffffff" />
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166958850-1"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-166958850-1"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -29,27 +56,42 @@
       gtag('config', 'UA-166958850-1');
     </script>
     <noscript>You need JavaScript to run this app.</noscript>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="app"></div>
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('worker.js').then(function(registration) {
-            console.log('Worker registration successful', registration.scope);
-          }, function(err) {
-            console.log('Worker registration failed', err);
-          }).catch(function(err) {
-            console.log(err);
-          });
+        const sw = '/sw.js';
+        navigator.serviceWorker.register(sw).then((registration) => {
+          registration.onupdatefound = () => {
+            const installingWorker = registration.installing;
+            if (installingWorker == null) {
+              return;
+            }
+            installingWorker.onstatechange = () => {
+              if (installingWorker.state === 'installed') {
+                if (navigator.serviceWorker.controller) {
+                  console.log(
+                    'New content is available and will be used when all ' +
+                      'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
+                  );
+                } else {
+                  console.log('Content is cached for offline use.');
+                }
+              }
+            };
+          };
         });
       } else {
         console.log('Service Worker is not supported by browser.');
       }
     </script>
-    <script type="text/javascript" src="https://www.unpkg.com/@testing-library/dom@7.5.6/dist/@testing-library/dom.umd.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://www.unpkg.com/@testing-library/dom@7.5.6/dist/@testing-library/dom.umd.min.js"
+    ></script>
     <script type="text/javascript" src="index.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-</body>
+  </body>
 </html>
