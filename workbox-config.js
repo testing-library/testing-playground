@@ -14,6 +14,10 @@ const removePath = async (manifestEntries) => {
     if (entry.url.includes('index.html')) {
       entry.url = 'index.html';
     }
+    if (entry.url.includes('client/')) {
+      const replaced = entry.url.replace('client/', '');
+      entry.url = replaced;
+    }
     return entry;
   });
   return { manifest, warnings: [] };
