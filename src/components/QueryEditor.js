@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Editor from './Editor';
 import { usePlayground } from './Context';
 
@@ -7,7 +7,8 @@ function QueryEditor() {
 
   const onLoad = (editor) => dispatch({ type: 'SET_QUERY_EDITOR', editor });
 
-  const onChange = (query) => dispatch({ type: 'SET_QUERY', query, updateEditor: false });
+  const onChange = (query) =>
+    dispatch({ type: 'SET_QUERY', query, updateEditor: false });
 
   return (
     <Editor
