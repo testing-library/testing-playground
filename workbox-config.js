@@ -43,4 +43,5 @@ module.exports = {
   clientsClaim: true,
   skipWaiting: true,
   manifestTransforms: [removeRevisionTransform, removePath],
+  ignoreURLParametersMatching: [/.*/],
 };
