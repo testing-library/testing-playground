@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-
-import usePlayground from '../hooks/usePlayground';
-import { initialValues } from '../constants';
 import state from '../lib/state';
 
 import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
+import { PlaygroundProvider } from './Context';
 
-const savedState = state.load();
+function onStateChange({ markup, query, result }) {
+  state.save({ markup, query });
+  state.updateTitle(result?.expression?.expression);
+}
+
+const initialValues = state.load();
 
 const SUPPORTED_PANES = {
   markup: true,
@@ -22,16 +25,6 @@ const SUPPORTED_PANES = {
 
 // TODO: we should support readonly mode
 function Embedded() {
-  const [query, setQuery, markup, setMarkup, parsed] = usePlayground({
-    initialMarkup: initialValues.html || savedState.markup,
-    initialQuery: initialValues.js || savedState.js,
-  });
-
-  useEffect(() => {
-    state.save({ markup, query });
-    state.updateTitle(parsed?.expression?.expression);
-  }, [markup, query]);
-
   const location = useLocation();
   const params = queryString.parse(location.search);
 
@@ -60,32 +53,26 @@ function Embedded() {
   }, []);
 
   return (
-    <div
-      className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
-    >
-      {panes.map((area) => {
-        switch (area) {
-          case 'preview':
-            return <Preview key={area} html={markup} />;
-          case 'markup':
-            return (
-              <MarkupEditor
-                key={area}
-                onChange={setMarkup}
-                initialValue={markup}
-              />
-            );
-          case 'query':
-            return (
-              <Query key={area} initialValue={query} onChange={setQuery} />
-            );
-          case 'result':
-            return <Result key={area} />;
-          default:
-            return null;
-        }
-      })}
-    </div>
+    <PlaygroundProvider onChange={onStateChange} initialValues={initialValues}>
+      <div
+        className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
+      >
+        {panes.map((area) => {
+          switch (area) {
+            case 'preview':
+              return <Preview key={area} />;
+            case 'markup':
+              return <MarkupEditor key={area} />;
+            case 'query':
+              return <Query key={area} />;
+            case 'result':
+              return <Result key={area} />;
+            default:
+              return null;
+          }
+        })}
+      </div>
+    </PlaygroundProvider>
   );
 }
 

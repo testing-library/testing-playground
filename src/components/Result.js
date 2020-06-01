@@ -2,19 +2,22 @@ import React from 'react';
 import ErrorBox from './ErrorBox';
 import ResultQueries from './ResultQueries';
 import ResultSuggestion from './ResultSuggestion';
-import { useAppContext } from './Context';
+import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 
 function Result() {
-  const { parsed } = useAppContext();
+  const { state } = usePlayground();
 
-  if (parsed.error) {
+  if (state.result.error) {
     return (
-      <ErrorBox caption={parsed.error.message} body={parsed.error.details} />
+      <ErrorBox
+        caption={state.result.error.message}
+        body={state.result.error.details}
+      />
     );
   }
 
-  const { data, suggestion } = parsed.elements?.[0] || {};
+  const { data, suggestion } = state.result.elements?.[0] || {};
 
   if (!data || !suggestion) {
     return <div />;

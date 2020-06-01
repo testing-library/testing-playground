@@ -1,5 +1,5 @@
 export const initialValues = {
-  html: `
+  markup: `
 <label for="username">Username</label>
 <input 
   id="username"
@@ -14,7 +14,7 @@ export const initialValues = {
 <button name="signup" type="submit">signup</button>
 `.trim(),
 
-  js: `
+  query: `
 // Query your elements here, preferably with 
 // \`screen.getBy…(…)\`. If you can't use
 // screen use \`container.querySelector(…)\`.

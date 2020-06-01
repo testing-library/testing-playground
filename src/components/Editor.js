@@ -71,7 +71,7 @@ function getQueryHints(cm) {
   } else if (word.includes('.')) {
     // user is already one level deeper, entered `screen.get...`
     const [obj, method] = word.split('.');
-    const values = suggestions[obj]?.filter((x) =>
+    const values = (suggestions[obj] || []).filter((x) =>
       x.toLowerCase().includes(method),
     );
     list.push(...values);
@@ -142,10 +142,9 @@ const NON_TRIGGER_KEYS = {
   '222': 'quote',
 };
 
-function Editor({ onChange, mode, initialValue }, forwardRef) {
+function Editor({ onLoad, onChange, mode, initialValue }) {
   const elem = useRef();
-  const localRef = useRef();
-  const editor = forwardRef || localRef;
+  const editor = useRef();
 
   useEffect(() => {
     editor.current = CodeMirror.fromTextArea(
@@ -187,6 +186,8 @@ function Editor({ onChange, mode, initialValue }, forwardRef) {
         });
       }
     });
+
+    onLoad(editor.current);
   }, [editor.current, onChange]);
 
   return (
@@ -196,4 +197,4 @@ function Editor({ onChange, mode, initialValue }, forwardRef) {
   );
 }
 
-export default React.forwardRef(Editor);
+export default Editor;
