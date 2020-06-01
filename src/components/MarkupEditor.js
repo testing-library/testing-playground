@@ -1,19 +1,13 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Editor from './Editor';
 import { usePlayground } from './Context';
 
 function MarkupEditor() {
   const { dispatch, state } = usePlayground();
 
-  const onLoad = useCallback(
-    (editor) => dispatch({ type: 'SET_MARKUP_EDITOR', editor }),
-    [dispatch],
-  );
+  const onLoad = (editor) => dispatch({ type: 'SET_MARKUP_EDITOR', editor });
 
-  const onChange = useCallback(
-    (markup) => dispatch({ type: 'SET_MARKUP', markup, updateEditor: false }),
-    [dispatch],
-  );
+  const onChange = (markup) => dispatch({ type: 'SET_MARKUP', markup, updateEditor: false });
 
   return (
     <div className="h-full w-full flex flex-col">
