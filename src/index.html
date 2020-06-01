@@ -10,12 +10,13 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../public/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../public/favicon-16x16.png">
     <link rel="manifest" href="../public/site.webmanifest">
-
+    
     <link rel="alternate" type="application/json+oembed"
-          href="http://testing-playground.com/oembed?url=http%3A%2F%2Ftesting-playground.com&format=json"
-          title="Testing Playground" />
-
+    href="http://testing-playground.com/oembed?url=http%3A%2F%2Ftesting-playground.com&format=json"
+    title="Testing Playground" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta name="theme-color" content="#ffffff" />
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166958850-1"></script>
@@ -27,10 +28,26 @@
       gtag('js', new Date());
       gtag('config', 'UA-166958850-1');
     </script>
+    <noscript>You need JavaScript to run this app.</noscript>
 </head>
 
 <body>
     <div id="app"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('worker.js').then(function(registration) {
+            console.log('Worker registration successful', registration.scope);
+          }, function(err) {
+            console.log('Worker registration failed', err);
+          }).catch(function(err) {
+            console.log(err);
+          });
+        });
+      } else {
+        console.log('Service Worker is not supported by browser.');
+      }
+    </script>
     <script type="text/javascript" src="https://www.unpkg.com/@testing-library/dom@7.5.6/dist/@testing-library/dom.umd.min.js"></script>
     <script type="text/javascript" src="index.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
