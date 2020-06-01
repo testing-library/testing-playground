@@ -13,10 +13,23 @@ const removePath = async (manifestEntries) => {
   const manifest = manifestEntries.map((entry) => {
     if (entry.url.includes('index.html')) {
       entry.url = 'index.html';
-    }
-    if (entry.url.includes('client/')) {
+    } else if (entry.url.includes('webmanifest')) {
       const replaced = entry.url.replace('client/', '');
       entry.url = replaced;
+    } else if (
+      entry.url.includes('public') &&
+      !entry.url.includes('webmanifest')
+    ) {
+      const replaced = entry.url.replace('client/', '');
+      entry.url = replaced;
+    } else if (
+      entry.url.includes('client/') &&
+      !entry.url.includes('public') &&
+      !entry.url.includes('webmanifest')
+    ) {
+      const split = entry.url.split('/');
+      const filePath = split.pop();
+      entry.url = filePath;
     }
     return entry;
   });
