@@ -11,7 +11,7 @@ const removeRevisionTransform = async (manifestEntries) => {
 
 const removePath = async (manifestEntries) => {
   const manifest = manifestEntries.map((entry) => {
-    if (entry.includes('/')) {
+    if (entry.url.includes('/')) {
       const split = entry.split('/');
       const filename = split.pop();
       return filename;
