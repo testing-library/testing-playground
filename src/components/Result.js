@@ -2,32 +2,36 @@ import React from 'react';
 import ErrorBox from './ErrorBox';
 import ResultQueries from './ResultQueries';
 import ResultSuggestion from './ResultSuggestion';
-import { useAppContext } from './Context';
-import { getQueryAdvise } from '../lib';
+import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 
 function Result() {
-  const { parsed, htmlRoot } = useAppContext();
-  const element = parsed.target;
+  const { state } = usePlayground();
 
-  if (parsed.error) {
-    return <ErrorBox caption={parsed.error} body={parsed.errorBody} />;
+  if (state.result.error) {
+    return (
+      <ErrorBox
+        caption={state.result.error.message}
+        body={state.result.error.details}
+      />
+    );
   }
 
-  const { data, advise } = getQueryAdvise({
-    root: htmlRoot,
-    element,
-  });
+  const { data, suggestion } = state.result.elements?.[0] || {};
+
+  if (!data || !suggestion) {
+    return <div />;
+  }
 
   return (
     <div className="flex flex-col overflow-hidden w-full h-full">
       <div className="flex-none pb-4 border-b">
-        <ResultSuggestion data={data} advise={advise} />
+        <ResultSuggestion data={data} suggestion={suggestion} />
       </div>
 
       <div className="flex-auto">
         <Scrollable>
-          <ResultQueries data={data} advise={advise} />
+          <ResultQueries data={data} suggestion={suggestion} />
         </Scrollable>
       </div>
     </div>

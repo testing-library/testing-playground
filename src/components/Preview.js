@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useAppContext } from './Context';
+import React, { useState, useEffect, useRef } from 'react';
+import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import { getQueryAdvise } from '../lib';
 
-function Preview({ html }) {
+function selectByCssPath(rootNode, cssPath) {
+  return rootNode?.querySelector(cssPath.replace(/^body > /, ''));
+}
+
+function Preview() {
   // Okay, listen up. `highlighted` can be a number of things, as I wanted to
   // keep a single variable to represent the state. This to reduce bug count
   // by creating out-of-sync states.
@@ -21,43 +25,51 @@ function Preview({ html }) {
   //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
   const [roles, setRoles] = useState([]);
+  const { state, dispatch } = usePlayground();
+  const htmlRoot = useRef();
 
-  const { parsed, jsEditorRef, htmlRoot, setHtmlRootRef } = useAppContext();
-
-  const { advise } = getQueryAdvise({
-    root: htmlRoot ? htmlRoot.firstChild : null,
+  const { suggestion } = getQueryAdvise({
+    rootNode: htmlRoot.current ? htmlRoot.current.firstChild : null,
     element: highlighted,
   });
 
+  // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
+
   useEffect(() => {
-    setRoles(Object.keys(parsed.roles || {}).sort());
-  }, [parsed.roles]);
+    setRoles(Object.keys(state.result.accessibleRoles || {}).sort());
+  }, [state.result.accessibleRoles]);
 
   useEffect(() => {
     if (highlighted) {
-      parsed.targets?.forEach((el) => el.classList.remove('highlight'));
+      state.result.elements?.forEach((el) => {
+        const target = selectByCssPath(htmlRoot.current, el.cssPath);
+        target?.classList.remove('highlight');
+      });
       highlighted.classList?.add('highlight');
     } else {
       highlighted?.classList?.remove('highlight');
 
       if (highlighted === false) {
-        parsed.targets?.forEach((el) => el.classList.add('highlight'));
+        state.result.elements?.forEach((el) => {
+          const target = selectByCssPath(htmlRoot.current, el.cssPath);
+          target?.classList.add('highlight');
+        });
       }
     }
 
     return () => highlighted?.classList?.remove('highlight');
-  }, [highlighted, parsed.targets]);
+  }, [highlighted, state.result.elements]);
 
   const handleClick = (event) => {
-    if (event.target === htmlRoot) {
+    if (event.target === htmlRoot.current) {
       return;
     }
 
     event.preventDefault();
     const expression =
-      advise.expression ||
+      suggestion.expression ||
       '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
-    jsEditorRef.current.setValue(expression);
+    dispatch({ type: 'SET_QUERY', query: expression });
   };
 
   const handleMove = (event) => {
@@ -84,15 +96,15 @@ function Preview({ html }) {
         <Scrollable>
           <div
             className="preview"
-            ref={setHtmlRootRef}
             onClick={handleClick}
             onMouseMove={handleMove}
-            dangerouslySetInnerHTML={{ __html: html }}
+            ref={htmlRoot}
+            dangerouslySetInnerHTML={{ __html: state.markup }}
           />
         </Scrollable>
       </div>
 
-      <PreviewHint roles={roles} advise={advise} />
+      <PreviewHint roles={roles} suggestion={suggestion} />
     </div>
   );
 }

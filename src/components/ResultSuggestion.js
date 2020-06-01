@@ -1,6 +1,6 @@
 import React from 'react';
 import { messages } from '../constants';
-import { useAppContext } from './Context';
+import { usePlayground } from './Context';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -8,37 +8,37 @@ function Code({ children }) {
   return <span className="font-bold font-mono">{children}</span>;
 }
 
-function ResultSuggestion({ data, advise }) {
-  const { parsed, jsEditorRef } = useAppContext();
+function ResultSuggestion({ data, suggestion }) {
+  const { state, dispatch } = usePlayground();
 
-  const used = parsed?.expression || {};
+  const used = state.result?.expression || {};
 
-  const usingAdvisedMethod = advise.method === used.method;
+  const usingAdvisedMethod = suggestion.method === used.method;
   const hasNameArg = data.name && used.args?.[1]?.includes('name');
 
-  const color = usingAdvisedMethod ? 'bg-green-600' : colors[advise.level];
+  const color = usingAdvisedMethod ? 'bg-green-600' : colors[suggestion.level];
 
-  const target = parsed.target || {};
+  const target = state.result.target || {};
 
-  let suggestion;
+  let message;
 
-  if (advise.level < used.level) {
-    suggestion = (
+  if (suggestion.level < used.level) {
+    message = (
       <p>
         You&apos;re using <Code>{used.method}</Code>, which falls under{' '}
         <Code>{messages[used.level].heading}</Code>. Upgrading to{' '}
-        <Code>{advise.method}</Code> is recommended.
+        <Code>{suggestion.method}</Code> is recommended.
       </p>
     );
-  } else if (advise.level === 0 && advise.method !== used.method) {
-    suggestion = (
+  } else if (suggestion.level === 0 && suggestion.method !== used.method) {
+    message = (
       <p>
         Nice! <Code>{used.method}</Code> is a great selector! Using{' '}
-        <Code>{advise.method}</Code> would still be preferable though.
+        <Code>{suggestion.method}</Code> would still be preferable though.
       </p>
     );
   } else if (target.tagName === 'INPUT' && !target.getAttribute('type')) {
-    suggestion = (
+    message = (
       <p>
         You can unlock <Code>getByRole</Code> by adding the{' '}
         <Code>type=&quot;text&quot;</Code> attribute explicitly. Accessibility
@@ -46,11 +46,11 @@ function ResultSuggestion({ data, advise }) {
       </p>
     );
   } else if (
-    advise.level === 0 &&
-    advise.method === 'getByRole' &&
+    suggestion.level === 0 &&
+    suggestion.method === 'getByRole' &&
     !data.name
   ) {
-    suggestion = (
+    message = (
       <p>
         Awesome! This is great already! You could still make the query a bit
         more specific by adding the name option. This would require to add some
@@ -58,19 +58,19 @@ function ResultSuggestion({ data, advise }) {
       </p>
     );
   } else if (
-    advise.level === 0 &&
-    advise.method === 'getByRole' &&
+    suggestion.level === 0 &&
+    suggestion.method === 'getByRole' &&
     data.name &&
     !hasNameArg
   ) {
-    suggestion = (
+    message = (
       <p>
         There is one thing though. You could make the query a bit more specific
         by adding the name option.
       </p>
     );
   } else if (used.level > 0) {
-    suggestion = (
+    message = (
       <p>
         This isn&apos;t great, but we can&apos;t do better with the current
         markup. Extend your html to improve accessibility and unlock better
@@ -78,27 +78,29 @@ function ResultSuggestion({ data, advise }) {
       </p>
     );
   } else {
-    suggestion = <p>This is great. Ship it!</p>;
+    message = <p>This is great. Ship it!</p>;
   }
-
-  const handleClick = () => {
-    jsEditorRef.current.setValue(advise.expression);
-  };
 
   return (
     <div className="space-y-4 text-sm">
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
         <div className="font-bold text-xs">suggested query</div>
-        {advise.expression && (
+        {suggestion.expression && (
           <div
             className="font-mono cursor-pointer text-xs"
-            onClick={handleClick}
+            onClick={() =>
+              dispatch({
+                type: 'SET_QUERY',
+                query: suggestion.expression,
+              })
+            }
           >
-            &gt; {advise.expression}
+            &gt; {suggestion.expression}
+            <br />
           </div>
         )}
       </div>
-      <div className="min-h-8">{suggestion}</div>
+      <div className="min-h-8">{message}</div>
     </div>
   );
 }
