@@ -5,15 +5,9 @@ import { usePlayground } from './Context';
 function QueryEditor() {
   const { dispatch, state } = usePlayground();
 
-  const onLoad = useCallback(
-    (editor) => dispatch({ type: 'SET_QUERY_EDITOR', editor }),
-    [dispatch],
-  );
+  const onLoad = (editor) => dispatch({ type: 'SET_QUERY_EDITOR', editor });
 
-  const onChange = useCallback(
-    (query) => dispatch({ type: 'SET_QUERY', query, updateEditor: false }),
-    [dispatch],
-  );
+  const onChange = (query) => dispatch({ type: 'SET_QUERY', query, updateEditor: false });
 
   return (
     <Editor
