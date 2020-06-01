@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Testing Playground",
+  "short_name": "Testing Playground",
   "icons": [
     {
       "src": "../public/android-chrome-192x192.png",
