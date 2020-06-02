@@ -23,6 +23,7 @@
   "dependencies": {
     "codemirror": "5.54.0",
     "dom-accessibility-api": "^0.4.3",
+    "dompurify": "^2.0.11",
     "js-beautify": "^1.11.0",
     "lodash.debounce": "4.0.8",
     "lz-string": "^1.4.4",

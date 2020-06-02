@@ -3,6 +3,7 @@ import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import { getQueryAdvise } from '../lib';
+import DOMPurify from 'dompurify';
 
 function selectByCssPath(rootNode, cssPath) {
   return rootNode?.querySelector(cssPath.replace(/^body > /, ''));
@@ -99,7 +100,9 @@ function Preview() {
             onClick={handleClick}
             onMouseMove={handleMove}
             ref={htmlRoot}
-            dangerouslySetInnerHTML={{ __html: state.markup }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(state.markup),
+            }}
           />
         </Scrollable>
       </div>
