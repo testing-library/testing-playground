@@ -29,7 +29,7 @@ function Preview() {
   const htmlRoot = useRef();
 
   const { suggestion } = getQueryAdvise({
-    rootNode: htmlRoot.current ? htmlRoot.current.firstChild : null,
+    rootNode: htmlRoot,
     element: highlighted,
   });
 
