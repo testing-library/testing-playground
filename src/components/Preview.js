@@ -108,7 +108,9 @@ function Preview() {
       <PreviewHint roles={roles} suggestion={suggestion} />
     </div>
   ) : (
-    <AddHtml />
+    <div className="w-full h-full flex flex-col relative overflow-hidden">
+      <AddHtml />
+    </div>
   );
 }
 
