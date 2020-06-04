@@ -25,7 +25,7 @@ function Preview({ html }) {
   const { parsed, jsEditorRef, htmlRoot, setHtmlRootRef } = useAppContext();
 
   const { advise } = getQueryAdvise({
-    root: htmlRoot ? htmlRoot.firstChild : null,
+    root: htmlRoot,
     element: highlighted,
   });
 
