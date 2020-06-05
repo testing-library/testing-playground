@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
+import AddHtml from './AddHtml';
 import { getQueryAdvise } from '../lib';
 
 function selectByCssPath(rootNode, cssPath) {
@@ -29,7 +30,7 @@ function Preview() {
   const htmlRoot = useRef();
 
   const { suggestion } = getQueryAdvise({
-    rootNode: htmlRoot.current ? htmlRoot.current.firstChild : null,
+    rootNode: htmlRoot?.current,
     element: highlighted,
   });
 
@@ -86,7 +87,7 @@ function Preview() {
     setHighlighted(target);
   };
 
-  return (
+  return state.markup ? (
     <div
       className="w-full h-full flex flex-col relative overflow-hidden"
       onMouseEnter={() => setHighlighted(true)}
@@ -105,6 +106,10 @@ function Preview() {
       </div>
 
       <PreviewHint roles={roles} suggestion={suggestion} />
+    </div>
+  ) : (
+    <div className="w-full h-full flex flex-col relative overflow-hidden">
+      <AddHtml />
     </div>
   );
 }

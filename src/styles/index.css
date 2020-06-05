@@ -1,0 +1,7 @@
+/**
+ * Don't rename this file to .pcss, parcel 2 doesn't change the extension, and
+ * browers won't recognize the mime type. We keep using the correct extension
+ * for other files to enable proper syntax highlighting.
+ */
+@import './app.pcss';
+@import './codemirror.pcss';

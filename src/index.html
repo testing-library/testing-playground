@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Testing Playground</title>
-    <link rel="stylesheet" href="styles/app.pcss" />
+    <link rel="stylesheet" href="styles/index.css" />
 
     <link
       rel="apple-touch-icon"
@@ -60,37 +60,11 @@
 
   <body>
     <div id="app"></div>
-    <script>
-      if ('serviceWorker' in navigator) {
-        const sw = '/sw.js';
-        navigator.serviceWorker.register(sw).then((registration) => {
-          registration.onupdatefound = () => {
-            const installingWorker = registration.installing;
-            if (installingWorker == null) {
-              return;
-            }
-            installingWorker.onstatechange = () => {
-              if (installingWorker.state === 'installed') {
-                if (navigator.serviceWorker.controller) {
-                  console.log(
-                    'New content is available and will be used when all ' +
-                      'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
-                  );
-                } else {
-                  console.log('Content is cached for offline use.');
-                }
-              }
-            };
-          };
-        });
-      } else {
-        console.log('Service Worker is not supported by browser.');
-      }
-    </script>
     <script
       type="text/javascript"
       src="https://www.unpkg.com/@testing-library/dom@7.5.6/dist/@testing-library/dom.umd.min.js"
     ></script>
+    <script type="text/javascript" src="service-worker.js"></script>
     <script type="text/javascript" src="index.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>

@@ -3,18 +3,12 @@ import { ensureArray, getQueryAdvise } from './lib';
 import { queries as supportedQueries } from './constants';
 import cssPath from './lib/cssPath';
 
-// this is not the way I want it to be, but I can't get '@testing-library/dom'
-// to build with Parcel. Something with "Incompatible receiver, Map required".
-// It works when running parcel in dev mode, but not in build mode. Seems to
-// have something to do with a core-js Map polyfill being used?
-// It's now loaded from unpkg.com via ./index.html
-//import { getQueriesForElement, queries, logDOM } from '@testing-library/dom';
-const {
+import {
   getQueriesForElement,
   queries,
   getRoles,
   logDOM,
-} = window.TestingLibraryDom;
+} from '@testing-library/dom';
 
 const debug = (element, maxLength, options) =>
   Array.isArray(element)
