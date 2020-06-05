@@ -1,4 +1,3 @@
-/* global TestingLibraryDom */
 import React, { useRef, useEffect } from 'react';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/xml/xml';
@@ -6,6 +5,7 @@ import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/hint/show-hint';
+import { queries } from '@testing-library/dom';
 
 import CodeMirror from 'codemirror';
 import debounce from 'lodash/debounce';
@@ -36,7 +36,7 @@ const options = {
 };
 
 const suggestions = {
-  screen: Object.keys(TestingLibraryDom.queries)
+  screen: Object.keys(queries)
     .filter((x) => x.startsWith('getBy'))
     .sort(),
   container: ['querySelector', 'querySelectorAll'],
