@@ -45,13 +45,13 @@ function reducer(state, action) {
 
 export function PlaygroundProvider(props) {
   let { initialValues: { markup, query } = {} } = props;
-  const result = parser.parse({ markup, query, cacheId: props.instanceId });
 
   if (!markup && !query) {
     markup = defaultValues.markup;
     query = defaultValues.query;
   }
 
+  const result = parser.parse({ markup, query, cacheId: props.instanceId });
   const [state, dispatch] = useReducer(reducer, { result, markup, query });
 
   useEffect(() => {
