@@ -20,7 +20,7 @@
     "prettier": "prettier . --write"
   },
   "dependencies": {
-    "@testing-library/dom": "^7.5.7",
+    "@testing-library/dom": "^7.10.0",
     "codemirror": "5.54.0",
     "dom-accessibility-api": "^0.4.3",
     "js-beautify": "^1.11.0",
