@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import * as TestingLibraryDom from '@testing-library/dom';
 
 window.TestingLibraryDom = TestingLibraryDom;
