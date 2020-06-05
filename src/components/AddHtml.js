@@ -1,5 +1,5 @@
 import React from 'react';
-import icon from '../../public/code_thinking.png';
+import icon from 'url:~/public/code_thinking.png';
 
 function AddHtml() {
   return (
