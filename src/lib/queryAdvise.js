@@ -16,10 +16,11 @@ export function getData({ rootNode, element }) {
   const labelText = labelElem ? labelElem.innerText : null;
 
   return {
-    role:
-      element.getAttribute('role') ||
-      // input's require a type for the role
-      (tagName === 'INPUT' && type !== 'text' ? '' : getRole(element)),
+    role: element.getAttribute('aria-hidden')
+      ? undefined
+      : element.getAttribute('role') ||
+        // input's require a type for the role
+        (tagName === 'INPUT' && type !== 'text' ? '' : getRole(element)),
     name: computeAccessibleName(element),
     tagName: tagName,
     type: type,
