@@ -18,4 +18,4 @@ function PreviewHint({ roles, suggestion }) {
   );
 }
 
-export default PreviewHint;
+export default React.memo(PreviewHint);
