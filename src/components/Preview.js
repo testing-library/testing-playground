@@ -8,7 +8,7 @@ function selectByCssPath(rootNode, cssPath) {
   return rootNode?.querySelector(cssPath.replace(/^body > /, ''));
 }
 
-function Preview({ markup, result, dispatch }) {
+function Preview({ markup, accessibleRoles, elements, dispatch }) {
   // Okay, listen up. `highlighted` can be a number of things, as I wanted to
   // keep a single variable to represent the state. This to reduce bug count
   // by creating out-of-sync states.
@@ -35,12 +35,12 @@ function Preview({ markup, result, dispatch }) {
   // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
 
   useEffect(() => {
-    setRoles(Object.keys(result.accessibleRoles || {}).sort());
-  }, [result.accessibleRoles]);
+    setRoles(Object.keys(accessibleRoles || {}).sort());
+  }, [accessibleRoles]);
 
   useEffect(() => {
     if (highlighted) {
-      result.elements?.forEach((el) => {
+      elements?.forEach((el) => {
         const target = selectByCssPath(htmlRoot.current, el.cssPath);
         target?.classList.remove('highlight');
       });
@@ -49,7 +49,7 @@ function Preview({ markup, result, dispatch }) {
       highlighted?.classList?.remove('highlight');
 
       if (highlighted === false) {
-        result.elements?.forEach((el) => {
+        elements?.forEach((el) => {
           const target = selectByCssPath(htmlRoot.current, el.cssPath);
           target?.classList.add('highlight');
         });
@@ -57,7 +57,7 @@ function Preview({ markup, result, dispatch }) {
     }
 
     return () => highlighted?.classList?.remove('highlight');
-  }, [highlighted, result.elements]);
+  }, [highlighted, elements]);
 
   const handleClick = (event) => {
     if (event.target === htmlRoot.current) {
@@ -112,4 +112,4 @@ function Preview({ markup, result, dispatch }) {
   );
 }
 
-export default Preview;
+export default React.memo(Preview);

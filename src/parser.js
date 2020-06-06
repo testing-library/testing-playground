@@ -2,6 +2,7 @@ import prettyFormat from 'pretty-format';
 import { ensureArray, getQueryAdvise } from './lib';
 import { queries as supportedQueries } from './constants';
 import cssPath from './lib/cssPath';
+import deepEqual from './lib/deepEqual';
 
 import {
   getQueriesForElement,
@@ -213,7 +214,7 @@ function runInSandbox({ markup, query, cacheId }) {
   return result;
 }
 
-function parse({ markup, query, cacheId }) {
+function parse({ markup, query, cacheId, prevResult }) {
   const result = runInSandbox({ markup, query, cacheId });
 
   result.expression = getLastExpression(query);
@@ -224,6 +225,20 @@ function parse({ markup, query, cacheId }) {
       prettyFormat.plugins.DOMCollection,
     ],
   });
+
+  if (prevResult) {
+    const keys = Object.keys(result);
+
+    for (let key of keys) {
+      if (deepEqual(result[key], prevResult[key])) {
+        result[key] = prevResult[key];
+      }
+    }
+
+    if (keys.every((key) => result[key] === prevResult[key])) {
+      return prevResult;
+    }
+  }
 
   return result;
 }

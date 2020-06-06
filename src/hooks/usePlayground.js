@@ -16,7 +16,11 @@ function reducer(state, action) {
       return {
         ...state,
         markup: action.markup,
-        result: parser.parse({ markup: action.markup, query: state.query }),
+        result: parser.parse({
+          markup: action.markup,
+          query: state.query,
+          prevResult: state.result,
+        }),
       };
     }
 
@@ -32,7 +36,11 @@ function reducer(state, action) {
       return {
         ...state,
         setQuery: action.query,
-        result: parser.parse({ markup: state.markup, query: action.query }),
+        result: parser.parse({
+          markup: state.markup,
+          query: action.query,
+          prevResult: state.result,
+        }),
       };
     }
 

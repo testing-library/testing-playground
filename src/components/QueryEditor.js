@@ -22,4 +22,4 @@ function QueryEditor({ query, dispatch }) {
   );
 }
 
-export default QueryEditor;
+export default React.memo(QueryEditor);

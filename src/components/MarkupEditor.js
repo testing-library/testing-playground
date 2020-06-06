@@ -26,4 +26,4 @@ function MarkupEditor({ markup, dispatch }) {
   );
 }
 
-export default MarkupEditor;
+export default React.memo(MarkupEditor);

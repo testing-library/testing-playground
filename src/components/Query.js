@@ -14,4 +14,4 @@ function Query({ query, result, dispatch }) {
   );
 }
 
-export default Query;
+export default React.memo(Query);

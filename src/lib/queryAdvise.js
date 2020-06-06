@@ -35,9 +35,10 @@ export function getData({ rootNode, element }) {
   };
 }
 
+const emptyResult = { data: {}, suggestion: {} };
 export function getQueryAdvise({ rootNode, element }) {
   if (!rootNode || element?.nodeType !== Node.ELEMENT_NODE) {
-    return { data: {}, suggestion: {} };
+    return emptyResult;
   }
 
   const data = getData({ rootNode, element });
@@ -47,7 +48,7 @@ export function getQueryAdvise({ rootNode, element }) {
     return {
       level: 3,
       expression: 'container.querySelector(…)',
-      suggestion: {},
+      suggestion: emptyResult.suggestion,
       data,
       ...messages[3],
     };

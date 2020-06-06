@@ -12,4 +12,4 @@ function QueryOutput({ error, result }) {
   );
 }
 
-export default QueryOutput;
+export default React.memo(QueryOutput);

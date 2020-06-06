@@ -9,7 +9,7 @@ function Heading({ children }) {
   return <h3 className="font-bold text-xs">{children}</h3>;
 }
 
-function Field({ method, data, dispatch, active }) {
+const Field = React.memo(function Field({ method, data, dispatch, active }) {
   const field = getFieldName(method);
   const value = data[field];
 
@@ -32,7 +32,7 @@ function Field({ method, data, dispatch, active }) {
       </div>
     </div>
   );
-}
+});
 
 // for inputs, the role will only work if there is also a type attribute
 function ResultQueries({ data, dispatch, activeMethod }) {
@@ -103,4 +103,4 @@ function ResultQueries({ data, dispatch, activeMethod }) {
   );
 }
 
-export default ResultQueries;
+export default React.memo(ResultQueries);
