@@ -1,7 +1,6 @@
-import React, { useContext, useReducer, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import parser from '../parser';
 import { initialValues as defaultValues } from '../constants';
-export const AppContext = React.createContext();
 
 function reducer(state, action) {
   switch (action.type) {
@@ -43,26 +42,24 @@ function reducer(state, action) {
   }
 }
 
-export function PlaygroundProvider(props) {
-  let { initialValues: { markup, query } = {} } = props;
+function usePlayground(props) {
+  let { markup, query, onChange, instanceId } = props;
 
   if (!markup && !query) {
     markup = defaultValues.markup;
     query = defaultValues.query;
   }
 
-  const result = parser.parse({ markup, query, cacheId: props.instanceId });
+  const result = parser.parse({ markup, query, cacheId: instanceId });
   const [state, dispatch] = useReducer(reducer, { result, markup, query });
 
   useEffect(() => {
-    if (typeof props.onChange === 'function') {
-      props.onChange(state);
+    if (typeof onChange === 'function') {
+      onChange(state);
     }
   }, [state.result]);
 
-  return <AppContext.Provider value={{ state, dispatch }} {...props} />;
+  return [state, dispatch];
 }
 
-export function usePlayground() {
-  return useContext(AppContext);
-}
+export default usePlayground;

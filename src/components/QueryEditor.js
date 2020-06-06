@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react';
 import Editor from './Editor';
-import { usePlayground } from './Context';
 
-function QueryEditor() {
-  const { dispatch, state } = usePlayground();
-
+function QueryEditor({ query, dispatch }) {
   const onLoad = useCallback(
     (editor) => dispatch({ type: 'SET_QUERY_EDITOR', editor }),
     [dispatch],
@@ -18,7 +15,7 @@ function QueryEditor() {
   return (
     <Editor
       mode="javascript"
-      initialValue={state.query}
+      initialValue={query}
       onLoad={onLoad}
       onChange={onChange}
     />

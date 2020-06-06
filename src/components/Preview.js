@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { usePlayground } from './Context';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import AddHtml from './AddHtml';
@@ -9,7 +8,7 @@ function selectByCssPath(rootNode, cssPath) {
   return rootNode?.querySelector(cssPath.replace(/^body > /, ''));
 }
 
-function Preview() {
+function Preview({ markup, result, dispatch }) {
   // Okay, listen up. `highlighted` can be a number of things, as I wanted to
   // keep a single variable to represent the state. This to reduce bug count
   // by creating out-of-sync states.
@@ -26,7 +25,6 @@ function Preview() {
   //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
   const [roles, setRoles] = useState([]);
-  const { state, dispatch } = usePlayground();
   const htmlRoot = useRef();
 
   const { suggestion } = getQueryAdvise({
@@ -37,12 +35,12 @@ function Preview() {
   // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
 
   useEffect(() => {
-    setRoles(Object.keys(state.result.accessibleRoles || {}).sort());
-  }, [state.result.accessibleRoles]);
+    setRoles(Object.keys(result.accessibleRoles || {}).sort());
+  }, [result.accessibleRoles]);
 
   useEffect(() => {
     if (highlighted) {
-      state.result.elements?.forEach((el) => {
+      result.elements?.forEach((el) => {
         const target = selectByCssPath(htmlRoot.current, el.cssPath);
         target?.classList.remove('highlight');
       });
@@ -51,7 +49,7 @@ function Preview() {
       highlighted?.classList?.remove('highlight');
 
       if (highlighted === false) {
-        state.result.elements?.forEach((el) => {
+        result.elements?.forEach((el) => {
           const target = selectByCssPath(htmlRoot.current, el.cssPath);
           target?.classList.add('highlight');
         });
@@ -59,7 +57,7 @@ function Preview() {
     }
 
     return () => highlighted?.classList?.remove('highlight');
-  }, [highlighted, state.result.elements]);
+  }, [highlighted, result.elements]);
 
   const handleClick = (event) => {
     if (event.target === htmlRoot.current) {
@@ -87,7 +85,7 @@ function Preview() {
     setHighlighted(target);
   };
 
-  return state.markup ? (
+  return markup ? (
     <div
       className="w-full h-full flex flex-col relative overflow-hidden"
       onMouseEnter={() => setHighlighted(true)}
@@ -100,7 +98,7 @@ function Preview() {
             onClick={handleClick}
             onMouseMove={handleMove}
             ref={htmlRoot}
-            dangerouslySetInnerHTML={{ __html: state.markup }}
+            dangerouslySetInnerHTML={{ __html: markup }}
           />
         </Scrollable>
       </div>

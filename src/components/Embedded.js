@@ -7,7 +7,7 @@ import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
-import { PlaygroundProvider } from './Context';
+import usePlayground from '../hooks/usePlayground';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -25,6 +25,11 @@ const SUPPORTED_PANES = {
 
 // TODO: we should support readonly mode
 function Embedded() {
+  const [{ markup, query, result }, dispatch] = usePlayground({
+    onChange: onStateChange,
+    ...initialValues,
+  });
+
   const location = useLocation();
   const params = queryString.parse(location.search);
 
@@ -53,26 +58,40 @@ function Embedded() {
   }, []);
 
   return (
-    <PlaygroundProvider onChange={onStateChange} initialValues={initialValues}>
-      <div
-        className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
-      >
-        {panes.map((area) => {
-          switch (area) {
-            case 'preview':
-              return <Preview key={area} />;
-            case 'markup':
-              return <MarkupEditor key={area} />;
-            case 'query':
-              return <Query key={area} />;
-            case 'result':
-              return <Result key={area} />;
-            default:
-              return null;
-          }
-        })}
-      </div>
-    </PlaygroundProvider>
+    <div
+      className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
+    >
+      {panes.map((area) => {
+        switch (area) {
+          case 'preview':
+            return (
+              <Preview
+                key={area}
+                markup={markup}
+                result={result}
+                dispatch={dispatch}
+              />
+            );
+          case 'markup':
+            return (
+              <MarkupEditor key={area} markup={markup} dispatch={dispatch} />
+            );
+          case 'query':
+            return (
+              <Query
+                key={area}
+                query={query}
+                result={result}
+                dispatch={dispatch}
+              />
+            );
+          case 'result':
+            return <Result key={area} result={result} dispatch={dispatch} />;
+          default:
+            return null;
+        }
+      })}
+    </div>
   );
 }
 

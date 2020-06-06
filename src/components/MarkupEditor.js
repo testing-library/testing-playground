@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react';
 import Editor from './Editor';
-import { usePlayground } from './Context';
 
-function MarkupEditor() {
-  const { dispatch, state } = usePlayground();
-
+function MarkupEditor({ markup, dispatch }) {
   const onLoad = useCallback(
     (editor) => dispatch({ type: 'SET_MARKUP_EDITOR', editor }),
     [dispatch],
@@ -20,7 +17,7 @@ function MarkupEditor() {
       <div className="markup-editor flex-auto relative overflow-hidden">
         <Editor
           mode="html"
-          initialValue={state.markup}
+          initialValue={markup}
           onLoad={onLoad}
           onChange={onChange}
         />

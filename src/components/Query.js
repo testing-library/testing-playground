@@ -1,21 +1,15 @@
 import React from 'react';
 import QueryEditor from './QueryEditor';
 import QueryOutput from './QueryOutput';
-import { usePlayground } from './Context';
 
-function Query({ onChange, initialValue }) {
-  const { state } = usePlayground();
-
+function Query({ query, result, dispatch }) {
   return (
     <div className="relative h-full w-full flex flex-col">
       <div className="query-editor flex-auto relative overflow-hidden">
-        <QueryEditor initialValue={initialValue} onChange={onChange} />
+        <QueryEditor query={query} dispatch={dispatch} />
       </div>
 
-      <QueryOutput
-        error={state.result.error?.message}
-        result={state.result.formatted}
-      />
+      <QueryOutput error={result.error?.message} result={result.formatted} />
     </div>
   );
 }
