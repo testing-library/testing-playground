@@ -1,6 +1,7 @@
 import React from 'react';
 import { messages } from '../constants';
 import { usePlayground } from './Context';
+import ResultCopyButton from './ResultCopyButton';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -86,17 +87,20 @@ function ResultSuggestion({ data, suggestion }) {
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
         <div className="font-bold text-xs">suggested query</div>
         {suggestion.expression && (
-          <div
-            className="font-mono cursor-pointer text-xs"
-            onClick={() =>
-              dispatch({
-                type: 'SET_QUERY',
-                query: suggestion.expression,
-              })
-            }
-          >
-            &gt; {suggestion.expression}
-            <br />
+          <div className="flex justify-between">
+            <div
+              className="font-mono cursor-pointer text-xs"
+              onClick={() =>
+                dispatch({
+                  type: 'SET_QUERY',
+                  query: suggestion.expression,
+                })
+              }
+            >
+              &gt; {suggestion.expression}
+              <br />
+            </div>
+            <ResultCopyButton expression={suggestion.expression} />
           </div>
         )}
       </div>
