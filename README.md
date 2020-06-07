@@ -2,7 +2,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
@@ -101,6 +101,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars0.githubusercontent.com/u/1500684?v=4" width="100px;" alt=""/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="#ideas-kentcdodds" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://michaeldeboey.be"><img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt=""/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/smeijer/testing-playground/commits?author=MichaelDeBoey" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/delca85"><img src="https://avatars1.githubusercontent.com/u/4076043?v=4" width="100px;" alt=""/><br /><sub><b>Bianca Del Carretto</b></sub></a><br /><a href="https://github.com/smeijer/testing-playground/commits?author=delca85" title="Code">💻</a></td>
+    <td align="center"><a href="http://gerritalex.de"><img src="https://avatars1.githubusercontent.com/u/29307652?v=4" width="100px;" alt=""/><br /><sub><b>Gerrit Alex</b></sub></a><br /><a href="https://github.com/smeijer/testing-playground/commits?author=ljosberinn" title="Code">💻</a> <a href="https://github.com/smeijer/testing-playground/commits?author=ljosberinn" title="Tests">⚠️</a></td>
   </tr>
 </table>
 

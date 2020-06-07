@@ -1,3 +1,6 @@
+import React from 'react';
+import { toast } from 'react-toastify';
+
 if (process.env.NODE_ENV === 'production') {
   if ('serviceWorker' in navigator) {
     const sw = '/sw.js';
@@ -10,7 +13,22 @@ if (process.env.NODE_ENV === 'production') {
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
-              console.log('Update is ready!');
+              toast(
+                <p>
+                  An update is ready!{' '}
+                  <button
+                    className="btn font-bold ml-2 pl-2 text-gray-800"
+                    onClick={() => window.location.reload()}
+                  >
+                    REFRESH
+                  </button>
+                </p>,
+                {
+                  position: 'bottom-left',
+                  autoClose: false,
+                  closeOnClick: false,
+                },
+              );
             } else {
               console.log('Content is cached for offline use.');
             }

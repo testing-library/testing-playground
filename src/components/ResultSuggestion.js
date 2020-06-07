@@ -1,6 +1,6 @@
 import React from 'react';
 import { messages } from '../constants';
-import { usePlayground } from './Context';
+import ResultCopyButton from './ResultCopyButton';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -8,17 +8,15 @@ function Code({ children }) {
   return <span className="font-bold font-mono">{children}</span>;
 }
 
-function ResultSuggestion({ data, suggestion }) {
-  const { state, dispatch } = usePlayground();
-
-  const used = state.result?.expression || {};
+function ResultSuggestion({ data, suggestion, result, dispatch }) {
+  const used = result?.expression || {};
 
   const usingAdvisedMethod = suggestion.method === used.method;
   const hasNameArg = data.name && used.args?.[1]?.includes('name');
 
   const color = usingAdvisedMethod ? 'bg-green-600' : colors[suggestion.level];
 
-  const target = state.result.target || {};
+  const target = result?.target || {};
 
   let message;
 
@@ -86,17 +84,20 @@ function ResultSuggestion({ data, suggestion }) {
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
         <div className="font-bold text-xs">suggested query</div>
         {suggestion.expression && (
-          <div
-            className="font-mono cursor-pointer text-xs"
-            onClick={() =>
-              dispatch({
-                type: 'SET_QUERY',
-                query: suggestion.expression,
-              })
-            }
-          >
-            &gt; {suggestion.expression}
-            <br />
+          <div className="flex justify-between">
+            <div
+              className="font-mono cursor-pointer text-xs"
+              onClick={() =>
+                dispatch({
+                  type: 'SET_QUERY',
+                  query: suggestion.expression,
+                })
+              }
+            >
+              &gt; {suggestion.expression}
+              <br />
+            </div>
+            <ResultCopyButton expression={suggestion.expression} />
           </div>
         )}
       </div>

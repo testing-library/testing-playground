@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime';
+
 if (window.document) {
   window.document.createRange = () => ({
     setStart: () => {},
