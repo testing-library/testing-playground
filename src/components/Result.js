@@ -11,7 +11,12 @@ function Result({ result, dispatch }) {
     );
   }
 
-  if (!result.expression) {
+  if (
+    !result.expression ||
+    !result.elements ||
+    !Array.isArray(result.elements) ||
+    result.elements.length === 0
+  ) {
     return (
       <div className="space-y-4 text-sm">
         <div className="min-h-8">
@@ -32,11 +37,10 @@ function Result({ result, dispatch }) {
       </div>
     );
   }
-
-  const { data, suggestion } = result.elements?.[0] || {};
+  const { data, suggestion } = result.elements[0];
 
   return (
-    <div className="flex flex-col overflow-hidden w-full h-full">
+    <div className="flex flex-col w-full h-full overflow-hidden">
       <div className="flex-none pb-4 border-b">
         <ResultSuggestion
           result={result}
