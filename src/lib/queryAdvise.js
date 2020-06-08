@@ -1,6 +1,6 @@
 import { messages, queries } from '../constants';
-import { getExpression } from './getExpression';
 import { computeAccessibleName, getRole } from 'dom-accessibility-api';
+import { getSuggestedQuery } from '@testing-library/dom';
 
 export function getData({ rootNode, element }) {
   const type = element.getAttribute('type');
@@ -38,26 +38,36 @@ export function getData({ rootNode, element }) {
 
 const emptyResult = { data: {}, suggestion: {} };
 export function getQueryAdvise({ rootNode, element }) {
-  if (!rootNode || element?.nodeType !== Node.ELEMENT_NODE) {
+  if (
+    !rootNode ||
+    rootNode?.nodeType !== Node.ELEMENT_NODE ||
+    element?.nodeType !== Node.ELEMENT_NODE
+  ) {
     return emptyResult;
   }
-
+  const suggestedQuery = getSuggestedQuery(element);
   const data = getData({ rootNode, element });
-  const query = queries.find(({ method }) => getExpression({ method, data }));
 
-  if (!query) {
+  if (!suggestedQuery) {
     return {
-      level: 3,
-      expression: 'container.querySelector(…)',
-      suggestion: emptyResult.suggestion,
+      suggestion: {
+        level: 3,
+        expression: 'container.querySelector(…)',
+        method: '',
+        ...messages[3],
+      },
       data,
-      ...messages[3],
     };
   }
-
-  const expression = getExpression({ method: query.method, data });
-  const suggestion = { expression, ...query, ...messages[query.level] };
-
+  const { level } = queries.find(
+    ({ method }) => method === suggestedQuery.queryMethod,
+  );
+  const suggestion = {
+    expression: suggestedQuery.toString(),
+    level,
+    method: suggestedQuery.queryMethod,
+    ...messages[level],
+  };
   return {
     data,
     suggestion,
