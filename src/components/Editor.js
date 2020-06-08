@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/css/css';
+import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/scroll/simplescrollbars';
@@ -25,6 +27,11 @@ const options = {
   html: {
     ...baseOptions,
     mode: { name: 'text/html', multilineTagIndentPastTag: false },
+  },
+
+  htmlmixed: {
+    ...baseOptions,
+    mode: { name: 'htmlmixed' },
   },
 
   javascript: {
