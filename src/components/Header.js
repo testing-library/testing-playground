@@ -1,5 +1,5 @@
 import React from 'react';
-import icon from 'url:~/public/favicon-32x32.png';
+import icon from 'url:~/public/36-production.png';
 import { links } from '../constants';
 
 const headerLinks = [
