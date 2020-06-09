@@ -1,7 +1,21 @@
-# Testing-Playground ([demo][playground])
+<div align="center">
+  <h1>Testing-Playground</h1>
+  
+  [![test-tube](./docs/icon.png)][emojione]
+
+Simple and complete DOM testing playground that encourage good testing
+practices.
+
+[**online playground**][playground] | [next version][playground-next]
+
+</div>
+
+<hr />
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **Playground for [testing-library/dom]**
@@ -105,6 +119,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -112,9 +127,11 @@ Contributions of any kind welcome!
 
 [testing-library/dom]: https://testing-library.com/docs/dom-testing-library/example-intro
 [playground]: https://testing-playground.com
+[playground-next]: https://develop.testing-playground.com
 [embed-demo]: https://codepen.io/smeijer/pen/yLYWZmK
 [roadmap.md]: https://github.com/smeijer/testing-playground/blob/master/ROADMAP.md
 [contributing.md]: https://github.com/smeijer/testing-playground/blob/master/CONTRIBUTING.md
 [issue tracker]: https://github.com/smeijer/testing-playground/issues
 [all-contributors]: https://github.com/all-contributors/all-contributors
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key
+[emojione]: https://www.emojione.com/emoji/1f9e
