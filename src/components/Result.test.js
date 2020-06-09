@@ -12,12 +12,12 @@ cases(
       />,
     );
     expect(
-      screen.getByText(/I don't know what to say/, { exact: false }),
+      screen.getByText(/i don't know what to say/i),
     ).toBeInTheDocument();
   },
   [
     {
-      name: 'unedfined',
+      name: 'undefined',
       elements: undefined,
     },
     {

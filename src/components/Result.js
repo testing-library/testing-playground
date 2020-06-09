@@ -13,7 +13,6 @@ function Result({ result, dispatch }) {
 
   if (
     !result.expression ||
-    !result.elements ||
     !Array.isArray(result.elements) ||
     result.elements.length === 0
   ) {
