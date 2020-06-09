@@ -6,7 +6,7 @@
     "start": "run-s start:client",
     "start:client": "parcel src/index.html --open",
     "start:embed": "parcel src/embed.html --open",
-    "build": "run-s clean build:client build:server builToad:sw",
+    "build": "run-s clean build:client build:server build:sw",
     "build:client": "parcel build src/index.html src/embed.js --dist-dir dist/client",
     "postbuild:client": "mkdir -p dist/client/public && cp _redirects dist/client/_redirects && cp public/favicon.ico dist/client/favicon.ico && cp public/icon.png dist/client/public/icon.png && cp -r .well-known dist/client/.well-known",
     "build:server": "cp -r src/lambda/ dist/server",
