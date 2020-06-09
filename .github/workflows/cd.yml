@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  APP_NAME: Testing Playground
+  NODE_VERSION: "12.x"
+
+jobs:
+  create-release:
+    name: Create Release Notes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all tags
+        run: git fetch origin +refs/tags/*:refs/tags/*
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Setup Env
+        run: |
+          find .github/scripts -type f -iname "*.sh" -exec chmod +x {} \;
+          .github/scripts/env.sh
+        env:
+          GITHUB: ${{ toJson(github) }}
+
+      - name: Create Release Notes
+        id: release_notes
+        run: .github/scripts/release-notes.sh
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ env.APP_NAME }} ${{ env.VERSION }}
+          body: ${{ steps.release_notes.outputs.changelog }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
