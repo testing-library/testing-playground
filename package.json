@@ -20,7 +20,7 @@
     "prettier": "prettier . --write"
   },
   "dependencies": {
-    "@testing-library/dom": "^7.10.0",
+    "@testing-library/dom": "^7.11.0",
     "codemirror": "5.54.0",
     "dom-accessibility-api": "^0.4.4",
     "js-beautify": "^1.11.0",
@@ -47,6 +47,7 @@
     "eslint-plugin-react": "^7.20.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
+    "jest-extended": "^0.11.5",
     "lint-staged": "^10.2.9",
     "npm-run-all": "^4.1.5",
     "parcel": "^2.0.0-nightly.280",
