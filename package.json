@@ -22,6 +22,7 @@
   "dependencies": {
     "@testing-library/dom": "^7.11.0",
     "codemirror": "5.54.0",
+    "deep-diff": "^1.0.2",
     "dom-accessibility-api": "^0.4.4",
     "js-beautify": "^1.11.0",
     "lodash.debounce": "4.0.8",
