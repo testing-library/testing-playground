@@ -6,7 +6,7 @@
     "start": "run-s start:client",
     "start:client": "parcel src/index.html --open",
     "start:embed": "parcel src/embed.html --open",
-    "build": "run-s clean build:client build:server build:sw",
+    "build": "cross-env NODE_ENV=production run-s clean build:client build:server build:sw",
     "build:client": "parcel build src/index.html src/embed.js --dist-dir dist/client",
     "postbuild:client": "mkdir -p dist/client/public && cp _redirects dist/client/_redirects && cp public/favicon.ico dist/client/favicon.ico && cp public/icon.png dist/client/public/icon.png && cp -r .well-known dist/client/.well-known",
     "build:server": "cp -r src/lambda/ dist/server",
@@ -19,7 +19,12 @@
     "ci:changelog": "node scripts/changelog.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prettier": "prettier . --write"
+    "prettier": "prettier . --write",
+    "bump:patch": "npm version patch -m 'release: cut the %s release'",
+    "bump:minor": "npm version minor -m 'release: cut the %s release'",
+    "bump:major": "npm version major -m 'release: cut the %s release'",
+    "preversion": "npm run test",
+    "postversion": "git push && git push --tags && git checkout master && git merge develop --ff && git push && git checkout -"
   },
   "dependencies": {
     "@testing-library/dom": "^7.11.0",
@@ -48,6 +53,7 @@
     "babel-eslint": "^10.1.0",
     "conventional-changelog": "^3.1.21",
     "conventional-changelog-config-spec": "^2.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
