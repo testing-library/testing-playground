@@ -63,7 +63,7 @@ export function getQueryAdvise({ rootNode, element }) {
     ({ method }) => method === suggestedQuery.queryMethod,
   );
   const suggestion = {
-    expression: suggestedQuery.toString(),
+    expression: `screen.${suggestedQuery.toString()}`,
     level,
     method: suggestedQuery.queryMethod,
     ...messages[level],
