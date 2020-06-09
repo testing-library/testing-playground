@@ -39,3 +39,10 @@ it('should return an empty object if element node is a malformed object', () => 
   result = getQueryAdvise({ rootNode, element: {} });
   expect(result).toMatchInlineSnapshot(emptyObject);
 });
+
+it('should add `screen.` on suggested query returned by getSuggestedQuery', () => {
+  const rootNode = document.createElement('div');
+  const element = document.createElement('button');
+  const result = getQueryAdvise({ rootNode, element });
+  expect(result.suggestion.expression).toStartWith('screen.');
+});
