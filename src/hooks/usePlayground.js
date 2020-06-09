@@ -35,7 +35,7 @@ function reducer(state, action) {
 
       return {
         ...state,
-        setQuery: action.query,
+        query: action.query,
         result: parser.parse({
           markup: state.markup,
           query: action.query,
