@@ -77,6 +77,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "Siemko",
+      "name": "Dominik Guzy",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/9118764?v=4",
+      "profile": "https://www.guzy.dev",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
