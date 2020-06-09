@@ -18,7 +18,7 @@ Also, I have no idea how it works, but I know we need to use emoji-key to list c
 
 ## Add tests
 
-_Status: In backlog ([#7](https://github.com/smeijer/testing-playground/issues/7))_
+_Status: Ongoing ([#7](https://github.com/smeijer/testing-playground/issues/7))_
 
 A [testing-playground.com] without tests... I don't think that should be a thing, but at this moment it is.
 
@@ -44,7 +44,7 @@ I haven't worked out the details, but enabling users to play with [user-event]s 
 
 ## DevTools!
 
-_Status: In backlog ([#11](https://github.com/smeijer/testing-playground/issues/11))_
+_Status: In progress ([#11](https://github.com/smeijer/testing-playground/issues/11))_
 
 I believe we can wrap this project into a chrome extension. That way people can use the thing on their own sites, without needing to copy / paste html fragments. How awesome would that be?!
 
