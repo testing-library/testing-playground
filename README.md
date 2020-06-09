@@ -13,9 +13,7 @@ practices.
 <hr />
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **Playground for [testing-library/dom]**
@@ -115,11 +113,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/delca85"><img src="https://avatars1.githubusercontent.com/u/4076043?v=4" width="100px;" alt=""/><br /><sub><b>Bianca Del Carretto</b></sub></a><br /><a href="https://github.com/smeijer/testing-playground/commits?author=delca85" title="Code">💻</a></td>
     <td align="center"><a href="http://gerritalex.de"><img src="https://avatars1.githubusercontent.com/u/29307652?v=4" width="100px;" alt=""/><br /><sub><b>Gerrit Alex</b></sub></a><br /><a href="https://github.com/smeijer/testing-playground/commits?author=ljosberinn" title="Code">💻</a> <a href="https://github.com/smeijer/testing-playground/commits?author=ljosberinn" title="Tests">⚠️</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://www.guzy.dev"><img src="https://avatars1.githubusercontent.com/u/9118764?v=4" width="100px;" alt=""/><br /><sub><b>Dominik Guzy</b></sub></a><br /><a href="https://github.com/smeijer/testing-playground/commits?author=Siemko" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
