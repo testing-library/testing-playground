@@ -39,7 +39,9 @@ function formatTime(time) {
 }
 
 // Use performance API if it's available in order to get better precision
-const timer = typeof performance?.now === 'function' ? performance : Date;
+//   performance can be null, performance?.now won't work here!
+const timer =
+  (typeof performance || {}).now === 'function' ? performance : Date;
 
 function renderDiff(diff) {
   const { kind, path, lhs, rhs, index, item } = diff;
