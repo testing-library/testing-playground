@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from 'react';
 import parser from '../parser';
 import { initialValues as defaultValues } from '../constants';
+import { withLogging } from '../lib/logger';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -35,7 +36,7 @@ function reducer(state, action) {
 
       return {
         ...state,
-        setQuery: action.query,
+        query: action.query,
         result: parser.parse({
           markup: state.markup,
           query: action.query,
@@ -59,7 +60,11 @@ function usePlayground(props) {
   }
 
   const result = parser.parse({ markup, query, cacheId: instanceId });
-  const [state, dispatch] = useReducer(reducer, { result, markup, query });
+  const [state, dispatch] = useReducer(withLogging(reducer), {
+    result,
+    markup,
+    query,
+  });
 
   useEffect(() => {
     if (typeof onChange === 'function') {

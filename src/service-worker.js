@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
             if (navigator.serviceWorker.controller) {
               toast(
                 <p>
-                  An update is ready!{' '}
+                  A new version is available!{' '}
                   <button
                     className="btn font-bold ml-2 pl-2 text-gray-800"
                     onClick={() => window.location.reload()}
