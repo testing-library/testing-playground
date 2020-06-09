@@ -11,32 +11,29 @@ if (process.env.NODE_ENV === 'production') {
           return;
         }
         installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              toast(
-                <p>
-                  A new version is available!{' '}
-                  <button
-                    className="btn font-bold ml-2 pl-2 text-gray-800"
-                    onClick={() => window.location.reload()}
-                  >
-                    REFRESH
-                  </button>
-                </p>,
-                {
-                  position: 'bottom-left',
-                  autoClose: false,
-                  closeOnClick: false,
-                },
-              );
-            } else {
-              console.log('Content is cached for offline use.');
-            }
+          if (
+            installingWorker.state === 'installed' &&
+            navigator.serviceWorker.controller
+          ) {
+            toast(
+              <p>
+                A new version is available!{' '}
+                <button
+                  className="btn font-bold ml-2 pl-2 text-gray-800"
+                  onClick={() => window.location.reload()}
+                >
+                  REFRESH
+                </button>
+              </p>,
+              {
+                position: 'bottom-left',
+                autoClose: false,
+                closeOnClick: false,
+              },
+            );
           }
         };
       };
     });
-  } else {
-    console.log('Service Worker is not supported by browser.');
   }
 }
