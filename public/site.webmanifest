@@ -1,8 +1,11 @@
 {
   "name": "Testing Playground",
+  "description": "Simple and complete DOM testing playground that encourage good testing practices.",
+  "lang": "en",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
+  "orientation": "landscape",
   "start_url": "/",
   "icons": [
     {
