@@ -11,9 +11,7 @@ cases(
         result={{ error: '', expression: {}, elements: opts.elements }}
       />,
     );
-    expect(
-      screen.getByText(/i don't know what to say/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/i don't know what to say/i)).toBeInTheDocument();
   },
   [
     {
