@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import AddHtml from './AddHtml';
@@ -33,6 +33,36 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   });
 
   // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
+
+  const scripts = useMemo(() => {
+    const container = document.createElement('div');
+    container.innerHTML = markup;
+    const scriptsCollections = container.getElementsByTagName('script');
+    return Array.from(scriptsCollections).map((script) => script.innerHTML);
+  }, [markup]);
+
+  const actualMarkup = useMemo(
+    () =>
+      scripts.length
+        ? scripts.reduce(
+            (html, script) => html.replace(`<script>${script}</script>`, ''),
+            markup,
+          )
+        : markup,
+    [scripts, markup],
+  );
+
+  useEffect(() => {
+    if (scripts.length) {
+      try {
+        scripts.forEach((script) => {
+          window.eval(script);
+        });
+      } catch {
+        return;
+      }
+    }
+  }, [scripts]);
 
   useEffect(() => {
     setRoles(Object.keys(accessibleRoles || {}).sort());
@@ -98,7 +128,9 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
             onClick={handleClick}
             onMouseMove={handleMove}
             ref={htmlRoot}
-            dangerouslySetInnerHTML={{ __html: markup }}
+            dangerouslySetInnerHTML={{
+              __html: actualMarkup,
+            }}
           />
         </Scrollable>
       </div>
