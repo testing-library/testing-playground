@@ -54,7 +54,7 @@ function handler(event, context, callback) {
         width: maxwidth,
         height: maxheight,
 
-        thumbnail_url: `${host}/public/icon.png`,
+        thumbnail_url: `${host}/icon.png`,
         thumbnail_width: 512,
         thumbnail_height: 512,
 
