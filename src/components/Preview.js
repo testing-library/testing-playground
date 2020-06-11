@@ -60,16 +60,17 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   );
 
   useEffect(() => {
-    if (scripts.length) {
+    if (scripts.length && htmlRoot.current) {
       try {
         scripts.forEach((script) => {
-          window.eval(script.scriptCode);
+          const executeScript = new Function(script.scriptCode);
+          executeScript();
         });
       } catch {
         return;
       }
     }
-  }, [scripts]);
+  }, [scripts, htmlRoot.current]);
 
   useEffect(() => {
     setRoles(Object.keys(accessibleRoles || {}).sort());
