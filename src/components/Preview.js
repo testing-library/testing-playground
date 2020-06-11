@@ -38,14 +38,21 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
     const container = document.createElement('div');
     container.innerHTML = markup;
     const scriptsCollections = container.getElementsByTagName('script');
-    return Array.from(scriptsCollections).map((script) => script.innerHTML);
+    return Array.from(scriptsCollections)
+      .filter(
+        (script) => script.type === 'text/javascript' || script.type === '',
+      )
+      .map((script) => ({
+        scriptCode: script.innerHTML,
+        toBeRemoved: script.outerHTML,
+      }));
   }, [markup]);
 
   const actualMarkup = useMemo(
     () =>
       scripts.length
         ? scripts.reduce(
-            (html, script) => html.replace(`<script>${script}</script>`, ''),
+            (html, script) => html.replace(script.toBeRemoved, ''),
             markup,
           )
         : markup,
@@ -56,7 +63,7 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
     if (scripts.length) {
       try {
         scripts.forEach((script) => {
-          window.eval(script);
+          window.eval(script.scriptCode);
         });
       } catch {
         return;
