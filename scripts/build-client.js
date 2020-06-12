@@ -1,10 +1,10 @@
-const { copy, remove, move, readFile, writeFile } = require('fs-extra');
+const { copy, remove, readFile, writeFile, readdir } = require('fs-extra');
 const { resolve, join } = require('path');
 const { build } = require('./build');
 const { openInBrowser } = require('@parcel/utils');
 const workbox = require('workbox-build');
 
-const hashRegExp = /\.\[0-9a-fA-F]{8}\./;
+const hashRegExp = /\.[0-9a-fA-F]{8}\./;
 
 const removeRevisionManifestTransform = async (manifestEntries) => ({
   manifest: manifestEntries.map((entry) =>
@@ -22,21 +22,44 @@ const workboxConfig = {
   ignoreURLParametersMatching: [/.*/],
 };
 
-async function renameWebManifest({ dest }) {
-  const htmlContent = await readFile(join(dest, 'index.html'), 'utf-8');
-  const [, file] = htmlContent.match(
+async function fixWebManifst({ dest }) {
+  // browsers can't detect service-worker updates if the webmanifest changes name
+  const htmlContent = await readFile(join(dest, 'index.html'), 'utf8');
+  const [, manifestFilename] = htmlContent.match(
     /<link rel="manifest" href="\/?(site\.[0-9a-fA-F]{8}\.webmanifest)">/,
   );
 
   // replace site.e5465fc8.webmanifest with webmanifest.json
-  const replacer = new RegExp(file, 'g');
-  const newContent = htmlContent.replace(replacer, 'webmanifest.json');
+  const replacer = new RegExp(manifestFilename, 'g');
+  const newContent = htmlContent.replace(replacer, 'webmanifest.json', 'utf8');
+
+  // fix image paths in manifest.json
+  const iconSrcHashTable = (await readdir(dest))
+    .filter((file) => /\.png/.test(file))
+    .reduce((index, file) => {
+      index[file.replace(hashRegExp, '.')] = file;
+      return index;
+    }, {});
+
+  const manifest = JSON.parse(
+    await readFile(join(dest, manifestFilename), 'utf8'),
+  );
+
+  manifest.icons.forEach((icon) => {
+    icon.src = iconSrcHashTable[icon.src];
+  });
 
   await Promise.all([
     // rename manifest file from site.e5465fc8.webmanifest to webmanifest.json
-    move(join(dest, file), join(dest, 'webmanifest.json')),
+    remove(join(dest, manifestFilename)),
     // write updated html content referring to the renamed manifest
     writeFile(join(dest, 'index.html'), newContent),
+    // write the fixed manifest json
+    writeFile(
+      join(dest, 'manifest.json'),
+      JSON.stringify(manifest, '', '  '),
+      'utf8',
+    ),
   ]);
 }
 
@@ -56,8 +79,7 @@ async function main() {
     port: 1234,
   });
 
-  // browsers can't detect service-worker updates if the webmanifest changes name
-  await renameWebManifest({ dest });
+  await fixWebManifst({ dest });
 
   await workbox.generateSW(workboxConfig);
 
