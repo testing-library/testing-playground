@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
+const IS_DEVTOOL = !!window?.chrome?.runtime.id;
+
 /**
  *
  * @param {string} suggestion
  */
 async function attemptCopyToClipboard(suggestion) {
   try {
-    if ('clipboard' in navigator) {
+    if (!IS_DEVTOOL && 'clipboard' in navigator) {
       await navigator.clipboard.writeText(suggestion);
       return true;
     }
@@ -43,8 +45,8 @@ const SuccessIcon = (
 const CopyIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
   >
     <path d="M0 0h24v24H0z" fill="none"></path>
