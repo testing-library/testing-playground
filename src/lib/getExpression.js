@@ -21,14 +21,18 @@ export function getFieldName(method) {
 export function getExpression({ method, data }) {
   const field = getFieldName(method);
 
-  if (method === 'getByRole' && data.role && data.name) {
-    return `screen.getByRole('${data.role}', { name: ${wrapInQuotes(
-      data.name,
-    )} })`;
+  if (method === 'getByRole') {
+    if (data.role && data.name) {
+      const matcher = new RegExp(`${data.name}`.toLowerCase(), 'i');
+      return `screen.getByRole('${data.role}', { name: ${matcher} })`;
+    } else {
+      return `screen.getByRole('${data.role}')`;
+    }
   }
 
   if (data[field]) {
-    return `screen.${method}(${wrapInQuotes(data[field])})`;
+    const matcher = new RegExp(`${data[field]}`.toLowerCase(), 'i');
+    return `screen.${method}(${matcher})`;
   }
 
   return '';
