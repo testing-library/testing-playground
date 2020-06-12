@@ -51,7 +51,7 @@ function nodeNameInCorrectCase(node) {
  */
 WebInspector.DOMPresentationUtils.cssPath = function (node, optimized) {
   if (node.nodeType !== Node.ELEMENT_NODE) {
-    return '';
+    return [];
   }
 
   let steps = [];
@@ -73,7 +73,12 @@ WebInspector.DOMPresentationUtils.cssPath = function (node, optimized) {
   }
 
   steps.reverse();
-  return steps.join(' > ');
+
+  steps.toString = function () {
+    return this.join(' > ');
+  };
+
+  return steps;
 };
 
 /**
