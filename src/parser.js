@@ -16,7 +16,7 @@ const debug = (element, maxLength, options) =>
     ? element.map((el) => logDOM(el, maxLength, options)).join('\n')
     : logDOM(element, maxLength, options);
 
-function getScreen(root) {
+export function getScreen(root) {
   return getQueriesForElement(root, queries, { debug });
 }
 
@@ -69,7 +69,7 @@ function getLastExpression(code) {
   const [method, ...args] = call
     .split(/[(),]/)
     .filter(Boolean)
-    .map((x) => unQuote(x.trim()));
+    .map((x) => unQuote((x || '').trim()));
 
   const expression = [scope, call].filter(Boolean).join('.');
   const level = supportedQueries.find((x) => x.method === method)?.level ?? 3;
@@ -82,6 +82,62 @@ function getLastExpression(code) {
     args,
     call,
   };
+}
+
+function createEvaluator({ rootNode }) {
+  const context = Object.assign({}, queries, {
+    screen: getScreen(rootNode),
+    container: rootNode,
+  });
+
+  const evaluator = Function.apply(null, [
+    ...Object.keys(context),
+    'expr',
+    'return eval(expr)',
+  ]);
+
+  function wrap(cb, extraData = {}) {
+    let result = { ...extraData };
+
+    try {
+      result.data = cb();
+    } catch (e) {
+      const error = e.message.split('\n');
+
+      result.error = {
+        message: error[0],
+        details: error.slice(1).join('\n').trim(),
+      };
+    }
+
+    result.elements = ensureArray(result.data)
+      .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
+      .map((element) => {
+        const { suggestion, data } = getQueryAdvise({
+          rootNode,
+          element,
+        });
+
+        return {
+          suggestion,
+          data,
+          target: element,
+          cssPath: cssPath(element, true),
+        };
+      });
+
+    result.accessibleRoles = getRoles(rootNode);
+    return result;
+  }
+
+  function exec(context, expr) {
+    return evaluator.apply(null, [
+      ...Object.values(context),
+      (expr || '').trim(),
+    ]);
+  }
+
+  return { context, evaluator, exec, wrap };
 }
 
 function createSandbox({ markup }) {
@@ -111,17 +167,9 @@ function createSandbox({ markup }) {
   document.body.appendChild(container);
 
   const sandbox = frame.contentDocument || frame.contentWindow.document;
-
-  const context = Object.assign({}, queries, {
-    screen: getScreen(sandbox.body),
-    container: sandbox.body,
+  const { context, evaluator, wrap } = createEvaluator({
+    rootNode: sandbox.body,
   });
-
-  const evaluator = Function.apply(null, [
-    ...Object.keys(context),
-    'expr',
-    'return eval(expr)',
-  ]);
 
   const script = sandbox.createElement('script');
   script.setAttribute('type', 'text/javascript');
@@ -129,7 +177,7 @@ function createSandbox({ markup }) {
     window.exec = function exec(context, expr) {
       const evaluator = ${evaluator};
       
-      return evaluator.apply(null, [...Object.values(context), expr.trim()]);
+      return evaluator.apply(null, [...Object.values(context), (expr || '').trim()]);
     }
   `;
 
@@ -146,22 +194,8 @@ function createSandbox({ markup }) {
         body = html;
       }
     },
-    eval: (script) => {
-      try {
-        return {
-          data: frame.contentWindow.exec(context, script),
-        };
-      } catch (e) {
-        const error = e.message.split('\n');
-
-        return {
-          error: {
-            message: error[0],
-            details: error.slice(1).join('\n').trim(),
-          },
-        };
-      }
-    },
+    eval: (query) =>
+      wrap(() => frame.contentWindow.exec(context, query), { markup, query }),
     destroy: () => document.body.removeChild(container),
   };
 }
@@ -184,26 +218,6 @@ function runInSandbox({ markup, query, cacheId }) {
   sandbox.ensureMarkup(markup);
 
   const result = sandbox.eval(query);
-  result.markup = markup;
-  result.query = query;
-
-  result.elements = ensureArray(result.data)
-    .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
-    .map((element) => {
-      const { suggestion, data } = getQueryAdvise({
-        rootNode: sandbox.rootNode,
-        element,
-      });
-
-      return {
-        suggestion,
-        data,
-        target: result.data,
-        cssPath: cssPath(result.data, true),
-      };
-    });
-
-  result.accessibleRoles = getRoles(sandbox.rootNode);
 
   if (cacheId && !sandboxes[cacheId]) {
     sandboxes[cacheId] = sandbox;
@@ -214,8 +228,28 @@ function runInSandbox({ markup, query, cacheId }) {
   return result;
 }
 
-function parse({ markup, query, cacheId, prevResult }) {
-  const result = runInSandbox({ markup, query, cacheId });
+function runUnsafe({ rootNode, query }) {
+  const evaluator = createEvaluator({ rootNode });
+
+  const result = evaluator.wrap(
+    () => evaluator.exec(evaluator.context, query),
+    {
+      query,
+      markup: rootNode.innerHTML,
+    },
+  );
+
+  return result;
+}
+
+function parse({ rootNode, markup, query, cacheId, prevResult }) {
+  if (!markup && !rootNode) {
+    throw new Error('either markup or rootNode should be provided');
+  }
+
+  const result = rootNode
+    ? runUnsafe({ rootNode, query })
+    : runInSandbox({ markup, query, cacheId });
 
   result.expression = getLastExpression(query);
 
