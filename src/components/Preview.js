@@ -60,15 +60,15 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   );
 
   useEffect(() => {
-    if (scripts.length && htmlRoot.current) {
-      try {
-        scripts.forEach((script) => {
+    if (htmlRoot.current) {
+      scripts.forEach((script) => {
+        try {
           const executeScript = new Function(script.scriptCode);
           executeScript();
-        });
-      } catch {
-        return;
-      }
+        } catch (e) {
+          alert('Failing script inserted in markup!');
+        }
+      });
     }
   }, [scripts, htmlRoot.current]);
 
