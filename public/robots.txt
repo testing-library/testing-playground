@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://testing-playground.com/sitemap.xml

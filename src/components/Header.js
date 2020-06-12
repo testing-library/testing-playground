@@ -15,8 +15,13 @@ function Header() {
         <div className="flex items-center flex-shrink-0 text-white">
           <a className="title" href="/">
             <h1 className="font-light text-xl tracking-tight flex space-x-4 items-center justify-start">
-              <img width={24} height={24} src={icon} />️{' '}
-              <span>Testing Playground</span>
+              <img
+                width={24}
+                height={24}
+                src={icon}
+                alt="Testing Playground mascot Froggy"
+              />
+              ️ <span>Testing Playground</span>
             </h1>
           </a>
         </div>
