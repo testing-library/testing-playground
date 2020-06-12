@@ -1,7 +1,7 @@
 <div align="center">
   <h1>Testing-Playground</h1>
   
-  [![test-tube](./docs/icon.png)][emojione]
+  [![test-tube](./public/icon.png)][emojione]
 
 Simple and complete DOM testing playground that encourage good testing
 practices.
@@ -13,7 +13,9 @@ practices.
 <hr />
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **Playground for [testing-library/dom]**
@@ -120,6 +122,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
