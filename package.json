@@ -1,6 +1,6 @@
 {
   "name": "testing-playground",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
   "scripts": {
     "start": "run-s start:client",
