@@ -1,5 +1,4 @@
 const { ensureDir } = require('fs-extra');
-const defaultConfigContents = require('@parcel/config-default');
 const Parcel = require('@parcel/core').default;
 const getPort = require('get-port');
 
@@ -14,17 +13,12 @@ async function build({
   const config = {
     entries,
     distDir: dest,
-    defaultConfig: {
-      ...defaultConfigContents,
-      filePath: require.resolve('@parcel/config-default'),
-    },
-    defaultEngines: {
-      browsers: ['defaults'],
-    },
   };
 
   if (serve !== false && port) {
     config.serve = { port: await getPort({ port }) };
+  } else {
+    config.mode = 'production';
   }
 
   const parcel = new Parcel(config);
