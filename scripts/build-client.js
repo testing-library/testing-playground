@@ -14,7 +14,7 @@ const removeRevisionManifestTransform = async (manifestEntries) => ({
 
 const workboxConfig = {
   globDirectory: 'dist/client',
-  globPatterns: ['**/*.{html,js,css,png,svg,jpg,gif,json,ico,webmanifest}'],
+  globPatterns: ['**/*.{html,js,css,png,svg,jpg,gif,json,ico}'],
   swDest: 'dist/client/sw.js',
   clientsClaim: true,
   skipWaiting: true,
@@ -22,16 +22,16 @@ const workboxConfig = {
   ignoreURLParametersMatching: [/.*/],
 };
 
-async function fixWebManifst({ dest }) {
-  // browsers can't detect service-worker updates if the webmanifest changes name
+async function fixWebManifest({ dest }) {
+  // browsers can't detect service-worker updates if the manifest changes name
   const htmlContent = await readFile(join(dest, 'index.html'), 'utf8');
   const [, manifestFilename] = htmlContent.match(
     /<link rel="manifest" href="\/?(site\.[0-9a-fA-F]{8}\.webmanifest)">/,
   );
 
-  // replace site.e5465fc8.webmanifest with webmanifest.json
+  // replace site.e5465fc8.webmanifest with manifest.json
   const replacer = new RegExp(manifestFilename, 'g');
-  const newContent = htmlContent.replace(replacer, 'webmanifest.json', 'utf8');
+  const newContent = htmlContent.replace(replacer, 'manifest.json', 'utf8');
 
   // fix image paths in manifest.json
   const iconSrcHashTable = (await readdir(dest))
@@ -50,7 +50,7 @@ async function fixWebManifst({ dest }) {
   });
 
   await Promise.all([
-    // rename manifest file from site.e5465fc8.webmanifest to webmanifest.json
+    // rename manifest file from site.e5465fc8.webmanifest to manifest.json
     remove(join(dest, manifestFilename)),
     // write updated html content referring to the renamed manifest
     writeFile(join(dest, 'index.html'), newContent),
@@ -79,7 +79,7 @@ async function main() {
     port: 1234,
   });
 
-  await fixWebManifst({ dest });
+  await fixWebManifest({ dest });
 
   await workbox.generateSW(workboxConfig);
 
