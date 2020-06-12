@@ -25,6 +25,7 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [scripts, setScripts] = useState([]);
   const htmlRoot = useRef();
 
   const { suggestion } = getQueryAdvise({
@@ -34,19 +35,33 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
 
   // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
 
-  const scripts = useMemo(() => {
+  useEffect(() => {
     const container = document.createElement('div');
     container.innerHTML = markup;
     const scriptsCollections = container.getElementsByTagName('script');
-    return Array.from(scriptsCollections)
-      .filter(
-        (script) => script.type === 'text/javascript' || script.type === '',
-      )
-      .map((script) => ({
-        scriptCode: script.innerHTML,
-        toBeRemoved: script.outerHTML,
-      }));
-  }, [markup]);
+    const jsScripts = Array.from(scriptsCollections).filter(
+      (script) => script.type === 'text/javascript' || script.type === '',
+    );
+    setScripts((scripts) => [
+      ...scripts.filter((script) =>
+        jsScripts
+          .map((jsScript) => jsScript.innerHTML)
+          .includes(script.innerHTML),
+      ),
+      ...jsScripts
+        .filter(
+          (jsScript) =>
+            !scripts
+              .map((script) => script.innerHTML)
+              .includes(jsScript.innerHTML),
+        )
+        .map((jsScript) => ({
+          scriptCode: jsScript.innerHTML,
+          toBeRemoved: jsScript.outerHTML,
+          evaluated: false,
+        })),
+    ]);
+  }, [markup, setScripts]);
 
   const actualMarkup = useMemo(
     () =>
@@ -60,17 +75,20 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   );
 
   useEffect(() => {
-    if (htmlRoot.current) {
-      scripts.forEach((script) => {
-        try {
-          const executeScript = new Function(script.scriptCode);
-          executeScript();
-        } catch (e) {
-          alert('Failing script inserted in markup!');
-        }
-      });
+    if (htmlRoot.current && highlighted) {
+      scripts
+        .filter((script) => !script.evaluated)
+        .forEach((script) => {
+          try {
+            script.evaluated = true;
+            const executeScript = new Function(script.scriptCode);
+            executeScript();
+          } catch (e) {
+            alert('Failing script inserted in markup!');
+          }
+        });
     }
-  }, [scripts, htmlRoot.current]);
+  }, [highlighted, scripts, htmlRoot.current]);
 
   useEffect(() => {
     setRoles(Object.keys(accessibleRoles || {}).sort());
