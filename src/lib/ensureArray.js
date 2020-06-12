@@ -1,3 +1,7 @@
 export function ensureArray(collection) {
-  return Array.isArray(collection) ? collection : [collection];
+  return collection instanceof NodeList
+    ? Array.from(collection)
+    : Array.isArray(collection)
+    ? collection
+    : [collection];
 }
