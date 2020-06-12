@@ -20,7 +20,15 @@ async function main() {
   });
 
   await copy('devtools/src/manifest.json', join(dest, 'manifest.json'));
-  await copy('public/icon.png', join(dest, 'icon.png'));
+
+  // copy icons that are declared in manifest.json#icons from /public dir
+  const manifest = require(join(dest, 'manifest.json'));
+
+  await Promise.all(
+    Object.values(manifest.icons).map((icon) =>
+      copy(icon.replace(/^icons/, 'public'), join(dest, icon)),
+    ),
+  );
 
   if (parcel.watching) {
     chromeLaunch('https://google.com', {

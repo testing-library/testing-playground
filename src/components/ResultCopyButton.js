@@ -1,6 +1,7 @@
+/* global chrome */
 import React, { useState, useEffect } from 'react';
 
-const IS_DEVTOOL = !!window?.chrome?.runtime.id;
+const IS_DEVTOOL = !!(window.chrome && chrome.runtime && chrome.runtime.id);
 
 /**
  *

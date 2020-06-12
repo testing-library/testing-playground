@@ -24,7 +24,7 @@ function Panel() {
   };
 
   return (
-    <div className="editor text-base w-screen h-screen">
+    <div className="p-2 w-screen h-screen">
       {result && <Result result={result} dispatch={dispatch} />}
     </div>
   );

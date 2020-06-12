@@ -1,9 +1,13 @@
 /* global chrome */
+import { getBrowserName } from './lib/utils';
 const panels = chrome.devtools.panels;
 
-panels.create('Testing Playground', 'icon.png', '/devtools/panel.html');
+const isChrome = getBrowserName() === 'Chrome';
+const name = isChrome ? '🐸 Testing Playground' : 'Testing Playground';
 
-panels.elements.createSidebarPane('Testing Playground', (sidebar) =>
+panels.create(name, '', '/devtools/panel.html');
+
+panels.elements.createSidebarPane(name, (sidebar) =>
   sidebar.setPage('/devtools/pane.html'),
 );
 
