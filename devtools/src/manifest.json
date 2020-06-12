@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "name": "Testing Playground Developer Tools",
+  "description": "Adds Testing Playground to the Chrome Developer Tools.",
+  "version": "1.0.0",
+  "version_name": "1.0.0",
+
+  "minimum_chrome_version": "49",
+
+  "icons": {
+  },
+
+  "browser_action": {
+  },
+
+  "web_accessible_resources": [
+    "window/testing-library.js"
+  ],
+
+  "devtools_page": "devtools/main.html",
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-6UcmjVDygSSU8p+3s7E7Kz8EG/ARhPADPRUm9P90HLM='; object-src 'self'",
+
+  "background": {
+    "scripts": ["background/background.js"],
+    "persistent": false
+  },
+
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "clipboardWrite"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script/contentScript.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}
