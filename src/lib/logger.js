@@ -64,7 +64,7 @@ const isLoggingEnabled =
   process.env.NODE_ENV !== 'production' || !!localStorage.getItem('debug');
 
 export function withLogging(reducerFn) {
-  if (isLoggingEnabled) {
+  if (!isLoggingEnabled) {
     return reducerFn;
   }
 
