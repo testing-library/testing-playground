@@ -47,9 +47,6 @@ function handler(event, context, callback) {
         provider_name: 'Testing Playground',
         provider_url: host,
 
-        author_name: 'Stephan Meijer',
-        author_url: 'https://github.com/smeijer/testing-playground',
-
         html: `<iframe src="${url}" width="${maxwidth}" height="${maxheight}" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" title="Testing Playground" style="overflow: hidden; display: block;" loading="lazy" name="testing-playground-${Date.now()}"></iframe>`,
         width: maxwidth,
         height: maxheight,
