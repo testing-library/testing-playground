@@ -11,8 +11,9 @@ function deepEqual(left, right) {
     );
   }
 
-  if (typeof left === 'object') {
+  if (left && typeof left === 'object') {
     return (
+      right &&
       typeof right === 'object' &&
       Object.keys(left).length === Object.keys(right).length &&
       Object.entries(left).every(([key, value]) => deepEqual(value, right[key]))
