@@ -61,7 +61,7 @@ function renderDiff(diff) {
 }
 
 const isLoggingEnabled =
-  process.env.NODE_ENV !== 'production' || !!localStorage.getItem('debug');
+  process.env.NODE_ENV === 'development' || !!localStorage.getItem('debug');
 
 export function withLogging(reducerFn) {
   if (!isLoggingEnabled) {
