@@ -194,12 +194,17 @@ function runInSandbox({ markup, query, cacheId }) {
         rootNode: sandbox.rootNode,
         element,
       });
-
+      const cssPathString = cssPath(result.data, true);
+      const container = document.createElement('div');
+      container.innerHTML = markup;
+      const target = container.querySelector(
+        cssPathString.replace(/^body > /, ''),
+      );
       return {
         suggestion,
         data,
-        target: result.data,
-        cssPath: cssPath(result.data, true),
+        target: target,
+        cssPath: cssPathString,
       };
     });
 
