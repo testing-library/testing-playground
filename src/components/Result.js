@@ -3,6 +3,7 @@ import ErrorBox from './ErrorBox';
 import ResultQueries from './ResultQueries';
 import ResultSuggestion from './ResultSuggestion';
 import Scrollable from './Scrollable';
+import { emptyResult } from '../lib';
 
 function Result({ result, dispatch }) {
   if (result.error) {
@@ -36,7 +37,8 @@ function Result({ result, dispatch }) {
       </div>
     );
   }
-  const { data, suggestion } = result.elements[0];
+
+  const { data, suggestion } = result.elements?.[0] || emptyResult;
 
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">

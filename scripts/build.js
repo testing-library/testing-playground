@@ -17,7 +17,9 @@ async function build({
 
   if (serve !== false && port) {
     config.serve = { port: await getPort({ port }) };
-  } else {
+  }
+
+  if (process.env.NODE_ENV === 'production') {
     config.mode = 'production';
   }
 

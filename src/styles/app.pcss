@@ -8,6 +8,10 @@ html {
   @apply h-full;
 }
 
+body {
+  @apply text-base;
+}
+
 body:not(.embedded) {
   @apply bg-gray-100;
 }
@@ -48,6 +52,15 @@ nav a:not(.title):hover {
 
 .editor > .h-full-within {
   height: calc(100% - 2rem);
+}
+
+.h-half {
+  height: 50%;
+}
+
+.grid-equal-cells {
+  grid-auto-rows: 1fr;
+  grid-auto-columns: 1fr;
 }
 
 blockquote {
@@ -113,6 +126,10 @@ blockquote cite:before {
 
 .error {
   @apply border text-white bg-red-600 p-4 rounded;
+}
+
+button:disabled {
+  opacity: .2;
 }
 
 /**

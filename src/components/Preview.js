@@ -5,7 +5,7 @@ import AddHtml from './AddHtml';
 import { getQueryAdvise } from '../lib';
 
 function selectByCssPath(rootNode, cssPath) {
-  return rootNode?.querySelector(cssPath.replace(/^body > /, ''));
+  return rootNode?.querySelector(cssPath.toString().replace(/^body > /, ''));
 }
 
 function Preview({ markup, accessibleRoles, elements, dispatch }) {
@@ -94,6 +94,7 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
       <div className="flex-auto relative overflow-hidden h-1">
         <Scrollable>
           <div
+            id="view"
             className="preview"
             onClick={handleClick}
             onMouseMove={handleMove}

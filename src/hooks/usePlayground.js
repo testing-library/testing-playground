@@ -20,6 +20,7 @@ function reducer(state, action) {
         result: parser.parse({
           markup: action.markup,
           query: state.query,
+          rootNode: state.rootNode,
           prevResult: state.result,
         }),
       };
@@ -40,6 +41,7 @@ function reducer(state, action) {
         result: parser.parse({
           markup: state.markup,
           query: action.query,
+          rootNode: state.rootNode,
           prevResult: state.result,
         }),
       };
@@ -52,18 +54,19 @@ function reducer(state, action) {
 }
 
 function usePlayground(props) {
-  let { markup, query, onChange, instanceId } = props;
+  let { markup, query, onChange, instanceId, rootNode } = props || {};
 
   if (!markup && !query) {
     markup = defaultValues.markup;
     query = defaultValues.query;
   }
 
-  const result = parser.parse({ markup, query, cacheId: instanceId });
+  const result = parser.parse({ rootNode, markup, query, cacheId: instanceId });
   const [state, dispatch] = useReducer(withLogging(reducer), {
-    result,
+    rootNode,
     markup,
     query,
+    result,
   });
 
   useEffect(() => {
