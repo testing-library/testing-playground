@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import AddHtml from './AddHtml';
@@ -25,6 +25,7 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   //    Indicating that the `parsed` element can be highlighted again.
   const [highlighted, setHighlighted] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [scripts, setScripts] = useState([]);
   const htmlRoot = useRef();
 
   const { suggestion } = getQueryAdvise({
@@ -33,6 +34,61 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
   });
 
   // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
+
+  useEffect(() => {
+    const container = document.createElement('div');
+    container.innerHTML = markup;
+    const scriptsCollections = container.getElementsByTagName('script');
+    const jsScripts = Array.from(scriptsCollections).filter(
+      (script) => script.type === 'text/javascript' || script.type === '',
+    );
+    setScripts((scripts) => [
+      ...scripts.filter((script) =>
+        jsScripts
+          .map((jsScript) => jsScript.innerHTML)
+          .includes(script.innerHTML),
+      ),
+      ...jsScripts
+        .filter(
+          (jsScript) =>
+            !scripts
+              .map((script) => script.innerHTML)
+              .includes(jsScript.innerHTML),
+        )
+        .map((jsScript) => ({
+          scriptCode: jsScript.innerHTML,
+          toBeRemoved: jsScript.outerHTML,
+          evaluated: false,
+        })),
+    ]);
+  }, [markup, setScripts]);
+
+  const actualMarkup = useMemo(
+    () =>
+      scripts.length
+        ? scripts.reduce(
+            (html, script) => html.replace(script.toBeRemoved, ''),
+            markup,
+          )
+        : markup,
+    [scripts, markup],
+  );
+
+  useEffect(() => {
+    if (htmlRoot.current && highlighted) {
+      scripts
+        .filter((script) => !script.evaluated)
+        .forEach((script) => {
+          try {
+            script.evaluated = true;
+            const executeScript = new Function(script.scriptCode);
+            executeScript();
+          } catch (e) {
+            alert('Failing script inserted in markup!');
+          }
+        });
+    }
+  }, [highlighted, scripts, htmlRoot.current]);
 
   useEffect(() => {
     setRoles(Object.keys(accessibleRoles || {}).sort());
@@ -99,7 +155,9 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
             onClick={handleClick}
             onMouseMove={handleMove}
             ref={htmlRoot}
-            dangerouslySetInnerHTML={{ __html: markup }}
+            dangerouslySetInnerHTML={{
+              __html: actualMarkup,
+            }}
           />
         </Scrollable>
       </div>
