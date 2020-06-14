@@ -15,7 +15,7 @@ series [How to Contribute to an Open Source Project on GitHub][egghead]
 > pull requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream git@github.com:smeijer/testing-playground.git
+> git remote add upstream https://github.com/testing-library/testing-playground
 > git fetch upstream
 > git branch --set-upstream-to=upstream/develop develop
 > ```
@@ -45,4 +45,4 @@ Also, please watch the repo and respond to questions/bug reports/feature
 requests! Thanks!
 
 [egghead]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
-[issues]: https://github.com/smeijer/testing-playground/issues
+[issues]: https://github.com/testing-library/testing-playground/issues

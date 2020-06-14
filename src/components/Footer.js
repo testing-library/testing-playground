@@ -6,45 +6,38 @@ function Footer() {
       <div className="text-xs text-gray-800">
         Copyright © 2020 Stephan Meijer & Contributors
       </div>
+
       <div className="flex space-x-4 items-center">
-        <a
-          className="github-button"
-          href="https://github.com/sponsors/smeijer"
-          data-icon="octicon-heart"
-          aria-label="Sponsor @smeijer on GitHub"
-        >
-          Sponsor
-        </a>
-        <a href="https://twitter.com/meijer_s">
+        <a href="https://twitter.com/TestingLib">
           <img
-            alt="Follow me on Twitter"
-            src="https://img.shields.io/twitter/url?label=Follow&style=social&url=https%3A%2F%2Ftwitter.com%2Fmeijer_s"
+            alt="Follow us on Twitter"
+            src="https://img.shields.io/twitter/url?label=Follow&style=social&url=https://twitter.com/TestingLib"
           />
         </a>
 
         <a
           className="github-button"
-          href="https://github.com/smeijer/testing-playground/issues"
+          href="https://github.com/testing-library/testing-playground/issues"
           data-icon="octicon-issue-opened"
-          aria-label="Issue smeijer/testing-playground on GitHub"
+          aria-label="Issue testing-library/testing-playground on GitHub"
         >
           Issue
         </a>
 
         <a
           className="github-button"
-          href="https://github.com/smeijer/testing-playground"
+          href="https://github.com/testing-library/testing-playground"
           data-icon="octicon-star"
-          aria-label="Star smeijer/testing-playground on GitHub"
+          aria-label="Star testing-library/testing-playground on GitHub"
         >
           Star
         </a>
 
         <a
           className="github-button"
-          href="https://github.com/smeijer/testing-playground/fork"
+          href="https://github.com/testing-library/testing-playground/fork"
           data-icon="octicon-repo-forked"
-          aria-label="Fork smeijer/testing-playground on GitHub"
+          aria-label="Fork testing-library/testing-playground on GitHub"
         >
           Fork
         </a>

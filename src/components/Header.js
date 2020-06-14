@@ -28,7 +28,7 @@ function Header() {
 
         <div className="flex items-center space-x-8">
           <a
-            href="https://github.com/smeijer/testing-playground"
+            href="https://github.com/testing-library/testing-playground"
             className="hover:underline"
           >
             GitHub
