@@ -92,7 +92,7 @@ Every section in the roadmap is accompanied by one or more issues. Contributions
 Please see [contributing.md] for more details. If you just want to run the playground on your own machine, go to your terminal and enter the following commands:
 
 ```bash
-git clone https://github.com/testing-library/testing-playground
+git clone git@github.com:testing-library/testing-playground.git
 cd testing-playground
 npm ci
 npm run start

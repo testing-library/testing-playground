@@ -15,7 +15,7 @@ series [How to Contribute to an Open Source Project on GitHub][egghead]
 > pull requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream https://github.com/testing-library/testing-playground
+> git remote add upstream git@github.com:testing-library/testing-playground.git
 > git fetch upstream
 > git branch --set-upstream-to=upstream/develop develop
 > ```

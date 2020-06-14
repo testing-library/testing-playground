@@ -6,12 +6,19 @@ function Footer() {
       <div className="text-xs text-gray-800">
         Copyright © 2020 Stephan Meijer & Contributors
       </div>
-
       <div className="flex space-x-4 items-center">
-        <a href="https://twitter.com/TestingLib">
+        <a
+          className="github-button"
+          href="https://github.com/sponsors/smeijer"
+          data-icon="octicon-heart"
+          aria-label="Sponsor @smeijer on GitHub"
+        >
+          Sponsor
+        </a>
+        <a href="https://twitter.com/meijer_s">
           <img
-            alt="Follow us on Twitter"
-            src="https://img.shields.io/twitter/url?label=Follow&style=social&url=https://twitter.com/TestingLib"
+            alt="Follow me on Twitter"
+            src="https://img.shields.io/twitter/url?label=@meijer_s&style=social&url=https%3A%2F%2Ftwitter.com%2Fmeijer_s"
           />
         </a>
 
