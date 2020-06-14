@@ -2,6 +2,15 @@
   "name": "testing-playground",
   "version": "1.6.0",
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
+  "author": "Stephan Meijer <stephan.meijer@gmail.com>",
+  "homepage": "https://testing-playground.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/testing-library/testing-playground"
+  },
+  "bugs": {
+    "url": "https://github.com/testing-library/testing-playground/issues"
+  },
   "scripts": {
     "start": "run-s start:client",
     "start:client": "node ./scripts/build-client",
