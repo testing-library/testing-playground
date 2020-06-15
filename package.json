@@ -4,6 +4,7 @@
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
   "author": "Stephan Meijer <stephan.meijer@gmail.com>",
   "homepage": "https://testing-playground.com",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/testing-library/testing-playground"
