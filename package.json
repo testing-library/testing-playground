@@ -37,7 +37,7 @@
     "postversion": "git push && git push --tags && git checkout master && git merge develop --ff && git push && git checkout -"
   },
   "dependencies": {
-    "@testing-library/dom": "^7.14.0",
+    "@testing-library/dom": "^7.15.0",
     "codemirror": "5.54.0",
     "crx-bridge": "^2.1.0",
     "deep-diff": "^1.0.2",
