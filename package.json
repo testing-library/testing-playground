@@ -2,12 +2,23 @@
   "name": "testing-playground",
   "version": "1.6.0",
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
+  "author": "Stephan Meijer <stephan.meijer@gmail.com>",
+  "homepage": "https://testing-playground.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/testing-library/testing-playground"
+  },
+  "bugs": {
+    "url": "https://github.com/testing-library/testing-playground/issues"
+  },
   "scripts": {
     "start": "run-s start:client",
     "start:client": "node ./scripts/build-client",
+    "start:devtools": "node ./scripts/build-devtools",
     "build": "run-s clean build:*",
     "build:client": "cross-env NODE_ENV=production node ./scripts/build-client",
     "build:server": "cross-env NODE_ENV=production node ./scripts/build-lambda",
+    "build:devtools": "cross-env NODE_ENV=production node ./scripts/build-devtools",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint . --quiet --fix",
     "lint:prettier": "prettier . --write",
@@ -28,11 +39,14 @@
   "dependencies": {
     "@testing-library/dom": "^7.14.0",
     "codemirror": "5.54.0",
+    "crx-bridge": "^2.1.0",
     "deep-diff": "^1.0.2",
     "dom-accessibility-api": "^0.4.4",
     "js-beautify": "^1.11.0",
     "lodash.debounce": "4.0.8",
+    "lodash.throttle": "^4.1.1",
     "lz-string": "^1.4.4",
+    "memoize-one": "^5.1.1",
     "pretty-format": "26.0.1",
     "query-string": "^6.12.1",
     "react": "^16.13.1",
@@ -44,6 +58,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
     "@testing-library/jest-dom": "^5.9.0",
@@ -51,6 +66,7 @@
     "@testing-library/user-event": "^11.4.2",
     "@types/fs-extra": "^9.0.1",
     "babel-eslint": "^10.1.0",
+    "chrome-launch": "^1.1.4",
     "conventional-changelog": "^3.1.21",
     "conventional-changelog-config-spec": "^2.1.0",
     "cross-env": "^7.0.2",

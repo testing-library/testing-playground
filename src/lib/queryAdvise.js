@@ -1,6 +1,7 @@
 import { messages, queries } from '../constants';
 import { computeAccessibleName, getRole } from 'dom-accessibility-api';
 import { getSuggestedQuery } from '@testing-library/dom';
+import cssPath from './cssPath';
 
 export function getData({ rootNode, element }) {
   const type = element.getAttribute('type');
@@ -36,7 +37,9 @@ export function getData({ rootNode, element }) {
   };
 }
 
-const emptyResult = { data: {}, suggestion: {} };
+// TODO:
+// TestingLibraryDom.getSuggestedQuery($0, 'get').toString()
+export const emptyResult = { data: {}, suggestion: {} };
 export function getQueryAdvise({ rootNode, element }) {
   if (
     !rootNode ||
@@ -49,10 +52,14 @@ export function getQueryAdvise({ rootNode, element }) {
   const data = getData({ rootNode, element });
 
   if (!suggestedQuery) {
+    // this will always work, but returns something potentially nasty, like:
+    // '#tsf > div:nth-child(2) > div:nth-child(1) > div:nth-child(4)'
+    const path = cssPath(element, true);
+
     return {
       suggestion: {
         level: 3,
-        expression: 'container.querySelector(…)',
+        expression: `container.querySelector('${path}')`,
         method: '',
         ...messages[3],
       },

@@ -11,7 +11,9 @@ it('should return default suggested query if none was returned by dtl', () => {
   const rootNode = document.createElement('div');
   const element = document.createElement('faketag');
   const result = getQueryAdvise({ rootNode, element });
-  expect(result.suggestion.expression).toEqual('container.querySelector(…)');
+  expect(result.suggestion.expression).toEqual(
+    "container.querySelector('faketag')",
+  );
 });
 
 it('should return an empty object if root node is a malformed object', () => {

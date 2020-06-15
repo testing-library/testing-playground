@@ -16,7 +16,12 @@ if (!IS_DEVELOPMENT) {
 
   plugins.push(
     purgecss({
-      content: ['src/*.html', 'src/**/*.js'],
+      content: [
+        'src/*.html',
+        'src/**/*.js',
+        'devtools/**/*.js',
+        'devtools/**/*.html',
+      ],
       whitelist: ['body', /CodeMirror/],
       whitelistPatternsChildren: [/CodeMirror/, /cm-s-dracula/],
       defaultExtractor: TailwindExtractor.extract,
