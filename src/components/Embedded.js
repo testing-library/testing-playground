@@ -1,20 +1,12 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import state from '../lib/state';
 
 import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load();
 
 const SUPPORTED_PANES = {
   markup: true,
@@ -26,8 +18,7 @@ const SUPPORTED_PANES = {
 // TODO: we should support readonly mode
 function Embedded() {
   const [{ markup, query, result }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
+    instanceId: 'embed',
   });
 
   const location = useLocation();

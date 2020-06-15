@@ -1,12 +1,17 @@
-import { useReducer, useEffect } from 'react';
-import parser from '../parser';
+import { useEffect, useReducer } from 'react';
+
 import { initialValues as defaultValues } from '../constants';
 import { withLogging } from '../lib/logger';
+import globalState from '../lib/state';
+import parser from '../parser';
 
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_MARKUP_EDITOR': {
-      return { ...state, markupEditor: action.editor };
+      return {
+        ...state,
+        markupEditor: action.editor,
+      };
     }
 
     case 'SET_MARKUP': {
@@ -20,14 +25,16 @@ function reducer(state, action) {
         result: parser.parse({
           markup: action.markup,
           query: state.query,
-          rootNode: state.rootNode,
           prevResult: state.result,
         }),
       };
     }
 
     case 'SET_QUERY_EDITOR': {
-      return { ...state, queryEditor: action.editor };
+      return {
+        ...state,
+        queryEditor: action.editor,
+      };
     }
 
     case 'SET_QUERY': {
@@ -41,7 +48,6 @@ function reducer(state, action) {
         result: parser.parse({
           markup: state.markup,
           query: action.query,
-          rootNode: state.rootNode,
           prevResult: state.result,
         }),
       };
@@ -53,29 +59,32 @@ function reducer(state, action) {
   }
 }
 
-function usePlayground(props) {
-  let { markup, query, onChange, instanceId, rootNode } = props || {};
+const onStateChange = ({ markup, query, result }) => {
+  globalState.save({ markup, query });
+  globalState.updateTitle(result?.expression?.expression);
+};
+
+const usePlayground = ({ instanceId }) => {
+  let { markup, query } = globalState.load();
 
   if (!markup && !query) {
     markup = defaultValues.markup;
     query = defaultValues.query;
   }
 
-  const result = parser.parse({ rootNode, markup, query, cacheId: instanceId });
+  const result = parser.parse({ markup, query, cacheId: instanceId });
   const [state, dispatch] = useReducer(withLogging(reducer), {
-    rootNode,
     markup,
+    markupEditor: null,
     query,
     result,
   });
 
   useEffect(() => {
-    if (typeof onChange === 'function') {
-      onChange(state);
-    }
+    onStateChange(state);
   }, [state.result]);
 
   return [state, dispatch];
-}
+};
 
 export default usePlayground;

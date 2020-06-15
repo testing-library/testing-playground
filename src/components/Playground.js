@@ -5,19 +5,10 @@ import MarkupEditor from './MarkupEditor';
 import Result from './Result';
 import Query from './Query';
 import usePlayground from '../hooks/usePlayground';
-import state from '../lib/state';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load() || {};
 
 function Playground() {
   const [{ markup, query, result }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
+    instanceId: 'playground',
   });
 
   return (

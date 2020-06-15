@@ -3,7 +3,6 @@ import React, { useRef, useCallback, useState } from 'react';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-import state from '../lib/state';
 import { eventMap } from '@testing-library/dom/dist/event-map';
 import { VirtualScrollable } from './Scrollable';
 import throttle from 'lodash.throttle';
@@ -12,13 +11,6 @@ import IconButton from './IconButton';
 import TrashcanIcon from './TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load() || {};
 
 function targetToString() {
   return [
@@ -107,11 +99,10 @@ function EventRecord({ index, style, data }) {
   );
 }
 
-const noop = () => {};
+const noop = () => undefined;
 function DomEvents() {
   const [{ markup, result }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
+    instanceId: 'domevents',
   });
 
   const buffer = useRef([]);
