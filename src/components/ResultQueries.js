@@ -1,5 +1,4 @@
 import React from 'react';
-import { getSuggestedQuery } from '@testing-library/dom';
 import { getFieldName } from '../lib';
 
 function Section({ children }) {
@@ -11,25 +10,19 @@ function Heading({ children }) {
 }
 
 const Field = React.memo(function Field({
-  method,
   data,
+  method,
+  query,
   dispatch,
   active,
-  target,
 }) {
   const field = getFieldName(method);
   const value = data[field];
   const handleClick = value
     ? () => {
-        const suggestedQuery = getSuggestedQuery(
-          target,
-          'get',
-          field.charAt(0).toUpperCase() + field.slice(1),
-        );
-
         dispatch({
           type: 'SET_QUERY',
-          query: `screen.${suggestedQuery.toString()}`,
+          query: `screen.${query.toString()}`,
         });
       }
     : undefined;
@@ -49,43 +42,43 @@ const Field = React.memo(function Field({
 });
 
 // for inputs, the role will only work if there is also a type attribute
-function ResultQueries({ data, dispatch, activeMethod, target }) {
+function ResultQueries({ data, queries, dispatch, activeMethod }) {
   return (
     <div className="grid grid-cols-2 gap-4 pt-4">
       <Section>
         <Heading>1. Queries Accessible to Everyone</Heading>
         <Field
-          target={target}
-          method="getByRole"
           data={data}
+          method="getByRole"
+          query={queries['getByRole']}
           dispatch={dispatch}
           active={'getByRole' === activeMethod}
         />
         <Field
-          target={target}
-          method="getByLabelText"
           data={data}
+          method="getByLabelText"
+          query={queries['getByLabelText']}
           dispatch={dispatch}
           active={'getByLabelText' === activeMethod}
         />
         <Field
-          target={target}
-          method="getByPlaceholderText"
           data={data}
+          method="getByPlaceholderText"
+          query={queries['getByPlaceholderText']}
           dispatch={dispatch}
           active={'getByPlaceholderText' === activeMethod}
         />
         <Field
-          target={target}
-          method="getByText"
           data={data}
+          method="getByText"
+          query={queries['getByText']}
           dispatch={dispatch}
           active={'getByText' === activeMethod}
         />
         <Field
-          target={target}
-          method="getByDisplayValue"
           data={data}
+          method="getByDisplayValue"
+          query={queries['getByDisplayValue']}
           dispatch={dispatch}
           active={'getByDisplayValue' === activeMethod}
         />
@@ -95,16 +88,16 @@ function ResultQueries({ data, dispatch, activeMethod, target }) {
         <Section>
           <Heading>2. Semantic Queries</Heading>
           <Field
-            target={target}
-            method="getByAltText"
             data={data}
+            method="getByAltText"
+            query={queries['getByAltText']}
             dispatch={dispatch}
             active={'getByAltText' === activeMethod}
           />
           <Field
-            target={target}
-            method="getByTitle"
             data={data}
+            method="getByTitle"
+            query={queries['getByTitle']}
             dispatch={dispatch}
             active={'getByTitle' === activeMethod}
           />
@@ -113,9 +106,9 @@ function ResultQueries({ data, dispatch, activeMethod, target }) {
         <Section>
           <Heading>3. TestId</Heading>
           <Field
-            target={target}
-            method="getByTestId"
             data={data}
+            method="getByTestId"
+            query={queries['getByTestId']}
             dispatch={dispatch}
             active={'getByTestId' === activeMethod}
           />

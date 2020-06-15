@@ -3,6 +3,7 @@ import { ensureArray, getQueryAdvise } from './lib';
 import { queries as supportedQueries } from './constants';
 import cssPath from './lib/cssPath';
 import deepEqual from './lib/deepEqual';
+import { getAllPossibileQueries } from './lib/queryAdvise';
 
 import {
   getQueriesForElement,
@@ -230,9 +231,7 @@ function runInSandbox({ markup, query, cacheId }) {
       });
 
       const cssPathString = cssPath(element, true).toString();
-      const container = document.createElement('div');
-      container.innerHTML = markup;
-      const target = container.querySelector(
+      const target = sandbox.rootNode.querySelector(
         cssPathString.replace(/^body > /, ''),
       );
       return {
@@ -240,6 +239,7 @@ function runInSandbox({ markup, query, cacheId }) {
         data,
         target: target,
         cssPath: cssPathString,
+        queries: getAllPossibileQueries(target),
       };
     });
 

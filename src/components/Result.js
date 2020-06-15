@@ -36,7 +36,7 @@ function Result({ result, dispatch }) {
       </div>
     );
   }
-  const { data, suggestion, target } = result.elements[0];
+  const { data, suggestion, queries } = result.elements[0];
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
       <div className="flex-none pb-4 border-b">
@@ -52,10 +52,10 @@ function Result({ result, dispatch }) {
         <Scrollable>
           <ResultQueries
             data={data}
+            queries={queries}
             suggestion={suggestion}
             activeMethod={result.expression?.method}
             dispatch={dispatch}
-            target={target}
           />
         </Scrollable>
       </div>
