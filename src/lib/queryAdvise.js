@@ -2,6 +2,7 @@ import { messages, queries } from '../constants';
 import { computeAccessibleName, getRole } from 'dom-accessibility-api';
 import { getSuggestedQuery } from '@testing-library/dom';
 import cssPath from './cssPath';
+import { getFieldName } from './';
 
 export function getData({ rootNode, element }) {
   const type = element.getAttribute('type');
@@ -82,19 +83,12 @@ export function getQueryAdvise({ rootNode, element }) {
 }
 
 export function getAllPossibileQueries(element) {
-  const queries = [
-    'Role',
-    'LabelText',
-    'PlaceholderText',
-    'Text',
-    'DisplayValue',
-    'AltText',
-    'Title',
-    'TestId',
-  ];
-
   const possibleQueries = queries
-    .map((query) => getSuggestedQuery(element, 'get', query))
+    .filter((query) => query.type !== 'GENERIC')
+    .map((query) => {
+      const method = getFieldName(query.method);
+      return getSuggestedQuery(element, 'get', method);
+    })
     .filter((suggestedQuery) => suggestedQuery !== undefined)
     .reduce((obj, suggestedQuery) => {
       obj[suggestedQuery.queryMethod] = suggestedQuery;

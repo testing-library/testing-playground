@@ -52,7 +52,7 @@ function Result({ result, dispatch }) {
         <Scrollable>
           <ResultQueries
             data={data}
-            queries={queries}
+            possibleQueries={queries}
             suggestion={suggestion}
             activeMethod={result.expression?.method}
             dispatch={dispatch}

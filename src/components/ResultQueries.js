@@ -1,5 +1,6 @@
 import React from 'react';
 import { getFieldName } from '../lib';
+import { queries } from '../constants';
 
 function Section({ children }) {
   return <div className="space-y-3">{children}</div>;
@@ -42,76 +43,62 @@ const Field = React.memo(function Field({
 });
 
 // for inputs, the role will only work if there is also a type attribute
-function ResultQueries({ data, queries, dispatch, activeMethod }) {
+function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
   return (
     <div className="grid grid-cols-2 gap-4 pt-4">
       <Section>
         <Heading>1. Queries Accessible to Everyone</Heading>
-        <Field
-          data={data}
-          method="getByRole"
-          query={queries['getByRole']}
-          dispatch={dispatch}
-          active={'getByRole' === activeMethod}
-        />
-        <Field
-          data={data}
-          method="getByLabelText"
-          query={queries['getByLabelText']}
-          dispatch={dispatch}
-          active={'getByLabelText' === activeMethod}
-        />
-        <Field
-          data={data}
-          method="getByPlaceholderText"
-          query={queries['getByPlaceholderText']}
-          dispatch={dispatch}
-          active={'getByPlaceholderText' === activeMethod}
-        />
-        <Field
-          data={data}
-          method="getByText"
-          query={queries['getByText']}
-          dispatch={dispatch}
-          active={'getByText' === activeMethod}
-        />
-        <Field
-          data={data}
-          method="getByDisplayValue"
-          query={queries['getByDisplayValue']}
-          dispatch={dispatch}
-          active={'getByDisplayValue' === activeMethod}
-        />
+        {queries
+          .filter((query) => query.type === 'ACCESSIBLE')
+          .map((query) => {
+            return (
+              <Field
+                key={query.method}
+                data={data}
+                method={query.method}
+                query={possibleQueries[query.method]}
+                dispatch={dispatch}
+                active={query.method === activeMethod}
+              />
+            );
+          })}
       </Section>
 
       <div className="space-y-8">
         <Section>
           <Heading>2. Semantic Queries</Heading>
-          <Field
-            data={data}
-            method="getByAltText"
-            query={queries['getByAltText']}
-            dispatch={dispatch}
-            active={'getByAltText' === activeMethod}
-          />
-          <Field
-            data={data}
-            method="getByTitle"
-            query={queries['getByTitle']}
-            dispatch={dispatch}
-            active={'getByTitle' === activeMethod}
-          />
+          {queries
+            .filter((query) => query.type === 'SEMANTIC')
+            .map((query) => {
+              return (
+                <Field
+                  key={query.method}
+                  data={data}
+                  method={query.method}
+                  query={possibleQueries[query.method]}
+                  dispatch={dispatch}
+                  active={query.method === activeMethod}
+                />
+              );
+            })}
         </Section>
 
         <Section>
           <Heading>3. TestId</Heading>
-          <Field
-            data={data}
-            method="getByTestId"
-            query={queries['getByTestId']}
-            dispatch={dispatch}
-            active={'getByTestId' === activeMethod}
-          />
+          {queries
+            .filter((query) => query.type === 'TEST')
+            .map((query) => {
+              return (
+                <Field
+                  key={query.method}
+                  data={data}
+                  method={query.method}
+                  query={possibleQueries[query.method]}
+                  dispatch={dispatch}
+                  active={query.method === activeMethod}
+                />
+              );
+            })}
         </Section>
       </div>
     </div>
