@@ -80,3 +80,26 @@ export function getQueryAdvise({ rootNode, element }) {
     suggestion,
   };
 }
+
+export function getAllPossibileQueries(element) {
+  const queries = [
+    'Role',
+    'LabelText',
+    'PlaceholderText',
+    'Text',
+    'DisplayValue',
+    'AltText',
+    'Title',
+    'TestId',
+  ];
+
+  const possibleQueries = queries
+    .map((query) => getSuggestedQuery(element, 'get', query))
+    .filter((suggestedQuery) => suggestedQuery !== undefined)
+    .reduce((obj, suggestedQuery) => {
+      obj[suggestedQuery.queryMethod] = suggestedQuery;
+      return obj;
+    }, {});
+
+  return possibleQueries;
+}
