@@ -44,7 +44,7 @@ Add the following snippet directly before your closing `</body>` tag:
 <script async src="https://testing-playground.com/embed.js"></script>
 ```
 
-Create a template element, in which you add to `script` tags. One for `html` and one for `javascript`. Make sure to type them correctly, as that's the what that our embedder uses to populate the different panes.
+Create a template element, in which you add to `script` tags. One for `html` and one for `javascript`. Make sure to type them correctly, as that's what our embedder uses to populate the different panes.
 
 Note that the `data-testing-playground` attribute is required as well.
 
