@@ -157,11 +157,15 @@ button:disabled {
   @apply block text-gray-700 text-sm font-bold mb-2;
 }
 
-.preview input {
-  @apply block appearance-none border rounded w-full py-2 px-3 mb-2 text-gray-700 leading-tight;
+.preview input,
+.preview textarea,
+.preview select {
+  @apply block appearance-none border rounded w-full py-2 px-3 mb-2 bg-white text-gray-700 leading-tight;
 }
 
 .preview input:focus,
+.preview textarea:focus,
+.preview select:focus,
 .preview button:focus {
   @apply outline-none border border-gray-700;
 }
