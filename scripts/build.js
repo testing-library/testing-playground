@@ -1,26 +1,44 @@
 const { ensureDir } = require('fs-extra');
 const Parcel = require('@parcel/core').default;
 const getPort = require('get-port');
+const { NodePackageManager } = require('@parcel/package-manager');
+const { NodeFS } = require('@parcel/fs');
 
-async function build({
-  entries,
-  dest,
-  port,
-  serve = process.env.NODE_ENV !== 'production',
-}) {
+// see here for options:
+//   https://github.com/parcel-bundler/parcel/blob/v2/packages/core/parcel/src/cli.js
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+async function build({ entries, dest, port, serve = !isProduction }) {
   await ensureDir(dest);
+
+  const packageManager = new NodePackageManager(new NodeFS());
+  const defaultConfig = await packageManager.require(
+    '@parcel/config-default',
+    __filename,
+    { autoinstall: !isProduction },
+  );
 
   const config = {
     entries,
     distDir: dest,
+    packageManager,
+    defaultConfig: {
+      ...defaultConfig,
+      filePath: (
+        await packageManager.resolve('@parcel/config-default', __filename, {
+          autoinstall: !isProduction,
+        })
+      ).resolved,
+    },
+    patchConsole: true,
+    mode: isProduction ? 'production' : 'development',
+    sourceMaps: true,
   };
 
   if (serve !== false && port) {
     config.serve = { port: await getPort({ port }) };
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    config.mode = 'production';
+    config.hot = { port: await getPort() };
   }
 
   const parcel = new Parcel(config);
