@@ -83,6 +83,7 @@ function getLastExpression(code) {
     level,
     args,
     call,
+    userEvent: minified.trim().startsWith('userEvent.'),
   };
 }
 

@@ -4,6 +4,7 @@ import ResultQueries from './ResultQueries';
 import ResultSuggestion from './ResultSuggestion';
 import Scrollable from './Scrollable';
 import { emptyResult } from '../lib';
+import UserEventResult from './UserEventResult';
 
 function Result({ result, dispatch }) {
   if (result.error) {
@@ -11,7 +12,9 @@ function Result({ result, dispatch }) {
       <ErrorBox caption={result.error.message} body={result.error.details} />
     );
   }
-
+  if (result.expression && result.expression.userEvent) {
+    return <UserEventResult />;
+  }
   if (
     !result.expression ||
     !Array.isArray(result.elements) ||
