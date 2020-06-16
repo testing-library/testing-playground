@@ -31,7 +31,7 @@ const options = {
 
   htmlmixed: {
     ...baseOptions,
-    mode: { name: 'htmlmixed' },
+    mode: { name: 'htmlmixed', multilineTagIndentPastTag: false },
   },
 
   javascript: {
