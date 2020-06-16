@@ -6,12 +6,12 @@ import usePlayground from '../hooks/usePlayground';
 import state from '../lib/state';
 import { eventMap } from '@testing-library/dom/dist/event-map';
 import { VirtualScrollable } from './Scrollable';
-import { FixedSizeList as List } from 'react-window';
 import throttle from 'lodash.throttle';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import IconButton from './IconButton';
 import TrashcanIcon from './TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
+import StickyList from './StickyList';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -133,9 +133,8 @@ function DomEvents() {
     if (!node) return;
 
     addLoggingEvents(node, (event) => {
-      // insert at index 0
       event.id = buffer.current.length;
-      buffer.current.splice(0, 0, event);
+      buffer.current.push(event);
       setTimeout(flush, 0);
     });
   }, []);
@@ -185,7 +184,9 @@ function DomEvents() {
             ) : (
               <AutoSizer>
                 {({ width, height }) => (
-                  <List
+                  <StickyList
+                    follow={true}
+                    mode="bottom"
                     ref={listRef}
                     height={height}
                     itemCount={eventCount}
@@ -195,7 +196,7 @@ function DomEvents() {
                     outerElementType={VirtualScrollable}
                   >
                     {EventRecord}
-                  </List>
+                  </StickyList>
                 )}
               </AutoSizer>
             )}
