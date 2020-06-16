@@ -8,7 +8,7 @@ function selectByCssPath(rootNode, cssPath) {
   return rootNode?.querySelector(cssPath.toString().replace(/^body > /, ''));
 }
 
-function Preview({ markup, accessibleRoles, elements, dispatch }) {
+function Preview({ markup, accessibleRoles, elements, dispatch, variant }) {
   // Okay, listen up. `highlighted` can be a number of things, as I wanted to
   // keep a single variable to represent the state. This to reduce bug count
   // by creating out-of-sync states.
@@ -147,7 +147,7 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
       onMouseEnter={() => setHighlighted(true)}
       onMouseLeave={() => setHighlighted(false)}
     >
-      <div className="flex-auto relative overflow-hidden h-1">
+      <div className="flex-auto relative overflow-hidden">
         <Scrollable>
           <div
             id="view"
@@ -162,7 +162,9 @@ function Preview({ markup, accessibleRoles, elements, dispatch }) {
         </Scrollable>
       </div>
 
-      <PreviewHint roles={roles} suggestion={suggestion} />
+      {variant !== 'minimal' && (
+        <PreviewHint roles={roles} suggestion={suggestion} />
+      )}
     </div>
   ) : (
     <div className="w-full h-full flex flex-col relative overflow-hidden">

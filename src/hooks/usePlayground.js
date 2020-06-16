@@ -31,7 +31,7 @@ function reducer(state, action) {
     }
 
     case 'SET_QUERY': {
-      if (action.updateEditor !== false) {
+      if (action.updateEditor !== false && state.queryEditor) {
         state.queryEditor.setValue(action.query);
       }
 
