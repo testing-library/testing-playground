@@ -47,6 +47,10 @@ function reducer(state, action) {
       };
     }
 
+    case 'TOGGLE_EXECUTION': {
+      return { ...state, eventExecuted: !state.eventExecuted };
+    }
+
     default: {
       throw new Error('Unknown action type: ' + action.type);
     }
@@ -65,6 +69,7 @@ function usePlayground(props) {
   const [state, dispatch] = useReducer(withLogging(reducer), {
     rootNode,
     markup,
+    eventExecuted: result ? result.markup !== markup : false,
     query,
     result,
   });

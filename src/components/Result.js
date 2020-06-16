@@ -6,14 +6,16 @@ import Scrollable from './Scrollable';
 import { emptyResult } from '../lib';
 import UserEventResult from './UserEventResult';
 
-function Result({ result, dispatch }) {
+function Result({ result, eventExecuted, dispatch }) {
   if (result.error) {
     return (
       <ErrorBox caption={result.error.message} body={result.error.details} />
     );
   }
   if (result.expression && result.expression.userEvent) {
-    return <UserEventResult />;
+    return (
+      <UserEventResult eventExecuted={eventExecuted} dispatch={dispatch} />
+    );
   }
   if (
     !result.expression ||

@@ -15,7 +15,7 @@ function onStateChange({ markup, query, result }) {
 const initialValues = state.load() || {};
 
 function Playground() {
-  const [{ markup, query, result }, dispatch] = usePlayground({
+  const [{ markup, query, result, eventExecuted }, dispatch] = usePlayground({
     onChange: onStateChange,
     ...initialValues,
   });
@@ -29,7 +29,7 @@ function Playground() {
 
         <div className="flex-auto h-56 md:h-full">
           <Preview
-            markup={result.markup}
+            markup={eventExecuted ? result.markup : markup}
             elements={result.elements}
             accessibleRoles={result.accessibleRoles}
             dispatch={dispatch}
@@ -45,7 +45,11 @@ function Playground() {
         </div>
 
         <div className="flex-auto h-56 md:h-full overflow-hidden">
-          <Result result={result} dispatch={dispatch} />
+          <Result
+            result={result}
+            eventExecuted={eventExecuted}
+            dispatch={dispatch}
+          />
         </div>
       </div>
     </div>

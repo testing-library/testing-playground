@@ -55,6 +55,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^6.0.5",
+    "react-toggle": "^4.1.1",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5"
   },
@@ -96,7 +97,7 @@
   "jest": {
     "verbose": true,
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|svg)$": "<rootDir>/src/__mocks__/fileMock.js"
+      "\\.(jpg|jpeg|png|svg|css)$": "<rootDir>/src/__mocks__/fileMock.js"
     },
     "setupFilesAfterEnv": [
       "./tests/setupTests.js"
