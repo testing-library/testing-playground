@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import { ToastContainer } from 'react-toastify';
 
 function Layout({ children }) {
   return (
@@ -14,6 +15,8 @@ function Layout({ children }) {
       <div className="flex-none">
         <Footer />
       </div>
+
+      <ToastContainer />
     </div>
   );
 }

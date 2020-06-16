@@ -1,6 +1,6 @@
 import React from 'react';
 
-function IconButton({ children, variant, onClick, className }) {
+function IconButton({ children, title, variant, onClick, className }) {
   return (
     <button
       className={[
@@ -13,6 +13,7 @@ function IconButton({ children, variant, onClick, className }) {
         .filter(Boolean)
         .join(' ')}
       onClick={onClick}
+      title={title}
     >
       {children}
     </button>
