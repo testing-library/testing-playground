@@ -74,7 +74,6 @@ function usePlayground(props) {
       onChange(state);
     }
   }, [state.result]);
-
   return [state, dispatch];
 }
 

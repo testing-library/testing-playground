@@ -11,6 +11,8 @@ import {
   logDOM,
 } from '@testing-library/dom';
 
+import userEvent from '@testing-library/user-event';
+
 const debug = (element, maxLength, options) =>
   Array.isArray(element)
     ? element.map((el) => logDOM(el, maxLength, options)).join('\n')
@@ -88,6 +90,7 @@ function createEvaluator({ rootNode }) {
   const context = Object.assign({}, queries, {
     screen: getScreen(rootNode),
     container: rootNode,
+    userEvent,
   });
 
   const evaluator = Function.apply(null, [
@@ -109,6 +112,7 @@ function createEvaluator({ rootNode }) {
         details: error.slice(1).join('\n').trim(),
       };
     }
+    result.markup = rootNode.innerHTML;
 
     result.elements = ensureArray(result.data)
       .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
@@ -138,6 +142,19 @@ function createEvaluator({ rootNode }) {
   }
 
   return { context, evaluator, exec, wrap };
+}
+
+function parseScripts(markup) {
+  const container = document.createElement('div');
+  container.innerHTML = markup;
+  const scriptsCollections = container.getElementsByTagName('script');
+  const jsScripts = Array.from(scriptsCollections).filter(
+    (script) => script.type === 'text/javascript' || script.type === '',
+  );
+  return jsScripts.map((script) => ({
+    scriptCode: script.innerHTML,
+    evaluated: false,
+  }));
 }
 
 function createSandbox({ markup }) {
@@ -194,6 +211,17 @@ function createSandbox({ markup }) {
         body = html;
       }
     },
+    evalScripts: () =>
+      parseScripts(markup)
+        .filter((script) => !script.evaluated)
+        .forEach((script) => {
+          try {
+            frame.contentWindow.exec(context, script.scriptCode);
+            script.evaluated = true;
+          } catch (e) {
+            console.log(e);
+          }
+        }),
     eval: (query) =>
       wrap(() => frame.contentWindow.exec(context, query), { markup, query }),
     destroy: () => document.body.removeChild(container),
@@ -217,6 +245,7 @@ function runInSandbox({ markup, query, cacheId }) {
   const sandbox = sandboxes[cacheId] || createSandbox({ markup });
   sandbox.ensureMarkup(markup);
 
+  sandbox.evalScripts();
   const result = sandbox.eval(query);
 
   if (cacheId && !sandboxes[cacheId]) {

@@ -29,7 +29,7 @@ function Playground() {
 
         <div className="flex-auto h-56 md:h-full">
           <Preview
-            markup={markup}
+            markup={result.markup}
             elements={result.elements}
             accessibleRoles={result.accessibleRoles}
             dispatch={dispatch}
