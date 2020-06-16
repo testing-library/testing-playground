@@ -119,11 +119,17 @@ function createEvaluator({ rootNode }) {
           element,
         });
 
+        const cssPathString = cssPath(element, true).toString();
+        const target = rootNode.querySelector(
+          cssPathString.replace(/^body > /, ''),
+        );
+
         return {
           suggestion,
           data,
           target: element,
-          cssPath: cssPath(element, true),
+          cssPath: cssPathString,
+          queries: getAllPossibileQueries(target),
         };
       });
 
@@ -219,31 +225,6 @@ function runInSandbox({ markup, query, cacheId }) {
   sandbox.ensureMarkup(markup);
 
   const result = sandbox.eval(query);
-  result.markup = markup;
-  result.query = query;
-
-  result.elements = ensureArray(result.data)
-    .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
-    .map((element) => {
-      const { suggestion, data } = getQueryAdvise({
-        rootNode: sandbox.rootNode,
-        element,
-      });
-
-      const cssPathString = cssPath(element, true).toString();
-      const target = sandbox.rootNode.querySelector(
-        cssPathString.replace(/^body > /, ''),
-      );
-      return {
-        suggestion,
-        data,
-        target: target,
-        cssPath: cssPathString,
-        queries: getAllPossibileQueries(target),
-      };
-    });
-
-  result.accessibleRoles = getRoles(sandbox.rootNode);
 
   if (cacheId && !sandboxes[cacheId]) {
     sandboxes[cacheId] = sandbox;
