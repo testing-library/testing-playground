@@ -3,7 +3,7 @@
   functions = "./dist/server"
   publish = "./dist/client"
 [build.environment]
-  NODE_VERSION=12
+  NODE_VERSION = "12"
 
 [template.environment]
   GITHUB_CLIENT_ID = "Your GitHub Oauth Client Id"
