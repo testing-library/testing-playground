@@ -1,5 +1,5 @@
 const { AuthorizationCode } = require('simple-oauth2');
-const githubAPI = ' https://github.com/login';
+const githubAPI = `https://github.com/login`;
 
 const authorization = new AuthorizationCode({
   client: {
