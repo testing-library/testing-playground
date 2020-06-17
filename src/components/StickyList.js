@@ -16,12 +16,18 @@ function StickyList(
 ) {
   const innerRef = useRef();
   useEffect(() => {
-    if (ref.current && innerRef.current) {
-      if (mode === 'bottom') {
-        ref.current.scrollTo(innerRef.current.offsetHeight);
-      } else if (mode === 'top') {
-        ref.current.scrollTo(0);
-      }
+    if (!ref.current || !innerRef.current) {
+      return;
+    }
+
+    if (innerRef.current.offsetHeight <= ref.current.props.height) {
+      return;
+    }
+
+    if (mode === 'bottom') {
+      ref.current.scrollTo(innerRef.current.offsetHeight);
+    } else {
+      ref.current.scrollTo(0);
     }
   }, [itemCount]);
 
