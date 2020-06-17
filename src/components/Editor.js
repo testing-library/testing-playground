@@ -58,8 +58,12 @@ function getQueryHints(cm) {
   let start = cursor.ch;
   let end = cursor.ch;
 
-  while (start && /\w|\./.test(line.charAt(start - 1))) --start;
-  while (end < line.length && /\w|\./.test(line.charAt(end))) ++end;
+  while (start && /\w|\./.test(line.charAt(start - 1))) {
+    --start;
+  }
+  while (end < line.length && /\w|\./.test(line.charAt(end))) {
+    ++end;
+  }
 
   const word = line.slice(start, end).toLowerCase();
   const offset = word.lastIndexOf('.') + 1;
@@ -169,7 +173,9 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
   }, [mode]);
 
   useEffect(() => {
-    if (!editor.current || typeof onChange !== 'function') return;
+    if (!editor.current || typeof onChange !== 'function') {
+      return;
+    }
 
     editor.current.on(
       'changes',

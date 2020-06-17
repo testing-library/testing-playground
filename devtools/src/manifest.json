@@ -23,9 +23,7 @@
     }
   },
 
-  "web_accessible_resources": [
-    "window/testing-library.js"
-  ],
+  "web_accessible_resources": ["window/testing-library.js"],
 
   "devtools_page": "devtools/main.html",
 
@@ -36,11 +34,7 @@
     "persistent": false
   },
 
-  "permissions": [
-    "<all_urls>",
-    "activeTab",
-    "clipboardWrite"
-  ],
+  "permissions": ["<all_urls>", "activeTab", "clipboardWrite"],
 
   "content_scripts": [
     {
