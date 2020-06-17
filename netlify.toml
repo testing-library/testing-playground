@@ -2,3 +2,9 @@
   command = "npm run build"
   functions = "./dist/server"
   publish = "./dist/client"
+[build.environment]
+  NODE_VERSION=12
+
+[template.environment]
+  GITHUB_CLIENT_ID = "Your GitHub Oauth Client Id"
+  GITHUB_CLIENT_SECRET = "Your GitHub Oauth Client Secret"

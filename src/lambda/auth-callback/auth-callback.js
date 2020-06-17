@@ -22,10 +22,13 @@ function handler(event, context, callback) {
       redirect_uri: `${host}/auth-callback`,
     })
     .then((result) => {
-      console.log('accessToken', result);
       const response = {
-        statusCode: 200,
-        body: JSON.stringify(result),
+        statusCode: 302,
+        headers: {
+          Location: `${host}/login?access_token=${result.token.access_token}`,
+          'Cache-Control': 'no-cache',
+        },
+        body: '',
       };
       return callback(null, response);
     })
