@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
@@ -69,14 +69,19 @@ function addLoggingEvents(node, log) {
       });
     };
   }
-
+  const eventListeners = [];
   Object.keys(eventMap).forEach((name) => {
-    node.addEventListener(
-      name.toLowerCase(),
-      createEventLogger({ name, ...eventMap[name] }),
-      true,
-    );
+    eventListeners.push({
+      name: name.toLowerCase(),
+      listener: node.addEventListener(
+        name.toLowerCase(),
+        createEventLogger({ name, ...eventMap[name] }),
+        true,
+      ),
+    });
   });
+
+  return eventListeners;
 }
 
 function EventRecord({ index, style, data }) {
@@ -127,18 +132,20 @@ function DomEvents() {
     [setEventCount],
   );
 
-  const setPreviewRef = useCallback((node) => {
-    previewRef.current = node;
-
-    if (!node) return;
-
-    addLoggingEvents(node, (event) => {
+  useEffect(() => {
+    if (!previewRef.current) return;
+    const eventListeners = addLoggingEvents(previewRef.current, (event) => {
       // insert at index 0
       event.id = buffer.current.length;
       buffer.current.splice(0, 0, event);
       setTimeout(flush, 0);
     });
-  }, []);
+    return () => {
+      eventListeners.forEach((event) =>
+        previewRef.current.removeEventListener(event.name, event.listener),
+      );
+    };
+  }, [previewRef.current]);
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
@@ -147,7 +154,7 @@ function DomEvents() {
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
 
-        <div className="flex-auto h-56 md:h-full" ref={setPreviewRef}>
+        <div className="flex-auto h-56 md:h-full" ref={previewRef}>
           <Preview
             markup={markup}
             elements={result.elements}
