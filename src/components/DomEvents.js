@@ -157,8 +157,9 @@ function DomEvents() {
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
 
-        <div className="flex-auto h-56 md:h-full" ref={setPreviewRef}>
+        <div className="flex-auto h-56 md:h-full">
           <Preview
+            forwardedRef={setPreviewRef}
             markup={markup}
             elements={result.elements}
             accessibleRoles={result.accessibleRoles}
@@ -196,7 +197,6 @@ function DomEvents() {
               <AutoSizer>
                 {({ width, height }) => (
                   <StickyList
-                    follow={true}
                     mode="bottom"
                     ref={listRef}
                     height={height}
