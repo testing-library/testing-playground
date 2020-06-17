@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
@@ -119,6 +119,7 @@ function DomEvents() {
   const listRef = useRef();
 
   const [eventCount, setEventCount] = useState(0);
+  const [eventListeners, setEventListeners] = useState([]);
 
   const reset = () => {
     buffer.current = [];
@@ -132,20 +133,23 @@ function DomEvents() {
     [setEventCount],
   );
 
-  useEffect(() => {
-    if (!previewRef.current) return;
-    const eventListeners = addLoggingEvents(previewRef.current, (event) => {
-      // insert at index 0
-      event.id = buffer.current.length;
-      buffer.current.splice(0, 0, event);
-      setTimeout(flush, 0);
-    });
-    return () => {
+  const setPreviewRef = useCallback((node) => {
+    if (node) {
+      previewRef.current = node;
+      const eventListeners = addLoggingEvents(node, (event) => {
+        // insert at index 0
+        event.id = buffer.current.length;
+        buffer.current.splice(0, 0, event);
+        setTimeout(flush, 0);
+      });
+      setEventListeners(eventListeners);
+    } else if (previewRef.current) {
       eventListeners.forEach((event) =>
         previewRef.current.removeEventListener(event.name, event.listener),
       );
-    };
-  }, [previewRef.current]);
+      previewRef.current = null;
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
@@ -154,7 +158,7 @@ function DomEvents() {
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
 
-        <div className="flex-auto h-56 md:h-full" ref={previewRef}>
+        <div className="flex-auto h-56 md:h-full" ref={setPreviewRef}>
           <Preview
             markup={markup}
             elements={result.elements}
