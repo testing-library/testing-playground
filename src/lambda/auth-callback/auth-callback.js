@@ -1,4 +1,4 @@
-const oauthClient = require('./oauth.helper');
+const oauthClient = require('../auth/oauth.helper');
 
 function getHostname(event, context) {
   if (event.headers.host) {
