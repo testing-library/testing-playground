@@ -1,7 +1,7 @@
 const { AuthorizationCode } = require('simple-oauth2');
 const githubAPI = `https://github.com/login`;
 
-const authorization = new AuthorizationCode({
+module.exports = new AuthorizationCode({
   client: {
     id: process.env.GITHUB_CLIENT_ID,
     secret: process.env.GITHUB_CLIENT_SECRET,
@@ -12,5 +12,3 @@ const authorization = new AuthorizationCode({
     authorizePath: `${githubAPI}/oauth/authorize`,
   },
 });
-
-module.exports = { authorization };

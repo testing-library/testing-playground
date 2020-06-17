@@ -1,4 +1,4 @@
-const { authorization } = require('./oauth.helper');
+const authorization = require('./oauth.helper');
 
 function getHostname(event, context) {
   if (event.headers.host) {
