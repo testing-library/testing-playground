@@ -1,5 +1,5 @@
-/auth /.netlify/functions/auth 200!
 /auth-callback /.netlify/functions/auth-callback 200!
+/auth /.netlify/functions/auth 200!
 /oembed /.netlify/functions/oembed 200!
 /       /.netlify/functions/server 200!
 /*      /.netlify/functions/server 200
