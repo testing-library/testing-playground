@@ -14,8 +14,8 @@
   },
   "scripts": {
     "start": "run-s start:client",
-    "start:client": "node ./scripts/build-client",
-    "start:devtools": "node ./scripts/build-devtools",
+    "start:client": "cross-env NODE_ENV=development node ./scripts/build-client",
+    "start:devtools": "cross-env NODE_ENV=development node ./scripts/build-devtools",
     "build": "run-s clean build:*",
     "build:client": "cross-env NODE_ENV=production node ./scripts/build-client",
     "build:server": "cross-env NODE_ENV=production node ./scripts/build-lambda",
