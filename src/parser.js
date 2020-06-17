@@ -243,7 +243,7 @@ function runUnsafe({ rootNode, query }) {
 }
 
 function parse({ rootNode, markup, query, cacheId, prevResult }) {
-  if (!markup && !rootNode) {
+  if (typeof markup !== 'string' && !rootNode) {
     throw new Error('either markup or rootNode should be provided');
   }
 
