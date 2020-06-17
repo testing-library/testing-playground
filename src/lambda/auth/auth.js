@@ -14,7 +14,7 @@ function handler(event, context, callback) {
   const host = getHostname(event, context);
 
   const authorizationURI = oauthClient.authorizeURL({
-    redirect_uri: `${host}/.netlify/functions/auth-callback`,
+    redirect_uri: `${host}/auth-callback`,
     scope: 'gist',
     state: '',
   });

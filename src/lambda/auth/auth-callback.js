@@ -19,7 +19,7 @@ function handler(event, context, callback) {
     .getToken({
       code: code,
       state: state,
-      redirect_uri: `${host}/.netlify/functions/auth-callback`,
+      redirect_uri: `${host}/auth-callback`,
     })
     .then((result) => {
       console.log('accessToken', result);
