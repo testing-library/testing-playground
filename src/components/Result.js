@@ -41,7 +41,7 @@ function Result({ result, dispatch }) {
   const { data, suggestion } = result.elements?.[0] || emptyResult;
 
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden">
+    <div className="flex flex-col h-56">
       <div className="flex-none pb-4 border-b">
         <ResultSuggestion
           result={result}

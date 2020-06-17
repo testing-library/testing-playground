@@ -44,7 +44,7 @@ function Playground() {
           <Query query={query} result={result} dispatch={dispatch} />
         </div>
 
-        <div className="flex-auto h-56 md:h-full overflow-hidden">
+        <div className="flex-auto overflow-auto">
           <Result result={result} dispatch={dispatch} />
         </div>
       </div>
