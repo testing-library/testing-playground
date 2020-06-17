@@ -45,6 +45,11 @@ function Header() {
               {x.title}
             </a>
           ))}
+
+          <div className="border-r border-gray-600 mx-4 h-8 hidden md:block" />
+          <a className="hover:underline truncate" href="/auth">
+            Login with GitHub
+          </a>
         </div>
       </div>
 
