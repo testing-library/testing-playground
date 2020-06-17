@@ -119,17 +119,12 @@ function createEvaluator({ rootNode }) {
           element,
         });
 
-        const cssPathString = cssPath(element, true).toString();
-        const target = rootNode.querySelector(
-          cssPathString.replace(/^body > /, ''),
-        );
-
         return {
           suggestion,
           data,
           target: element,
-          cssPath: cssPathString,
-          queries: getAllPossibileQueries(target),
+          cssPath: cssPath(element, true).toString(),
+          queries: getAllPossibileQueries(element),
         };
       });
 
