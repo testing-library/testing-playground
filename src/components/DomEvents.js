@@ -1,17 +1,13 @@
-import React, { useRef, useCallback, useState } from 'react';
-
-import Preview from './Preview';
-import MarkupEditor from './MarkupEditor';
-import usePlayground from '../hooks/usePlayground';
-import state from '../lib/state';
 import { eventMap } from '@testing-library/dom/dist/event-map';
-import { VirtualScrollable } from './Scrollable';
 import throttle from 'lodash.throttle';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import IconButton from './IconButton';
-import TrashcanIcon from './TrashcanIcon';
+
 import EmptyStreetImg from '../images/EmptyStreetImg';
+
+import IconButton from './IconButton';
+import { VirtualScrollable } from './Scrollable';
 import StickyList from './StickyList';
+import TrashcanIcon from './TrashcanIcon';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -51,38 +47,31 @@ function getElementData(element) {
     name: element.name || null,
     htmlFor: element.htmlFor || null,
     value: value || null,
-    checked: hasChecked ? !!element.checked : null,
+    checked: hasChecked ? Boolean(element.checked) : null,
     toString: targetToString,
   };
 }
 
-function addLoggingEvents(node, log) {
-  function createEventLogger(eventType) {
-    return function logEvent(event) {
-      if (event.target === event.currentTarget) {
-        return;
-      }
-
-      log({
-        event: eventType,
-        target: getElementData(event.target),
-      });
-    };
+const createEventLogger = (log, eventType) => (event) => {
+  if (event.target === event.currentTarget) {
+    return;
   }
-  const eventListeners = [];
-  Object.keys(eventMap).forEach((name) => {
-    eventListeners.push({
-      name: name.toLowerCase(),
-      listener: node.addEventListener(
-        name.toLowerCase(),
-        createEventLogger({ name, ...eventMap[name] }),
-        true,
-      ),
-    });
-  });
 
-  return eventListeners;
-}
+  log({
+    event: eventType,
+    target: getElementData(event.target),
+  });
+};
+
+const addLoggingEvents = (node, log) =>
+  Object.entries(eventMap).map(([name, event]) => ({
+    name: name.toLowerCase(),
+    listener: node.addEventListener(
+      name.toLowerCase(),
+      createEventLogger(log, { name, ...event }),
+      true,
+    ),
+  }));
 
 function EventRecord({ index, style, data }) {
   const { id, event, target } = data[index];
@@ -107,7 +96,7 @@ function EventRecord({ index, style, data }) {
   );
 }
 
-const noop = () => {};
+const noop = () => undefined;
 function DomEvents() {
   const [{ markup, result }, dispatch] = usePlayground({
     onChange: onStateChange,
@@ -130,7 +119,7 @@ function DomEvents() {
     throttle(() => setEventCount(buffer.current.length), 16, {
       leading: false,
     }),
-    [setEventCount],
+    [],
   );
 
   const setPreviewRef = useCallback((node) => {
@@ -143,8 +132,8 @@ function DomEvents() {
       });
       setEventListeners(eventListeners);
     } else if (previewRef.current) {
-      eventListeners.forEach((event) =>
-        previewRef.current.removeEventListener(event.name, event.listener),
+      eventListeners.forEach(({ name, listener }) =>
+        previewRef.current.removeEventListener(name, listener),
       );
       previewRef.current = null;
     }
