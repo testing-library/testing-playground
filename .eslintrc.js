@@ -21,6 +21,8 @@ module.exports = {
     jest: true,
   },
   rules: {
+    curly: 'error',
+
     // I'll probably add some typescript types instead
     'react/prop-types': 'off',
   },

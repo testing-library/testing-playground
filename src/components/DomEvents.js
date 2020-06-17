@@ -71,14 +71,19 @@ function addLoggingEvents(node, log) {
       });
     };
   }
-
+  const eventListeners = [];
   Object.keys(eventMap).forEach((name) => {
-    node.addEventListener(
-      name.toLowerCase(),
-      createEventLogger({ name, ...eventMap[name] }),
-      true,
-    );
+    eventListeners.push({
+      name: name.toLowerCase(),
+      listener: node.addEventListener(
+        name.toLowerCase(),
+        createEventLogger({ name, ...eventMap[name] }),
+        true,
+      ),
+    });
   });
+
+  return eventListeners;
 }
 
 function EventRecord({ index, style, data }) {
@@ -116,6 +121,7 @@ function DomEvents() {
   const listRef = useRef();
 
   const [eventCount, setEventCount] = useState(0);
+  const [eventListeners, setEventListeners] = useState([]);
 
   const reset = () => {
     buffer.current = [];
@@ -137,16 +143,21 @@ function DomEvents() {
   );
 
   const setPreviewRef = useCallback((node) => {
-    previewRef.current = node;
-
-    if (!node) return;
-
-    addLoggingEvents(node, (event) => {
-      // insert at index 0
-      event.id = buffer.current.length;
-      buffer.current.splice(0, 0, event);
-      setTimeout(flush, 0);
-    });
+    if (node) {
+      previewRef.current = node;
+      const eventListeners = addLoggingEvents(node, (event) => {
+        // insert at index 0
+        event.id = buffer.current.length;
+        buffer.current.splice(0, 0, event);
+        setTimeout(flush, 0);
+      });
+      setEventListeners(eventListeners);
+    } else if (previewRef.current) {
+      eventListeners.forEach((event) =>
+        previewRef.current.removeEventListener(event.name, event.listener),
+      );
+      previewRef.current = null;
+    }
   }, []);
 
   return (

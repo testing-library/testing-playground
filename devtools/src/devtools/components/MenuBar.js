@@ -37,7 +37,7 @@ function MenuBar({ cssPath, suggestion }) {
         className="focus:outline-none"
         title="Inspect the matching DOM element"
         disabled={!cssPath}
-        onClick={() => inspectedWindow.inspect(cssPath)}
+        onClick={() => inspectedWindow.inspect(cssPath.toString())}
       >
         <InspectIcon />
       </button>

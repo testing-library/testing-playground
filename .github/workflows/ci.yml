@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  NODE_VERSION: "12.x"
+  NODE_VERSION: '12.x'
 
 jobs:
   setup:
@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Cache node modules
         id: cache
@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Fetch all branches
         run: |
@@ -67,7 +67,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Cache node modules
         uses: actions/cache@v1
