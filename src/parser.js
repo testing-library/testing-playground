@@ -123,7 +123,7 @@ function createEvaluator({ rootNode }) {
           suggestion,
           data,
           target: element,
-          cssPath: cssPath(element, true).toString(),
+          cssPath: cssPath(element, true),
           queries: getAllPossibileQueries(element),
         };
       });
