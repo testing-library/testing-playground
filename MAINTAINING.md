@@ -50,7 +50,7 @@ to release. See the next section on Releases for more about that.
 Our releases are automatic. They happen whenever code lands into `master`. A
 netlify build gets kicked off, and when tagged a changelog is published on
 GitHub. The changelog is generated based on the git commit messages. With this
-in mind, **please brush up on [the commit message convention][commit] which 
+in mind, **please brush up on [the commit message convention][commit] which
 drives our releases.**
 
 > One important note about this: Please make sure that commit messages do NOT
@@ -63,5 +63,4 @@ drives our releases.**
 
 Thank you so much for helping to maintain this project!
 
-[commit]:
-  https://github.com/conventional-changelog-archived-repos/conventional-changelog-angular/blob/ed32559941719a130bb0327f886d6a32a8cbc2ba/convention.md
+[commit]: https://github.com/conventional-changelog-archived-repos/conventional-changelog-angular/blob/ed32559941719a130bb0327f886d6a32a8cbc2ba/convention.md

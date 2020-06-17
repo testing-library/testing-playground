@@ -25,18 +25,22 @@ screen.getByRole('button')
 };
 
 export const queries = [
-  { method: 'getByRole', level: 0 },
-  { method: 'getByLabelText', level: 0 },
-  { method: 'getByPlaceholderText', level: 0 },
-  { method: 'getByText', level: 0 },
-  { method: 'getByDisplayValue', level: 0 },
+  { method: 'getByRole', level: 0, type: 'ACCESSIBLE' },
+  { method: 'getByLabelText', level: 0, type: 'ACCESSIBLE' },
+  {
+    method: 'getByPlaceholderText',
+    level: 0,
+    type: 'ACCESSIBLE',
+  },
+  { method: 'getByText', level: 0, type: 'ACCESSIBLE' },
+  { method: 'getByDisplayValue', level: 0, type: 'ACCESSIBLE' },
 
-  { method: 'getByAltText', level: 1 },
-  { method: 'getByTitle', level: 1 },
+  { method: 'getByAltText', level: 1, type: 'SEMANTIC' },
+  { method: 'getByTitle', level: 1, type: 'SEMANTIC' },
 
-  { method: 'getByTestId', level: 2 },
+  { method: 'getByTestId', level: 2, type: 'TEST' },
 
-  { method: 'querySelector', level: 3 },
+  { method: 'querySelector', level: 3, type: 'GENERIC' },
 ];
 
 // some quotes from https://testing-library.com/docs/guide-which-query

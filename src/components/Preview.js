@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from 'react';
 import Scrollable from './Scrollable';
 import PreviewHint from './PreviewHint';
 import AddHtml from './AddHtml';
@@ -8,7 +14,14 @@ function selectByCssPath(rootNode, cssPath) {
   return rootNode?.querySelector(cssPath.toString().replace(/^body > /, ''));
 }
 
-function Preview({ markup, accessibleRoles, elements, dispatch, variant }) {
+function Preview({
+  markup,
+  accessibleRoles,
+  elements,
+  dispatch,
+  variant,
+  forwardedRef,
+}) {
   // Okay, listen up. `highlighted` can be a number of things, as I wanted to
   // keep a single variable to represent the state. This to reduce bug count
   // by creating out-of-sync states.
@@ -33,7 +46,13 @@ function Preview({ markup, accessibleRoles, elements, dispatch, variant }) {
     element: highlighted,
   });
 
-  // TestingLibraryDom?.getSuggestedQuery(highlighted, 'get').toString() : null
+  const refSetter = useCallback((node) => {
+    if (typeof forwardedRef === 'function') {
+      forwardedRef(node || null);
+    }
+
+    htmlRoot.current = node;
+  }, []);
 
   useEffect(() => {
     const container = document.createElement('div');
@@ -154,7 +173,7 @@ function Preview({ markup, accessibleRoles, elements, dispatch, variant }) {
             className="preview"
             onClick={handleClick}
             onMouseMove={handleMove}
-            ref={htmlRoot}
+            ref={refSetter}
             dangerouslySetInnerHTML={{
               __html: actualMarkup,
             }}

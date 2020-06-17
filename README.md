@@ -13,7 +13,7 @@ practices.
 <hr />
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **Playground for [testing-library/dom]**
@@ -116,6 +116,8 @@ Thanks goes to these people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://www.guzy.dev"><img src="https://avatars1.githubusercontent.com/u/9118764?v=4" width="100px;" alt=""/><br /><sub><b>Dominik Guzy</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=Siemko" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/connorProgrammes"><img src="https://avatars3.githubusercontent.com/u/66570218?v=4" width="100px;" alt=""/><br /><sub><b>ConnorProgrammes</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=connorProgrammes" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://twitter.com/JacobMGEvans"><img src="https://avatars1.githubusercontent.com/u/27247160?v=4" width="100px;" alt=""/><br /><sub><b>Jacob M-G Evans</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=JacobMGEvans" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/sumeesh879"><img src="https://avatars1.githubusercontent.com/u/20029120?v=4" width="100px;" alt=""/><br /><sub><b>Sumeesh Nagisetty</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/pulls?q=is%3Apr+reviewed-by%3Asumeesh879" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 
