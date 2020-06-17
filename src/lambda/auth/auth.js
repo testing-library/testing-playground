@@ -1,4 +1,4 @@
-const oauthClient = require('./oauth.helper');
+const { authorization } = require('./oauth.helper');
 
 function getHostname(event, context) {
   if (event.headers.host) {
@@ -13,7 +13,7 @@ function getHostname(event, context) {
 function handler(event, context, callback) {
   const host = getHostname(event, context);
 
-  const authorizationURI = oauthClient.authorizationCode.authorizeURL({
+  const authorizationURI = authorization.authorizationCode.authorizeURL({
     redirect_uri: `${host}/.netlify/functions/auth-callback`,
     scope: 'gist',
     state: '',

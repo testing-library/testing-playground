@@ -1,4 +1,4 @@
-const oauthClient = require('./oauth.helper');
+const { authorization } = require('./oauth.helper');
 
 function getHostname(event, context) {
   if (event.headers.host) {
@@ -15,7 +15,7 @@ function handler(event, context, callback) {
   const code = event.queryStringParameters.code;
   const state = event.queryStringParameters.state;
 
-  oauthClient.authorizationCode
+  authorization.authorizationCode
     .getToken({
       code: code,
       state: state,
