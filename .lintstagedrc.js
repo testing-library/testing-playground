@@ -3,5 +3,7 @@ module.exports = {
     `eslint --quiet --fix ${files.join(' ')}`,
     `jest --passWithNoTests`,
   ],
-  '**/*.{md,js}': (files) => [`prettier --write ${files.join(' ')}`],
+  '**/*.{md,js,json,yml,html,css,pcss}': (files) => [
+    `prettier --write ${files.join(' ')}`,
+  ],
 };
