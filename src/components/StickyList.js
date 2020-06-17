@@ -18,7 +18,10 @@ function StickyList(
   const innerRef = useRef();
   useEffect(() => {
     if (ref.current && follow && innerRef.current) {
-      if (mode === 'bottom') {
+      if (
+        mode === 'bottom' &&
+        innerRef.current.offsetHeight > ref.current.props.height
+      ) {
         ref.current.scrollTo(innerRef.current.offsetHeight);
       } else if (mode === 'top') {
         ref.current.scrollTo(0);
