@@ -17,7 +17,8 @@ body:not(.embedded) {
 }
 
 /* purgecss ignore */
-body.embedded, body.embedded #app {
+body.embedded,
+body.embedded #app {
   @apply h-full overflow-hidden p-1;
 }
 
@@ -30,7 +31,7 @@ nav a:not(.title):hover {
 }
 
 .footer:not(:hover) {
-  opacity: .3;
+  opacity: 0.3;
 }
 
 .footer > div > span {
@@ -81,7 +82,7 @@ blockquote:before {
   font-size: 80px;
   display: block;
   padding-left: 10px;
-  content: "\201C";
+  content: '\201C';
   position: absolute;
   left: -20px;
   top: -32px;
@@ -92,24 +93,24 @@ blockquote cite {
 }
 
 blockquote cite:before {
-  content: "\2014 \2009";
+  content: '\2014 \2009';
 }
 
 .field {
   @apply relative cursor-default p-1 rounded border border-transparent;
   z-index: 0;
-  transition: background-color .2s ease;
+  transition: background-color 0.2s ease;
 }
 
-.field[data-clickable="false"]:hover {
+.field[data-clickable='false']:hover {
   @apply bg-gray-100;
 }
 
-.field[data-clickable="true"] {
+.field[data-clickable='true'] {
   @apply cursor-pointer bg-blue-100;
 }
 
-.field[data-clickable="true"]:hover {
+.field[data-clickable='true']:hover {
   @apply bg-blue-200;
 }
 
@@ -129,7 +130,7 @@ blockquote cite:before {
 }
 
 button:disabled {
-  opacity: .2;
+  opacity: 0.2;
 }
 
 /**
@@ -160,7 +161,8 @@ button:disabled {
   @apply block appearance-none border rounded w-full py-2 px-3 mb-2 text-gray-700 leading-tight;
 }
 
-.preview input:focus, .preview button:focus {
+.preview input:focus,
+.preview button:focus {
   @apply outline-none border border-gray-700;
 }
 
