@@ -1,10 +1,9 @@
-/* global chrome */
 import React, { useState, useEffect } from 'react';
 import IconButton from './IconButton';
 import SuccessIcon from './icons/SuccessIcon';
 import CopyIcon from './icons/CopyIcon';
 
-const IS_DEVTOOL = !!(window.chrome && chrome.runtime && chrome.runtime.id);
+const IS_DEVTOOL = Boolean(window?.chrome?.runtime?.id);
 
 /**
  *

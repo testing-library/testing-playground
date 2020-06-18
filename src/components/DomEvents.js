@@ -127,11 +127,10 @@ function DomEvents() {
     setEventCount(0);
   };
 
-  const getTextToCopy = () => {
-    return buffer.current
+  const getTextToCopy = () =>
+    buffer.current
       .map((log) => `${log.target.toString()} - ${log.event.EventType}`)
       .join('\n');
-  };
 
   const flush = useCallback(
     throttle(() => setEventCount(buffer.current.length), 16, {
