@@ -28,7 +28,7 @@ function useSorter({
   const sortedRows = React.useMemo(() => {
     const sortedRows = sortByFn(rows, sortBy, sortDirection);
     return sortedRows;
-  }, [rows.length, sortBy, sortByFn, sortDirection]);
+  }, [JSON.stringify(rows), sortBy, sortByFn, sortDirection]);
 
   return [sortedRows, rows];
 }
