@@ -11,9 +11,8 @@ import throttle from 'lodash.throttle';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import IconButton from './IconButton';
 import TrashcanIcon from './icons/TrashcanIcon';
-import CopyIcon from './icons/CopyIcon';
+import CopyButton from './CopyButton';
 import EmptyStreetImg from '../images/EmptyStreetImg';
-import copyToClipboard from '../lib/copy';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -128,11 +127,10 @@ function DomEvents() {
     setEventCount(0);
   };
 
-  const copy = () => {
-    const logString = buffer.current
+  const getTextToCopy = () => {
+    return buffer.current
       .map((log) => `${log.target.toString()} - ${log.event.EventType}`)
       .join('\n');
-    copyToClipboard(logString);
   };
 
   const flush = useCallback(
@@ -192,9 +190,11 @@ function DomEvents() {
             <div className="flex-auto p-2 flex justify-between">
               <span>selector</span>
               <div>
-                <IconButton title="copy log" onClick={copy}>
-                  <CopyIcon />
-                </IconButton>
+                <CopyButton
+                  text={getTextToCopy}
+                  title="copy log"
+                  className="mr-5"
+                />
                 <IconButton title="clear event log" onClick={reset}>
                   <TrashcanIcon />
                 </IconButton>
