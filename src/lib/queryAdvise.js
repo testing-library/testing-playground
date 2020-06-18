@@ -38,6 +38,29 @@ export function getData({ rootNode, element }) {
   };
 }
 
+function flattenDOM(node) {
+  return [
+    node,
+    ...Array.from(node.children).reduce(
+      (acc, child) => [...acc, ...flattenDOM(child)],
+      [],
+    ),
+  ];
+}
+
+function getSnapshot(element) {
+  const innerItems = flattenDOM(element);
+  const snapshot = innerItems
+    .map((el) => {
+      const suggestion = getSuggestedQuery(el);
+      return suggestion && `screen.${suggestion.toString()};`;
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  return snapshot;
+}
+
 // TODO:
 // TestingLibraryDom.getSuggestedQuery($0, 'get').toString()
 export const emptyResult = { data: {}, suggestion: {} };
@@ -61,6 +84,7 @@ export function getQueryAdvise({ rootNode, element }) {
       suggestion: {
         level: 3,
         expression: `container.querySelector('${path}')`,
+        snapshot: getSnapshot(element),
         method: '',
         ...messages[3],
       },
