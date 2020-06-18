@@ -6,13 +6,13 @@ import usePlayground from '../hooks/usePlayground';
 import state from '../lib/state';
 import { eventMap } from '@testing-library/dom/dist/event-map';
 import { VirtualScrollable } from './Scrollable';
-import { FixedSizeList as List } from 'react-window';
 import throttle from 'lodash.throttle';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import IconButton from './IconButton';
 import TrashcanIcon from './icons/TrashcanIcon';
 import CopyButton from './CopyButton';
 import EmptyStreetImg from '../images/EmptyStreetImg';
+import StickyList from './StickyList';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -144,9 +144,8 @@ function DomEvents() {
     if (node) {
       previewRef.current = node;
       const eventListeners = addLoggingEvents(node, (event) => {
-        // insert at index 0
         event.id = buffer.current.length;
-        buffer.current.splice(0, 0, event);
+        buffer.current.push(event);
         setTimeout(flush, 0);
       });
       setEventListeners(eventListeners);
@@ -165,8 +164,9 @@ function DomEvents() {
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
 
-        <div className="flex-auto h-56 md:h-full" ref={setPreviewRef}>
+        <div className="flex-auto h-56 md:h-full">
           <Preview
+            forwardedRef={setPreviewRef}
             markup={markup}
             elements={result.elements}
             accessibleRoles={result.accessibleRoles}
@@ -210,7 +210,8 @@ function DomEvents() {
             ) : (
               <AutoSizer>
                 {({ width, height }) => (
-                  <List
+                  <StickyList
+                    mode="bottom"
                     ref={listRef}
                     height={height}
                     itemCount={eventCount}
@@ -220,7 +221,7 @@ function DomEvents() {
                     outerElementType={VirtualScrollable}
                   >
                     {EventRecord}
-                  </List>
+                  </StickyList>
                 )}
               </AutoSizer>
             )}
