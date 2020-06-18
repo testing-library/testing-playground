@@ -29,7 +29,7 @@ function StickyList(
     } else {
       ref.current.scrollTo(0);
     }
-  }, [itemCount]);
+  }, [itemCount, mode]);
 
   return (
     <List
