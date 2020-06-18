@@ -113,7 +113,7 @@ function DomEvents() {
   const listRef = useRef();
 
   const [sortBy, setSortBy] = useState('id');
-  const [sortDirection, setSortDirection] = useState('desc');
+  const [sortDirection, setSortDirection] = useState('asc');
   const [sortedRows] = useSorter({
     rows: buffer.current,
     sortBy,
