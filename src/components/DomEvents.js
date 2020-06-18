@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
-
+import { ChevronUpIcon, ChevronDownIcon } from '@primer/octicons-react';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
@@ -12,6 +12,7 @@ import IconButton from './IconButton';
 import TrashcanIcon from './TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
+import useSorter from '../hooks/useSorter';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -85,7 +86,7 @@ function addLoggingEvents(node, log) {
 }
 
 function EventRecord({ index, style, data }) {
-  const { id, event, target } = data[index];
+  const { id, type, name, element, selector } = data[index];
 
   return (
     <div
@@ -96,30 +97,55 @@ function EventRecord({ index, style, data }) {
     >
       <div className="p-2 flex-none w-16">{id}</div>
 
-      <div className="p-2 flex-none w-32">{event.EventType}</div>
-      <div className="p-2 flex-none w-32">{event.name}</div>
+      <div className="p-2 flex-none w-32">{type}</div>
+      <div className="p-2 flex-none w-32">{name}</div>
 
-      <div className="p-2 flex-none w-40">{target.tagName}</div>
-      <div className="p-2 flex-auto whitespace-no-wrap">
-        {target.toString()}
-      </div>
+      <div className="p-2 flex-none w-40">{element}</div>
+      <div className="p-2 flex-auto whitespace-no-wrap">{selector}</div>
     </div>
   );
 }
 
 const noop = () => {};
 function DomEvents() {
+  const buffer = useRef([]);
+  const previewRef = useRef();
+  const listRef = useRef();
+
+  const [sortBy, setSortBy] = useState('id');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const [sortedRows] = useSorter({
+    rows: buffer.current,
+    sortBy,
+    sortDirection,
+  });
   const [{ markup, result }, dispatch] = usePlayground({
     onChange: onStateChange,
     ...initialValues,
   });
 
-  const buffer = useRef([]);
-  const previewRef = useRef();
-  const listRef = useRef();
-
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
+
+  const getSortIcon = (key) => {
+    if (key === sortBy) {
+      return (
+        <IconButton>
+          {sortDirection === 'desc' ? <ChevronDownIcon /> : <ChevronUpIcon />}
+        </IconButton>
+      );
+    }
+    return null;
+  };
+
+  const updateSort = (key) => {
+    if (key !== sortBy) {
+      setSortBy(key);
+      setSortDirection('desc');
+    } else {
+      setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
+    }
+  };
 
   const reset = () => {
     buffer.current = [];
@@ -137,8 +163,14 @@ function DomEvents() {
     if (node) {
       previewRef.current = node;
       const eventListeners = addLoggingEvents(node, (event) => {
-        event.id = buffer.current.length;
-        buffer.current.push(event);
+        const log = {
+          id: buffer.current.length + 1,
+          type: event.event.EventType,
+          name: event.event.name,
+          element: event.target.tagName,
+          selector: event.target.toString(),
+        };
+        buffer.current.push(log);
         setTimeout(flush, 0);
       });
       setEventListeners(eventListeners);
@@ -174,14 +206,39 @@ function DomEvents() {
       <div className="editor md:h-56 flex-auto overflow-hidden">
         <div className="h-56 md:h-full w-full flex flex-col">
           <div className="h-8 flex items-center w-full text-sm font-bold">
-            <div className="p-2 w-16">#</div>
+            <div
+              className="p-2 w-16 cursor-pointer"
+              onClick={() => updateSort('id')}
+            >
+              # {getSortIcon('id')}
+            </div>
 
-            <div className="p-2 w-32">type</div>
-            <div className="p-2 w-32">name</div>
+            <div
+              className="p-2 w-32 cursor-pointer"
+              onClick={() => updateSort('type')}
+            >
+              type {getSortIcon('type')}
+            </div>
+            <div
+              className="p-2 w-32 cursor-pointer"
+              onClick={() => updateSort('name')}
+            >
+              name {getSortIcon('name')}
+            </div>
 
-            <div className="p-2 w-40">element</div>
+            <div
+              className="p-2 w-40 cursor-pointer"
+              onClick={() => updateSort('element')}
+            >
+              element {getSortIcon('element')}
+            </div>
             <div className="flex-auto p-2 flex justify-between">
-              <span>selector</span>
+              <span
+                className="cursor-pointer"
+                onClick={() => updateSort('selector')}
+              >
+                selector {getSortIcon('selector')}
+              </span>
               <IconButton title="clear event log" onClick={reset}>
                 <TrashcanIcon />
               </IconButton>
@@ -189,7 +246,7 @@ function DomEvents() {
           </div>
 
           <div className="flex-auto relative overflow-hidden">
-            {eventCount === 0 ? (
+            {sortedRows.length === 0 ? (
               <div className="flex w-full h-full opacity-50 items-end justify-center">
                 <EmptyStreetImg height="80%" />
               </div>
@@ -201,7 +258,7 @@ function DomEvents() {
                     ref={listRef}
                     height={height}
                     itemCount={eventCount}
-                    itemData={buffer.current}
+                    itemData={sortedRows}
                     itemSize={32}
                     width={width}
                     outerElementType={VirtualScrollable}
