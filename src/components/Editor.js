@@ -11,6 +11,7 @@ import { queries } from '@testing-library/dom';
 
 import CodeMirror from 'codemirror';
 import debounce from 'lodash/debounce';
+import beautifier from '../lib/beautify';
 
 const baseOptions = {
   autoCloseBrackets: true,
@@ -198,6 +199,17 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
           completeSingle: false,
         });
       }
+    });
+
+    editor.current.on('blur', () => {
+      let formattedText = editor.current.getValue();
+      if (mode === 'htmlmixed') {
+        formattedText = beautifier.beautifyHtml(editor.current.getValue());
+      } else if (mode === 'javascript') {
+        formattedText = beautifier.beautifyJs(editor.current.getValue());
+      }
+      editor.current.setValue(formattedText);
+      onChange(formattedText);
     });
 
     onLoad(editor.current);

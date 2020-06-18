@@ -4,7 +4,7 @@ import {
 } from 'lz-string';
 import queryString from 'query-string';
 
-import beautify from 'js-beautify';
+import beautifier from '../lib/beautify';
 
 function unindent(string) {
   return (string || '').replace(/[ \t]*[\n][ \t]*/g, '\n');
@@ -21,13 +21,11 @@ export function compress({ markup, query }) {
 
 export function decompress({ markup, query }) {
   const result = {
-    markup: beautify.html(
+    markup: beautifier.beautifyHtml(
       decompressFromEncodedURIComponent(markup || ''),
-      beautifyOptions,
     ),
-    query: beautify.js(
+    query: beautifier.beautifyJs(
       decompressFromEncodedURIComponent(query || ''),
-      beautifyOptions,
     ),
   };
 
@@ -45,12 +43,6 @@ function save({ markup, query }) {
 
   history.replaceState(null, '', window.location.pathname + '?' + search);
 }
-
-const beautifyOptions = {
-  indent_size: 2,
-  wrap_line_length: 72,
-  wrap_attributes: 'force-expand-multiline',
-};
 
 function load() {
   const { hash, search } = window.location;
