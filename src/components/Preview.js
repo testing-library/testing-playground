@@ -1,184 +1,127 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from 'react';
-import Scrollable from './Scrollable';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PreviewHint from './PreviewHint';
 import AddHtml from './AddHtml';
-import { getQueryAdvise } from '../lib';
+import { getRoles } from '@testing-library/dom';
+import debounce from 'lodash.debounce';
 
-function selectByCssPath(rootNode, cssPath) {
-  return rootNode?.querySelector(cssPath.toString().replace(/^body > /, ''));
+function getSandbox(ref) {
+  try {
+    const document =
+      ref.current?.contentDocument ||
+      ref.current?.contentWindow?.document ||
+      null;
+
+    if (document) {
+      document.__SANDBOX_ROOT__ =
+        document.__SANDBOX_ROOT__ || document.getElementById('sandbox');
+
+      return {
+        document: document,
+        root: document.__SANDBOX_ROOT__,
+      };
+    }
+  } catch (e) {
+    console.log(
+      'iframe navigated away from this origin, we no longer have access to the document',
+    );
+  }
+
+  return { document: null, root: null };
 }
 
-function Preview({
-  markup,
-  accessibleRoles,
-  elements,
-  dispatch,
-  variant,
-  forwardedRef,
-}) {
-  // Okay, listen up. `highlighted` can be a number of things, as I wanted to
-  // keep a single variable to represent the state. This to reduce bug count
-  // by creating out-of-sync states.
-  //
-  // 1. When the mouse pointer enters the preview area, `highlighted` changes
-  //    to true. True indicates that the highlight no longer indicates the parsed
-  //    element.
-  // 2. When the mouse pointer is pointing at an element, `highlighted` changes
-  //    to the target element. A dom node.
-  // 3. When the mouse pointer leaves that element again, `highlighted` changse
-  //    back to... true. Not to false! To indicate that we still want to use
-  //    the mouse position to control the highlight.
-  // 4. Once the mouse leaves the preview area, `highlighted` switches to false.
-  //    Indicating that the `parsed` element can be highlighted again.
-  const [highlighted, setHighlighted] = useState(false);
-  const [roles, setRoles] = useState([]);
-  const [scripts, setScripts] = useState([]);
-  const htmlRoot = useRef();
+function setInnerHTML(node, html) {
+  const doc = node.ownerDocument;
+  node.innerHTML = html;
 
-  const { suggestion } = getQueryAdvise({
-    rootNode: htmlRoot?.current,
-    element: highlighted,
-  });
+  for (let prevScript of node.querySelectorAll('script')) {
+    const newScript = doc.createElement('script');
 
-  const refSetter = useCallback((node) => {
-    if (typeof forwardedRef === 'function') {
-      forwardedRef(node || null);
+    for (let [key, value] of prevScript.attributes) {
+      newScript[key] = value;
     }
 
-    htmlRoot.current = node;
+    newScript.appendChild(doc.createTextNode(prevScript.innerHTML));
+    prevScript.parentNode.replaceChild(newScript, prevScript);
+  }
+}
+
+function Preview({ markup, variant, forwardedRef, dispatch }) {
+  const [roles, setRoles] = useState([]);
+  const [suggestion, setSuggestion] = useState();
+
+  const frameRef = useRef();
+
+  const refSetter = useCallback((node) => {
+    frameRef.current = node;
   }, []);
 
   useEffect(() => {
-    const container = document.createElement('div');
-    container.innerHTML = markup;
-    const scriptsCollections = container.getElementsByTagName('script');
-    const jsScripts = Array.from(scriptsCollections).filter(
-      (script) => script.type === 'text/javascript' || script.type === '',
-    );
-    setScripts((scripts) => [
-      ...scripts.filter((script) =>
-        jsScripts
-          .map((jsScript) => jsScript.innerHTML)
-          .includes(script.innerHTML),
-      ),
-      ...jsScripts
-        .filter(
-          (jsScript) =>
-            !scripts
-              .map((script) => script.innerHTML)
-              .includes(jsScript.innerHTML),
-        )
-        .map((jsScript) => ({
-          scriptCode: jsScript.innerHTML,
-          toBeRemoved: jsScript.outerHTML,
-          evaluated: false,
-        })),
-    ]);
-  }, [markup, setScripts]);
+    const listener = ({ data: { source, event, payload } = {} }) => {
+      if (source !== 'testing-playground-sandbox') {
+        return;
+      }
 
-  const actualMarkup = useMemo(
-    () =>
-      scripts.length
-        ? scripts.reduce(
-            (html, script) => html.replace(script.toBeRemoved, ''),
-            markup,
-          )
-        : markup,
-    [scripts, markup],
+      switch (event) {
+        case 'SANDBOX_LOADED': {
+          const { root } = getSandbox(frameRef);
+
+          setInnerHTML(root, markup);
+          setRoles(Object.keys(getRoles(root) || {}).sort());
+
+          if (typeof forwardedRef === 'function') {
+            forwardedRef(root);
+          }
+
+          break;
+        }
+
+        case 'SELECT_NODE': {
+          dispatch({ type: 'SET_QUERY', query: payload.suggestion.expression });
+          break;
+        }
+
+        case 'HOVER_NODE': {
+          setSuggestion(payload.suggestion);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('message', listener, false);
+    return () => window.removeEventListener('message', listener);
+  }, [markup]);
+
+  const reload = useCallback(
+    debounce(() => {
+      const { document } = getSandbox(frameRef);
+
+      if (document) {
+        // When the user is using inline scripts, we need to clean the context before
+        // re-evaluation of the scripts. Otherwise he could get errors like
+        //   `Identifier 'button' has already been declared`
+        document.location.reload(true);
+      } else {
+        // markup might have changed, while the iframe navigated to a different origin
+        // restore the origin, and use a cache breaker to make the iframe trigger a reload
+        frameRef.current.setAttribute('src', '/sandbox.html?' + Date.now());
+      }
+    }, 500),
+    [frameRef],
   );
 
-  useEffect(() => {
-    if (htmlRoot.current && highlighted) {
-      scripts
-        .filter((script) => !script.evaluated)
-        .forEach((script) => {
-          try {
-            script.evaluated = true;
-            const executeScript = new Function(script.scriptCode);
-            executeScript();
-          } catch (e) {
-            alert('Failing script inserted in markup!');
-          }
-        });
-    }
-  }, [highlighted, scripts, htmlRoot.current]);
-
-  useEffect(() => {
-    setRoles(Object.keys(accessibleRoles || {}).sort());
-  }, [accessibleRoles]);
-
-  useEffect(() => {
-    if (highlighted) {
-      elements?.forEach((el) => {
-        const target = selectByCssPath(htmlRoot.current, el.cssPath);
-        target?.classList.remove('highlight');
-      });
-      highlighted.classList?.add('highlight');
-    } else {
-      highlighted?.classList?.remove('highlight');
-
-      if (highlighted === false) {
-        elements?.forEach((el) => {
-          const target = selectByCssPath(htmlRoot.current, el.cssPath);
-          target?.classList.add('highlight');
-        });
-      }
-    }
-
-    return () => highlighted?.classList?.remove('highlight');
-  }, [highlighted, elements]);
-
-  const handleClick = (event) => {
-    if (event.target === htmlRoot.current) {
-      return;
-    }
-
-    event.preventDefault();
-    const expression =
-      suggestion.expression ||
-      '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
-    dispatch({ type: 'SET_QUERY', query: expression });
-  };
-
-  const handleMove = (event) => {
-    const target = document.elementFromPoint(event.clientX, event.clientY);
-    if (target === highlighted) {
-      return;
-    }
-
-    if (target === htmlRoot) {
-      setHighlighted(true);
-      return;
-    }
-
-    setHighlighted(target);
-  };
+  useEffect(reload, [markup]);
 
   return markup ? (
-    <div
-      className="w-full h-full flex flex-col relative overflow-hidden"
-      onMouseEnter={() => setHighlighted(true)}
-      onMouseLeave={() => setHighlighted(false)}
-    >
+    <div className="w-full h-full flex flex-col relative overflow-hidden">
       <div className="flex-auto relative overflow-hidden">
-        <Scrollable>
-          <div
-            id="view"
-            className="preview"
-            onClick={handleClick}
-            onMouseMove={handleMove}
-            ref={refSetter}
-            dangerouslySetInnerHTML={{
-              __html: actualMarkup,
-            }}
-          />
-        </Scrollable>
+        <iframe
+          ref={refSetter}
+          src="/sandbox.html"
+          security="restricted"
+          className="w-full h-full"
+          scrolling="no"
+          frameBorder="0"
+        />
       </div>
 
       {variant !== 'minimal' && (

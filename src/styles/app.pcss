@@ -12,8 +12,12 @@ body {
   @apply text-base;
 }
 
-body:not(.embedded) {
+body:not(.embedded, .sandbox) {
   @apply bg-gray-100;
+}
+
+body.sandbox {
+  @apply w-full h-full overflow-hidden;
 }
 
 /* purgecss ignore */

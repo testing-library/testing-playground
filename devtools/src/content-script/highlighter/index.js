@@ -26,6 +26,8 @@ export default function setupHighlighter({
   onSelectNode = () => {},
 } = {}) {
   let isInspecting = false;
+  let stopOnClick = true;
+  let blockEvents = true;
 
   Bridge.onMessage('CLEAR_HIGHLIGHTS', withMessageData(clearHighlights));
   Bridge.onMessage('HIGHLIGHT_ELEMENTS', withMessageData(highlightElements));
@@ -33,8 +35,11 @@ export default function setupHighlighter({
   Bridge.onMessage('START_INSPECTING', withMessageData(startInspecting));
   Bridge.onMessage('STOP_INSPECTING', withMessageData(stopInspecting));
 
-  function startInspecting() {
+  function startInspecting(options) {
     isInspecting = true;
+    stopOnClick = options.stopOnClick !== false;
+    blockEvents = options.blockEvents !== false;
+
     addEventListeners(view);
   }
 
@@ -48,6 +53,13 @@ export default function setupHighlighter({
       view.addEventListener('pointerdown', onPointerDown, true);
       view.addEventListener('pointerover', onPointerOver, true);
       view.addEventListener('pointerup', onPointerUp, true);
+    }
+  }
+
+  function stopPropagation(event) {
+    if (blockEvents) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
 
@@ -99,30 +111,27 @@ export default function setupHighlighter({
   }
 
   function onClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    stopPropagation(event);
 
-    stopInspecting();
+    if (isInspecting && stopOnClick) {
+      stopInspecting();
+    }
   }
 
   function onMouseEvent(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    stopPropagation(event);
   }
 
   function onPointerDown(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    stopPropagation(event);
 
-    selectNode(event.target);
+    selectNode(event.target, { trigger: 'click' });
   }
 
   function onPointerOver(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    stopPropagation(event);
 
     const target = event.target;
-
     if (target.tagName === 'IFRAME') {
       try {
         if (!iframesListeningTo.has(target)) {
@@ -136,12 +145,11 @@ export default function setupHighlighter({
     }
 
     showOverlay([target], false);
-    selectNode(target);
+    selectNode(target, { trigger: 'hover' });
   }
 
   function onPointerUp(event) {
-    event.preventDefault();
-    event.stopPropagation();
+    stopPropagation(event);
   }
 
   const selectNode = throttle(

@@ -228,7 +228,7 @@ export default class Overlay {
     const name = elements[0].nodeName.toLowerCase();
 
     const node = elements[0];
-    const hook = node.ownerDocument.defaultView.__TESTING_PLAYGROUND__;
+    const hook = node.ownerDocument.defaultView.__TESTING_PLAYGROUND__ || {};
 
     let tipData = {
       target: node,

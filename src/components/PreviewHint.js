@@ -2,7 +2,7 @@ import React from 'react';
 import Expandable from './Expandable';
 
 function PreviewHint({ roles, suggestion }) {
-  const expression = suggestion.expression ? (
+  const expression = suggestion?.expression ? (
     `> ${suggestion.expression}`
   ) : (
     <div>

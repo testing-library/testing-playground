@@ -48,7 +48,7 @@ function HiddenThumb() {
   return <div style={{ display: 'none' }} />;
 }
 
-function Scrollable({ children, variant = 'light' }) {
+function Scrollable({ children, variant = 'light', ...props }) {
   return (
     <AutoSizer>
       {({ width, height }) => (
@@ -59,7 +59,7 @@ function Scrollable({ children, variant = 'light' }) {
           )}
           renderThumbHorizontal={HiddenThumb}
         >
-          <div>{children}</div>
+          <div {...props}>{children}</div>
         </Scrollbars>
       )}
     </AutoSizer>
