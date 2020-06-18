@@ -6,15 +6,28 @@ const beautifyOptions = {
   wrap_attributes: 'force-expand-multiline',
 };
 
-function beautifyHtml(html) {
+function html(html) {
   return beautify.html(html, beautifyOptions);
 }
 
-function beautifyJs(js) {
+function js(js) {
   return beautify.js(js, beautifyOptions);
 }
 
+function format(mode, content) {
+  if (mode === 'htmlmixed' || mode === 'html') {
+    return html(content);
+  }
+
+  if (mode === 'javascript') {
+    return js(content);
+  }
+
+  return content;
+}
+
 export default {
-  beautifyHtml,
-  beautifyJs,
+  html,
+  js,
+  format,
 };

@@ -4,7 +4,7 @@ import {
 } from 'lz-string';
 import queryString from 'query-string';
 
-import beautifier from '../lib/beautify';
+import beautify from '../lib/beautify';
 
 function unindent(string) {
   return (string || '').replace(/[ \t]*[\n][ \t]*/g, '\n');
@@ -21,12 +21,8 @@ export function compress({ markup, query }) {
 
 export function decompress({ markup, query }) {
   const result = {
-    markup: beautifier.beautifyHtml(
-      decompressFromEncodedURIComponent(markup || ''),
-    ),
-    query: beautifier.beautifyJs(
-      decompressFromEncodedURIComponent(query || ''),
-    ),
+    markup: beautify.html(decompressFromEncodedURIComponent(markup || '')),
+    query: beautify.js(decompressFromEncodedURIComponent(query || '')),
   };
 
   return result;
