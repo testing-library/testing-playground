@@ -122,18 +122,15 @@ function DomEvents() {
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
 
-  const getSortIcon = () => {
-    return (
-      <IconButton>
-        {sortDirection.current === 'desc' ? (
-          <ChevronDownIcon />
-        ) : (
-          <ChevronUpIcon />
-        )}
-      </IconButton>
-    );
-  };
-
+  const getSortIcon = () => (
+    <IconButton>
+      {sortDirection.current === 'desc' ? (
+        <ChevronDownIcon />
+      ) : (
+        <ChevronUpIcon />
+      )}
+    </IconButton>
+  );
   const changeSortDirection = () => {
     const newDirection = sortDirection.current === 'desc' ? 'asc' : 'desc';
     buffer.current = buffer.current.reverse();
