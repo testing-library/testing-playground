@@ -9,3 +9,6 @@ local/
 
 # Local Netlify folder
 .netlify
+
+# macOS
+.DS_Store
