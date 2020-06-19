@@ -51,17 +51,19 @@ function HiddenThumb() {
 function Scrollable({ children, variant = 'light' }) {
   return (
     <AutoSizer>
-      {({ width, height }) => (
-        <Scrollbars
-          style={{ width, height }}
-          renderThumbVertical={() => (
-            <Thumb orientation="vertical" variant={variant} />
-          )}
-          renderThumbHorizontal={HiddenThumb}
-        >
-          <div>{children}</div>
-        </Scrollbars>
-      )}
+      {({ width, height }) => {
+        return (
+          <Scrollbars
+            style={{ width, height }}
+            renderThumbVertical={() => {
+              return <Thumb orientation="vertical" variant={variant} />;
+            }}
+            renderThumbHorizontal={HiddenThumb}
+          >
+            <div>{children}</div>
+          </Scrollbars>
+        );
+      }}
     </AutoSizer>
   );
 }
@@ -79,8 +81,12 @@ function VirtualScrollableComponent(props) {
       style={{ ...style, overflow: 'hidden' }}
       className={className}
       onScroll={onScroll}
-      renderThumbVertical={() => <Thumb orientation="vertical" />}
-      renderThumbHorizontal={() => <Thumb orientation="horizontal" />}
+      renderThumbVertical={() => {
+        return <Thumb orientation="vertical" />;
+      }}
+      renderThumbHorizontal={() => {
+        return <Thumb orientation="horizontal" />;
+      }}
       hideTracksWhenNotNeeded={true}
     >
       {children}
@@ -89,8 +95,8 @@ function VirtualScrollableComponent(props) {
 }
 
 // eslint-disable-next-line react/display-name
-export const VirtualScrollable = React.forwardRef((props, ref) => (
-  <VirtualScrollableComponent {...props} forwardedRef={ref} />
-));
+export const VirtualScrollable = React.forwardRef((props, ref) => {
+  return <VirtualScrollableComponent {...props} forwardedRef={ref} />;
+});
 
 export default Scrollable;

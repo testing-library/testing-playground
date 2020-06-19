@@ -29,7 +29,9 @@ const styles = {
   },
 };
 
-export const pad = (num, maxLength) => `${num}`.padStart(0, maxLength);
+export const pad = (num, maxLength) => {
+  return `${num}`.padStart(0, maxLength);
+};
 
 function formatTime(time) {
   return `${pad(time.getHours(), 2)}:${pad(time.getMinutes(), 2)}:${pad(

@@ -3,12 +3,16 @@ import Editor from './Editor';
 
 function MarkupEditor({ markup, dispatch }) {
   const onLoad = useCallback(
-    (editor) => dispatch({ type: 'SET_MARKUP_EDITOR', editor }),
+    (editor) => {
+      return dispatch({ type: 'SET_MARKUP_EDITOR', editor });
+    },
     [dispatch],
   );
 
   const onChange = useCallback(
-    (markup) => dispatch({ type: 'SET_MARKUP', markup, updateEditor: false }),
+    (markup) => {
+      return dispatch({ type: 'SET_MARKUP', markup, updateEditor: false });
+    },
     [dispatch],
   );
 

@@ -7,9 +7,9 @@ const name = isChrome ? '🐸 Testing Playground' : 'Testing Playground';
 
 panels.create(name, '', '/devtools/panel.html');
 
-panels.elements.createSidebarPane(name, (sidebar) =>
-  sidebar.setPage('/devtools/pane.html'),
-);
+panels.elements.createSidebarPane(name, (sidebar) => {
+  return sidebar.setPage('/devtools/pane.html');
+});
 
 function onSelectionChanged() {
   chrome.devtools.inspectedWindow.eval(

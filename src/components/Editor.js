@@ -45,7 +45,9 @@ const options = {
 
 const suggestions = {
   screen: Object.keys(queries)
-    .filter((x) => x.startsWith('getBy'))
+    .filter((x) => {
+      return x.startsWith('getBy');
+    })
     .sort(),
   container: ['querySelector', 'querySelectorAll'],
 };
@@ -83,13 +85,15 @@ function getQueryHints(cm) {
   } else if (word.includes('.')) {
     // user is already one level deeper, entered `screen.get...`
     const [obj, method] = word.split('.');
-    const values = (suggestions[obj] || []).filter((x) =>
-      x.toLowerCase().includes(method),
-    );
+    const values = (suggestions[obj] || []).filter((x) => {
+      return x.toLowerCase().includes(method);
+    });
     list.push(...values);
   } else {
     // browsing the root level, user types something like `scr` -> `screen``
-    const values = Object.keys(suggestions).filter((x) => x.startsWith(word));
+    const values = Object.keys(suggestions).filter((x) => {
+      return x.startsWith(word);
+    });
     list.push(...values);
   }
 

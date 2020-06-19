@@ -58,45 +58,51 @@ function Preview({
     const container = document.createElement('div');
     container.innerHTML = markup;
     const scriptsCollections = container.getElementsByTagName('script');
-    const jsScripts = Array.from(scriptsCollections).filter(
-      (script) => script.type === 'text/javascript' || script.type === '',
-    );
-    setScripts((scripts) => [
-      ...scripts.filter((script) =>
-        jsScripts
-          .map((jsScript) => jsScript.innerHTML)
-          .includes(script.innerHTML),
-      ),
-      ...jsScripts
-        .filter(
-          (jsScript) =>
-            !scripts
-              .map((script) => script.innerHTML)
-              .includes(jsScript.innerHTML),
-        )
-        .map((jsScript) => ({
-          scriptCode: jsScript.innerHTML,
-          toBeRemoved: jsScript.outerHTML,
-          evaluated: false,
-        })),
-    ]);
+    const jsScripts = Array.from(scriptsCollections).filter((script) => {
+      return script.type === 'text/javascript' || script.type === '';
+    });
+    setScripts((scripts) => {
+      return [
+        ...scripts.filter((script) => {
+          return jsScripts
+            .map((jsScript) => {
+              return jsScript.innerHTML;
+            })
+            .includes(script.innerHTML);
+        }),
+        ...jsScripts
+          .filter((jsScript) => {
+            return !scripts
+              .map((script) => {
+                return script.innerHTML;
+              })
+              .includes(jsScript.innerHTML);
+          })
+          .map((jsScript) => {
+            return {
+              scriptCode: jsScript.innerHTML,
+              toBeRemoved: jsScript.outerHTML,
+              evaluated: false,
+            };
+          }),
+      ];
+    });
   }, [markup, setScripts]);
 
-  const actualMarkup = useMemo(
-    () =>
-      scripts.length
-        ? scripts.reduce(
-            (html, script) => html.replace(script.toBeRemoved, ''),
-            markup,
-          )
-        : markup,
-    [scripts, markup],
-  );
+  const actualMarkup = useMemo(() => {
+    return scripts.length
+      ? scripts.reduce((html, script) => {
+          return html.replace(script.toBeRemoved, '');
+        }, markup)
+      : markup;
+  }, [scripts, markup]);
 
   useEffect(() => {
     if (htmlRoot.current && highlighted) {
       scripts
-        .filter((script) => !script.evaluated)
+        .filter((script) => {
+          return !script.evaluated;
+        })
         .forEach((script) => {
           try {
             script.evaluated = true;
@@ -131,7 +137,9 @@ function Preview({
       }
     }
 
-    return () => highlighted?.classList?.remove('highlight');
+    return () => {
+      return highlighted?.classList?.remove('highlight');
+    };
   }, [highlighted, elements]);
 
   const handleClick = (event) => {
@@ -163,8 +171,12 @@ function Preview({
   return markup ? (
     <div
       className="w-full h-full flex flex-col relative overflow-hidden"
-      onMouseEnter={() => setHighlighted(true)}
-      onMouseLeave={() => setHighlighted(false)}
+      onMouseEnter={() => {
+        return setHighlighted(true);
+      }}
+      onMouseLeave={() => {
+        return setHighlighted(false);
+      }}
     >
       <div className="flex-auto relative overflow-hidden">
         <Scrollable>

@@ -57,7 +57,9 @@ async function build({ entries, dest, port, serve = !isProduction }) {
     } else {
       parcel
         .run()
-        .then((build) => resolve({ build, config, watching: false }))
+        .then((build) => {
+          return resolve({ build, config, watching: false });
+        })
         .catch(reject);
     }
   });

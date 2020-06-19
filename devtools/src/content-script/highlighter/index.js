@@ -18,7 +18,9 @@ import { hideOverlay, showOverlay } from './Highlighter';
 let iframesListeningTo = new Set();
 
 function withMessageData(fn) {
-  return ({ data }) => fn(data);
+  return ({ data }) => {
+    return fn(data);
+  };
 }
 
 export default function setupHighlighter({
@@ -89,8 +91,12 @@ export default function setupHighlighter({
 
     if (nodes?.[0]) {
       const elems = nodes
-        .map((x) => (typeof x === 'string' ? document.querySelector(x) : x))
-        .filter((x) => x.nodeType === Node.ELEMENT_NODE);
+        .map((x) => {
+          return typeof x === 'string' ? document.querySelector(x) : x;
+        })
+        .filter((x) => {
+          return x.nodeType === Node.ELEMENT_NODE;
+        });
 
       showOverlay(elems, hideAfterTimeout);
     } else {

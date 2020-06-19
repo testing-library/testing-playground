@@ -67,9 +67,9 @@ export function getQueryAdvise({ rootNode, element }) {
       data,
     };
   }
-  const { level } = queries.find(
-    ({ method }) => method === suggestedQuery.queryMethod,
-  );
+  const { level } = queries.find(({ method }) => {
+    return method === suggestedQuery.queryMethod;
+  });
   const suggestion = {
     expression: `screen.${suggestedQuery.toString()}`,
     level,
@@ -84,12 +84,16 @@ export function getQueryAdvise({ rootNode, element }) {
 
 export function getAllPossibileQueries(element) {
   const possibleQueries = queries
-    .filter((query) => query.type !== 'GENERIC')
+    .filter((query) => {
+      return query.type !== 'GENERIC';
+    })
     .map((query) => {
       const method = getFieldName(query.method);
       return getSuggestedQuery(element, 'get', method);
     })
-    .filter((suggestedQuery) => suggestedQuery !== undefined)
+    .filter((suggestedQuery) => {
+      return suggestedQuery !== undefined;
+    })
     .reduce((obj, suggestedQuery) => {
       obj[suggestedQuery.queryMethod] = suggestedQuery;
       return obj;

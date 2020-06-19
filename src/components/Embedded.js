@@ -35,8 +35,12 @@ function Embedded() {
 
   const panes = params.panes
     ? Array.from(new Set(params.panes.split(',')))
-        .map((x) => x.trim())
-        .filter((x) => SUPPORTED_PANES[x])
+        .map((x) => {
+          return x.trim();
+        })
+        .filter((x) => {
+          return SUPPORTED_PANES[x];
+        })
     : ['markup', 'preview', 'query', 'result'];
 
   // TODO: we should add tabs to handle > 2 panes
@@ -54,7 +58,9 @@ function Embedded() {
 
   useEffect(() => {
     document.body.classList.add('embedded');
-    return () => document.body.classList.remove('embedded');
+    return () => {
+      return document.body.classList.remove('embedded');
+    };
   }, []);
 
   return (

@@ -12,10 +12,15 @@ import {
   logDOM,
 } from '@testing-library/dom';
 
-const debug = (element, maxLength, options) =>
-  Array.isArray(element)
-    ? element.map((el) => logDOM(el, maxLength, options)).join('\n')
+const debug = (element, maxLength, options) => {
+  return Array.isArray(element)
+    ? element
+        .map((el) => {
+          return logDOM(el, maxLength, options);
+        })
+        .join('\n')
     : logDOM(element, maxLength, options);
+};
 
 export function getScreen(root) {
   return getQueriesForElement(root, queries, { debug });
@@ -43,10 +48,9 @@ function getLastExpression(code) {
     // remove all white space outside quotes
     .replace(/[ ]+(?=[^"'`]*(?:["'`][^"'`]*["'`][^"'`]*)*$)/g, '');
 
-  const start = supportedQueries.reduce(
-    (idx, qry) => Math.max(idx, minified.lastIndexOf(qry.method)),
-    -1,
-  );
+  const start = supportedQueries.reduce((idx, qry) => {
+    return Math.max(idx, minified.lastIndexOf(qry.method));
+  }, -1);
 
   if (start === -1) {
     return '';
@@ -70,10 +74,15 @@ function getLastExpression(code) {
   const [method, ...args] = call
     .split(/[(),]/)
     .filter(Boolean)
-    .map((x) => unQuote((x || '').trim()));
+    .map((x) => {
+      return unQuote((x || '').trim());
+    });
 
   const expression = [scope, call].filter(Boolean).join('.');
-  const level = supportedQueries.find((x) => x.method === method)?.level ?? 3;
+  const level =
+    supportedQueries.find((x) => {
+      return x.method === method;
+    })?.level ?? 3;
 
   return {
     expression,
@@ -112,7 +121,9 @@ function createEvaluator({ rootNode }) {
     }
 
     result.elements = ensureArray(result.data)
-      .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
+      .filter((x) => {
+        return x?.nodeType === Node.ELEMENT_NODE;
+      })
       .map((element) => {
         const { suggestion, data } = getQueryAdvise({
           rootNode,
@@ -196,9 +207,20 @@ function createSandbox({ markup }) {
         body = html;
       }
     },
-    eval: (query) =>
-      wrap(() => frame.contentWindow.exec(context, query), { markup, query }),
-    destroy: () => document.body.removeChild(container),
+    eval: (query) => {
+      return wrap(
+        () => {
+          return frame.contentWindow.exec(context, query);
+        },
+        {
+          markup,
+          query,
+        },
+      );
+    },
+    destroy: () => {
+      return document.body.removeChild(container);
+    },
   };
 }
 
@@ -234,7 +256,9 @@ function runUnsafe({ rootNode, query }) {
   const evaluator = createEvaluator({ rootNode });
 
   const result = evaluator.wrap(
-    () => evaluator.exec(evaluator.context, query),
+    () => {
+      return evaluator.exec(evaluator.context, query);
+    },
     {
       query,
       markup: rootNode.innerHTML,
@@ -271,7 +295,11 @@ function parse({ rootNode, markup, query, cacheId, prevResult }) {
       }
     }
 
-    if (keys.every((key) => result[key] === prevResult[key])) {
+    if (
+      keys.every((key) => {
+        return result[key] === prevResult[key];
+      })
+    ) {
       return prevResult;
     }
   }

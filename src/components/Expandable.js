@@ -49,7 +49,9 @@ function Expandable({ children, className, variant }) {
           <IconButton
             className="bg-inherit absolute bottom-0 right-0 mx-4 my-2"
             variant={variant}
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => {
+              return setExpanded(!expanded);
+            }}
           >
             <ChevronDown />
           </IconButton>
@@ -65,7 +67,9 @@ function Expandable({ children, className, variant }) {
       <IconButton
         className="bg-inherit"
         variant={variant}
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => {
+          return setExpanded(!expanded);
+        }}
       >
         <ChevronUp />
       </IconButton>

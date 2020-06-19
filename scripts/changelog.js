@@ -59,7 +59,9 @@ async function generate({ version, from, to, showHeader } = {}) {
         lines = lines.slice(3); // strip header and 2 blank lines
       }
 
-      lines = lines.map((x) => (x.startsWith('#') ? x.substr(1) : x));
+      lines = lines.map((x) => {
+        return x.startsWith('#') ? x.substr(1) : x;
+      });
 
       content = lines.join('\n');
       return resolve(content);

@@ -87,12 +87,12 @@ function ResultSuggestion({ data, suggestion, result, dispatch }) {
           <div className="flex justify-between">
             <div
               className="font-mono cursor-pointer text-xs"
-              onClick={() =>
-                dispatch({
+              onClick={() => {
+                return dispatch({
                   type: 'SET_QUERY',
                   query: suggestion.expression,
-                })
-              }
+                });
+              }}
             >
               &gt; {suggestion.expression}
               <br />

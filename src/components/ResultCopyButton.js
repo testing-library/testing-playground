@@ -76,7 +76,9 @@ function ResultCopyButton({ expression }) {
         setCopied(false);
       }, 1500);
 
-      return () => clearTimeout(timeout);
+      return () => {
+        return clearTimeout(timeout);
+      };
     }
   }, [copied]);
 

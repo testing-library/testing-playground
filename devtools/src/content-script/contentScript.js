@@ -38,7 +38,9 @@ function init() {
 
     if (data.highlight) {
       hook.highlighter.highlight({
-        nodes: (result.elements || []).map((x) => x.target),
+        nodes: (result.elements || []).map((x) => {
+          return x.target;
+        }),
         hideAfterTimeout: data.hideAfterTimeout,
       });
     }

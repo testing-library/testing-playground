@@ -6,11 +6,13 @@ const workbox = require('workbox-build');
 
 const hashRegExp = /\.[0-9a-fA-F]{8}\./;
 
-const removeRevisionManifestTransform = async (manifestEntries) => ({
-  manifest: manifestEntries.map((entry) =>
-    hashRegExp.test(entry.url) ? { ...entry, revision: null } : entry,
-  ),
-});
+const removeRevisionManifestTransform = async (manifestEntries) => {
+  return {
+    manifest: manifestEntries.map((entry) => {
+      return hashRegExp.test(entry.url) ? { ...entry, revision: null } : entry;
+    }),
+  };
+};
 
 const workboxConfig = {
   globDirectory: 'dist/client',
@@ -35,7 +37,9 @@ async function fixWebManifest({ dest }) {
 
   // fix image paths in manifest.json
   const iconSrcHashTable = (await readdir(dest))
-    .filter((file) => /\.png/.test(file))
+    .filter((file) => {
+      return /\.png/.test(file);
+    })
     .reduce((index, file) => {
       index[file.replace(hashRegExp, '.')] = file;
       return index;

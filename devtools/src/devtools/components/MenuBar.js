@@ -14,9 +14,9 @@ function MenuBar({ cssPath, suggestion }) {
       <button
         className="focus:outline-none"
         title="select element"
-        onClick={() =>
-          Bridge.sendMessage('START_INSPECTING', null, 'content-script')
-        }
+        onClick={() => {
+          return Bridge.sendMessage('START_INSPECTING', null, 'content-script');
+        }}
       >
         <SelectIcon />
       </button>
@@ -24,9 +24,9 @@ function MenuBar({ cssPath, suggestion }) {
       <button
         className="focus:outline-none"
         title="clear highlights"
-        onClick={() =>
-          Bridge.sendMessage('CLEAR_HIGHLIGHTS', null, 'content-script')
-        }
+        onClick={() => {
+          return Bridge.sendMessage('CLEAR_HIGHLIGHTS', null, 'content-script');
+        }}
       >
         <LayersIcon />
       </button>
@@ -37,7 +37,9 @@ function MenuBar({ cssPath, suggestion }) {
         className="focus:outline-none"
         title="Inspect the matching DOM element"
         disabled={!cssPath}
-        onClick={() => inspectedWindow.inspect(cssPath.toString())}
+        onClick={() => {
+          return inspectedWindow.inspect(cssPath.toString());
+        }}
       >
         <InspectIcon />
       </button>
@@ -46,7 +48,9 @@ function MenuBar({ cssPath, suggestion }) {
         className="focus:outline-none"
         title="Log the suggested query and result to console"
         disabled={!suggestion?.expression}
-        onClick={() => inspectedWindow.logQuery(suggestion?.expression)}
+        onClick={() => {
+          return inspectedWindow.logQuery(suggestion?.expression);
+        }}
       >
         <LogIcon />
       </button>

@@ -7,7 +7,9 @@ function deepEqual(left, right) {
     return (
       Array.isArray(right) &&
       left.length === right.length &&
-      left.every((value, idx) => deepEqual(value, right[idx]))
+      left.every((value, idx) => {
+        return deepEqual(value, right[idx]);
+      })
     );
   }
 
@@ -16,7 +18,9 @@ function deepEqual(left, right) {
       right &&
       typeof right === 'object' &&
       Object.keys(left).length === Object.keys(right).length &&
-      Object.entries(left).every(([key, value]) => deepEqual(value, right[key]))
+      Object.entries(left).every(([key, value]) => {
+        return deepEqual(value, right[key]);
+      })
     );
   }
 

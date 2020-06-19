@@ -38,7 +38,9 @@ function getElementData(element) {
     element.tagName === 'SELECT' && element.multiple
       ? element.selectedOptions.length > 0
         ? JSON.stringify(
-            Array.from(element.selectedOptions).map((o) => o.value),
+            Array.from(element.selectedOptions).map((o) => {
+              return o.value;
+            }),
           )
         : null
       : element.value;
@@ -127,9 +129,15 @@ function DomEvents() {
   };
 
   const flush = useCallback(
-    throttle(() => setEventCount(buffer.current.length), 16, {
-      leading: false,
-    }),
+    throttle(
+      () => {
+        return setEventCount(buffer.current.length);
+      },
+      16,
+      {
+        leading: false,
+      },
+    ),
     [setEventCount],
   );
 
@@ -143,9 +151,12 @@ function DomEvents() {
       });
       setEventListeners(eventListeners);
     } else if (previewRef.current) {
-      eventListeners.forEach((event) =>
-        previewRef.current.removeEventListener(event.name, event.listener),
-      );
+      eventListeners.forEach((event) => {
+        return previewRef.current.removeEventListener(
+          event.name,
+          event.listener,
+        );
+      });
       previewRef.current = null;
     }
   }, []);
@@ -195,20 +206,22 @@ function DomEvents() {
               </div>
             ) : (
               <AutoSizer>
-                {({ width, height }) => (
-                  <StickyList
-                    mode="bottom"
-                    ref={listRef}
-                    height={height}
-                    itemCount={eventCount}
-                    itemData={buffer.current}
-                    itemSize={32}
-                    width={width}
-                    outerElementType={VirtualScrollable}
-                  >
-                    {EventRecord}
-                  </StickyList>
-                )}
+                {({ width, height }) => {
+                  return (
+                    <StickyList
+                      mode="bottom"
+                      ref={listRef}
+                      height={height}
+                      itemCount={eventCount}
+                      itemData={buffer.current}
+                      itemSize={32}
+                      width={width}
+                      outerElementType={VirtualScrollable}
+                    >
+                      {EventRecord}
+                    </StickyList>
+                  );
+                }}
               </AutoSizer>
             )}
           </div>

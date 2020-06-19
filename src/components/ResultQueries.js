@@ -49,7 +49,9 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
       <Section>
         <Heading>1. Queries Accessible to Everyone</Heading>
         {queries
-          .filter((query) => query.type === 'ACCESSIBLE')
+          .filter((query) => {
+            return query.type === 'ACCESSIBLE';
+          })
           .map((query) => {
             return (
               <Field
@@ -68,7 +70,9 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
         <Section>
           <Heading>2. Semantic Queries</Heading>
           {queries
-            .filter((query) => query.type === 'SEMANTIC')
+            .filter((query) => {
+              return query.type === 'SEMANTIC';
+            })
             .map((query) => {
               return (
                 <Field
@@ -86,7 +90,9 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
         <Section>
           <Heading>3. TestId</Heading>
           {queries
-            .filter((query) => query.type === 'TEST')
+            .filter((query) => {
+              return query.type === 'TEST';
+            })
             .map((query) => {
               return (
                 <Field

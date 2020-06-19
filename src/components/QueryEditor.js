@@ -3,12 +3,16 @@ import Editor from './Editor';
 
 function QueryEditor({ query, dispatch }) {
   const onLoad = useCallback(
-    (editor) => dispatch({ type: 'SET_QUERY_EDITOR', editor }),
+    (editor) => {
+      return dispatch({ type: 'SET_QUERY_EDITOR', editor });
+    },
     [dispatch],
   );
 
   const onChange = useCallback(
-    (query) => dispatch({ type: 'SET_QUERY', query, updateEditor: false }),
+    (query) => {
+      return dispatch({ type: 'SET_QUERY', query, updateEditor: false });
+    },
     [dispatch],
   );
 

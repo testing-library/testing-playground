@@ -182,9 +182,9 @@ export default class Overlay {
   inspect(nodes) {
     // We can't get the size of text nodes or comment nodes. React as of v15
     // heavily uses comment nodes to delimit text.
-    const elements = nodes.filter(
-      (node) => node.nodeType === Node.ELEMENT_NODE,
-    );
+    const elements = nodes.filter((node) => {
+      return node.nodeType === Node.ELEMENT_NODE;
+    });
 
     while (this.rects.length > elements.length) {
       const rect = this.rects.pop();

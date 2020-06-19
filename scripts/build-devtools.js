@@ -25,9 +25,9 @@ async function main() {
   const manifest = require(join(dest, 'manifest.json'));
 
   await Promise.all(
-    Object.values(manifest.icons).map((icon) =>
-      copy(icon.replace(/^icons/, 'public'), join(dest, icon)),
-    ),
+    Object.values(manifest.icons).map((icon) => {
+      return copy(icon.replace(/^icons/, 'public'), join(dest, icon));
+    }),
   );
 
   if (parcel.watching) {

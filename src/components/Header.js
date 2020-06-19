@@ -36,24 +36,28 @@ function Header() {
 
           <div className="border-r border-gray-600 mx-4 h-8 hidden md:block" />
 
-          {headerLinks.map((x) => (
-            <a
-              className="hover:underline hidden md:block"
-              key={x.title}
-              href={x.url}
-            >
-              {x.title}
-            </a>
-          ))}
+          {headerLinks.map((x) => {
+            return (
+              <a
+                className="hover:underline hidden md:block"
+                key={x.title}
+                href={x.url}
+              >
+                {x.title}
+              </a>
+            );
+          })}
         </div>
       </div>
 
       <div className="flex justify-between sm:justify-end items-center bg-gray-800 px-8 h-10 md:hidden space-x-8">
-        {headerLinks.map((x) => (
-          <a className="hover:underline truncate" key={x.title} href={x.url}>
-            {x.title}
-          </a>
-        ))}
+        {headerLinks.map((x) => {
+          return (
+            <a className="hover:underline truncate" key={x.title} href={x.url}>
+              {x.title}
+            </a>
+          );
+        })}
       </div>
     </nav>
   );
