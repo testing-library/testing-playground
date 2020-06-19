@@ -50,8 +50,24 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
         <Heading>1. Queries Accessible to Everyone</Heading>
         {queries
           .filter((query) => query.type === 'ACCESSIBLE')
-          .map((query) => {
-            return (
+          .map((query) => (
+            <Field
+              key={query.method}
+              data={data}
+              method={query.method}
+              query={possibleQueries[query.method]}
+              dispatch={dispatch}
+              active={query.method === activeMethod}
+            />
+          ))}
+      </Section>
+
+      <div className="space-y-8">
+        <Section>
+          <Heading>2. Semantic Queries</Heading>
+          {queries
+            .filter((query) => query.type === 'SEMANTIC')
+            .map((query) => (
               <Field
                 key={query.method}
                 data={data}
@@ -60,45 +76,23 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
                 dispatch={dispatch}
                 active={query.method === activeMethod}
               />
-            );
-          })}
-      </Section>
-
-      <div className="space-y-8">
-        <Section>
-          <Heading>2. Semantic Queries</Heading>
-          {queries
-            .filter((query) => query.type === 'SEMANTIC')
-            .map((query) => {
-              return (
-                <Field
-                  key={query.method}
-                  data={data}
-                  method={query.method}
-                  query={possibleQueries[query.method]}
-                  dispatch={dispatch}
-                  active={query.method === activeMethod}
-                />
-              );
-            })}
+            ))}
         </Section>
 
         <Section>
           <Heading>3. TestId</Heading>
           {queries
             .filter((query) => query.type === 'TEST')
-            .map((query) => {
-              return (
-                <Field
-                  key={query.method}
-                  data={data}
-                  method={query.method}
-                  query={possibleQueries[query.method]}
-                  dispatch={dispatch}
-                  active={query.method === activeMethod}
-                />
-              );
-            })}
+            .map((query) => (
+              <Field
+                key={query.method}
+                data={data}
+                method={query.method}
+                query={possibleQueries[query.method]}
+                dispatch={dispatch}
+                active={query.method === activeMethod}
+              />
+            ))}
         </Section>
       </div>
     </div>
