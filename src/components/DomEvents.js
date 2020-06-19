@@ -12,7 +12,6 @@ import IconButton from './IconButton';
 import TrashcanIcon from './TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
-import useSorter from '../hooks/useSorter';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -112,13 +111,8 @@ function DomEvents() {
   const previewRef = useRef();
   const listRef = useRef();
 
-  const [sortBy, setSortBy] = useState('id');
-  const [sortDirection, setSortDirection] = useState('asc');
-  const [sortedRows] = useSorter({
-    rows: buffer.current,
-    sortBy,
-    sortDirection,
-  });
+  const sortDirection = useRef('asc');
+  const [appendMode, setAppendMode] = useState('bottom');
   const [{ markup, result }, dispatch] = usePlayground({
     onChange: onStateChange,
     ...initialValues,
@@ -127,24 +121,23 @@ function DomEvents() {
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
 
-  const getSortIcon = (key) => {
-    if (key === sortBy) {
-      return (
-        <IconButton>
-          {sortDirection === 'desc' ? <ChevronDownIcon /> : <ChevronUpIcon />}
-        </IconButton>
-      );
-    }
-    return null;
+  const getSortIcon = () => {
+    return (
+      <IconButton>
+        {sortDirection.current === 'desc' ? (
+          <ChevronDownIcon />
+        ) : (
+          <ChevronUpIcon />
+        )}
+      </IconButton>
+    );
   };
 
-  const updateSort = (key) => {
-    if (key !== sortBy) {
-      setSortBy(key);
-      setSortDirection('desc');
-    } else {
-      setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
-    }
+  const changeSortDirection = () => {
+    const newDirection = sortDirection.current === 'desc' ? 'asc' : 'desc';
+    buffer.current = buffer.current.reverse();
+    setAppendMode(newDirection === 'desc' ? 'top' : 'bottom');
+    sortDirection.current = newDirection;
   };
 
   const reset = () => {
@@ -170,7 +163,12 @@ function DomEvents() {
           element: event.target.tagName,
           selector: event.target.toString(),
         };
-        buffer.current.push(log);
+        if (sortDirection.current === 'desc') {
+          buffer.current.splice(0, 0, log);
+        } else {
+          buffer.current.push(log);
+        }
+
         setTimeout(flush, 0);
       });
       setEventListeners(eventListeners);
@@ -208,37 +206,17 @@ function DomEvents() {
           <div className="h-8 flex items-center w-full text-sm font-bold">
             <div
               className="p-2 w-16 cursor-pointer"
-              onClick={() => updateSort('id')}
+              onClick={changeSortDirection}
             >
               # {getSortIcon('id')}
             </div>
 
-            <div
-              className="p-2 w-32 cursor-pointer"
-              onClick={() => updateSort('type')}
-            >
-              type {getSortIcon('type')}
-            </div>
-            <div
-              className="p-2 w-32 cursor-pointer"
-              onClick={() => updateSort('name')}
-            >
-              name {getSortIcon('name')}
-            </div>
+            <div className="p-2 w-32 ">type</div>
+            <div className="p-2 w-32 ">name</div>
 
-            <div
-              className="p-2 w-40 cursor-pointer"
-              onClick={() => updateSort('element')}
-            >
-              element {getSortIcon('element')}
-            </div>
+            <div className="p-2 w-40 ">element</div>
             <div className="flex-auto p-2 flex justify-between">
-              <span
-                className="cursor-pointer"
-                onClick={() => updateSort('selector')}
-              >
-                selector {getSortIcon('selector')}
-              </span>
+              <span>selector</span>
               <IconButton title="clear event log" onClick={reset}>
                 <TrashcanIcon />
               </IconButton>
@@ -246,7 +224,7 @@ function DomEvents() {
           </div>
 
           <div className="flex-auto relative overflow-hidden">
-            {sortedRows.length === 0 ? (
+            {buffer.current.length === 0 ? (
               <div className="flex w-full h-full opacity-50 items-end justify-center">
                 <EmptyStreetImg height="80%" />
               </div>
@@ -254,11 +232,11 @@ function DomEvents() {
               <AutoSizer>
                 {({ width, height }) => (
                   <StickyList
-                    mode="bottom"
+                    mode={appendMode}
                     ref={listRef}
                     height={height}
                     itemCount={eventCount}
-                    itemData={sortedRows}
+                    itemData={buffer.current}
                     itemSize={32}
                     width={width}
                     outerElementType={VirtualScrollable}
