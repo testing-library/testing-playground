@@ -7,7 +7,7 @@ const variants = {
 };
 
 function IconButton({ children, title, variant, onClick, className }) {
-  const cssVariant = variants[variant] ?? variants['light'];
+  const cssVariant = variants[variant] || variants['light'];
   return (
     <button
       className={[
