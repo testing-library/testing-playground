@@ -18,7 +18,7 @@ function useSorter({
   sortByFn = defaultSorter,
 }) {
   if (!Array.isArray(rows)) {
-    throw Error('rows should be an array');
+    throw TypeError('rows should be an array');
   }
 
   if (sortDirection !== 'desc' && sortDirection !== 'asc') {
