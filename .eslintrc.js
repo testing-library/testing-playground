@@ -22,6 +22,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    'arrow-body-style': ['error', 'as-needed'],
     curly: 'error',
 
     // I'll probably add some typescript types instead
