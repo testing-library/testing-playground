@@ -26,5 +26,6 @@ module.exports = {
 
     // I'll probably add some typescript types instead
     'react/prop-types': 'off',
+    'arrow-body-style': ['error', 'always'],
   },
 };
