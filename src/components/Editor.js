@@ -11,6 +11,7 @@ import { queries } from '@testing-library/dom';
 
 import CodeMirror from 'codemirror';
 import debounce from 'lodash/debounce';
+import beautify from '../lib/beautify';
 
 const baseOptions = {
   autoCloseBrackets: true,
@@ -199,6 +200,22 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
         });
       }
     });
+
+    const format = () => {
+      const value = editor.current.getValue();
+      const formatted = beautify.format(mode, value);
+      editor.current.setValue(formatted);
+    };
+
+    editor.current.on('change', (_, change) => {
+      if (change.origin !== 'paste') {
+        return;
+      }
+
+      format();
+    });
+
+    editor.current.on('blur', format);
 
     onLoad(editor.current);
   }, [editor.current, onChange]);

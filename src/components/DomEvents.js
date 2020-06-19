@@ -9,7 +9,8 @@ import { VirtualScrollable } from './Scrollable';
 import throttle from 'lodash.throttle';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import IconButton from './IconButton';
-import TrashcanIcon from './TrashcanIcon';
+import TrashcanIcon from './icons/TrashcanIcon';
+import CopyButton from './CopyButton';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
 
@@ -145,6 +146,11 @@ function DomEvents() {
     setEventCount(0);
   };
 
+  const getTextToCopy = () =>
+    buffer.current
+      .map((log) => `${log.target.toString()} - ${log.event.EventType}`)
+      .join('\n');
+
   const flush = useCallback(
     throttle(() => setEventCount(buffer.current.length), 16, {
       leading: false,
@@ -217,9 +223,16 @@ function DomEvents() {
             <div className="p-2 w-40 ">element</div>
             <div className="flex-auto p-2 flex justify-between">
               <span>selector</span>
-              <IconButton title="clear event log" onClick={reset}>
-                <TrashcanIcon />
-              </IconButton>
+              <div>
+                <CopyButton
+                  text={getTextToCopy}
+                  title="copy log"
+                  className="mr-5"
+                />
+                <IconButton title="clear event log" onClick={reset}>
+                  <TrashcanIcon />
+                </IconButton>
+              </div>
             </div>
           </div>
 

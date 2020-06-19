@@ -39,26 +39,24 @@ function Result({ result, dispatch }) {
   const { data, suggestion, queries } = result.elements[0];
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
-      <div className="flex-none pb-4 border-b">
-        <ResultSuggestion
-          result={result}
-          dispatch={dispatch}
-          data={data}
-          suggestion={suggestion}
-        />
-      </div>
-
-      <div className="flex-auto">
-        <Scrollable>
-          <ResultQueries
+      <Scrollable>
+        <div className="pb-4 border-b">
+          <ResultSuggestion
+            result={result}
+            dispatch={dispatch}
             data={data}
             possibleQueries={queries}
             suggestion={suggestion}
-            activeMethod={result.expression?.method}
-            dispatch={dispatch}
           />
-        </Scrollable>
-      </div>
+        </div>
+
+        <ResultQueries
+          data={data}
+          suggestion={suggestion}
+          activeMethod={result.expression?.method}
+          dispatch={dispatch}
+        />
+      </Scrollable>
     </div>
   );
 }

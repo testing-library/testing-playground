@@ -1,11 +1,11 @@
 const tailwindcss = require('tailwindcss');
 const atImport = require('postcss-import');
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const plugins = [atImport, tailwindcss];
 
-if (!IS_DEVELOPMENT) {
+if (IS_PRODUCTION) {
   const purgecss = require('@fullhuman/postcss-purgecss');
 
   class TailwindExtractor {
