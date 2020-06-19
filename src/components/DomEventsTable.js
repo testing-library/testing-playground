@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import IconButton from './IconButton';
 import TrashcanIcon from './icons/TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
@@ -6,14 +6,27 @@ import StickyList from './StickyList';
 import { VirtualScrollable } from './Scrollable';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import CopyButton from './CopyButton';
+import Select from 'react-select';
 
+const defaultNamesOptions = [
+  { label: 'mouseEnter', value: 'mouseEnter' },
+  { label: 'mouseMove', value: 'mouseMove' },
+  { label: 'mouseOver', value: 'mouseOver' },
+  { label: 'mouseOut', value: 'mouseOut' },
+  { label: 'mouseLeave', value: 'mouseLeave' },
+  { label: 'pointerOver', value: 'pointerOver' },
+  { label: 'pointerMove', value: 'pointerMove' },
+  { label: 'pointerEnter', value: 'pointerEnter' },
+  { label: 'pointerLeave', value: 'pointerLeave' },
+  { label: 'pointerOut', value: 'pointerOut' },
+];
 
 function EventRecord({ index, style, data }) {
   const { id, event, target } = data[index];
 
   return (
     <div
-      className={`w-full h-8 flex items-center text-sm ${
+      className={`w-full h-10 flex items-center text-sm ${
         index % 2 ? 'bg-gray-100' : ''
       }`}
       style={style}
@@ -31,13 +44,99 @@ function EventRecord({ index, style, data }) {
   );
 }
 
-const DomEventsTable = ({ reset, data, eventCount }) => {
+function SelectHeader({ label, options, onChange, value }) {
+  const valueContainer = () => label;
+
+  const styles = {
+    control: (style) => ({
+      ...style,
+      paddingLeft: '0.5rem',
+    }),
+    option: (style, { isSelected }) => ({
+      ...style,
+      color: 'black',
+      backgroundColor: isSelected ? '#f2f2f2' : 'white',
+      fontWeight: 400,
+      ':active': {
+        backgroundColor: 'white',
+      },
+    }),
+    input: (style) => ({
+      ...style,
+      marginBottom: 0,
+    }),
+    menu: (style) => ({
+      ...style,
+      marginTop: 0,
+    }),
+  };
+
+  return (
+    <Select
+      styles={styles}
+      options={options}
+      components={{
+        ValueContainer: valueContainer,
+      }}
+      isMulti
+      isSearchable
+      dropdownAlign={{ offset: [0, 0] }}
+      onChange={onChange}
+      hideSelectedOptions={false}
+      value={value}
+    />
+  );
+}
+
+const DomEventsTable = ({
+  reset,
+  data,
+  eventCount,
+  typeOptions,
+  nameOptions,
+}) => {
   const listRef = useRef();
+  const [selectedTypes, setSelectedTypes] = useState(typeOptions);
+  const [selectedNames, setSelectedNames] = useState(defaultNamesOptions);
+  const onChangeHandler = (fieldName) => (selectedOptions, { action }) => {
+    if (fieldName === 'type') {
+      setSelectedTypes(selectedOptions);
+    }
+    if (fieldName === 'name') {
+      if (action === 'clear') {
+        setSelectedNames(defaultNamesOptions);
+      } else {
+        setSelectedNames(selectedOptions);
+      }
+    }
+  };
+
+  const filterData = ({ event }) => {
+    if (selectedTypes.length && selectedNames.length) {
+      return (
+        selectedTypes.find((type) => type.value === event.EventType) &&
+        selectedNames.find((name) => name.value === event.name)
+      );
+    }
+    if (selectedTypes.length) {
+      return selectedTypes.find((type) => type.value === event.EventType);
+    }
+    if (selectedNames.length) {
+      return selectedNames.find((name) => name.value === event.name);
+    }
+    return true;
+  };
 
   const getTextToCopy = () =>
     data
       .map((log) => `${log.target.toString()} - ${log.event.EventType}`)
       .join('\n');
+
+  const onResetHandler = useCallback(() => {
+    setSelectedTypes([]);
+    setSelectedNames(defaultNamesOptions);
+    reset();
+  }, [setSelectedTypes, setSelectedNames, reset]);
 
   return (
     <div className="editor md:h-56 flex-auto overflow-hidden">
@@ -45,8 +144,22 @@ const DomEventsTable = ({ reset, data, eventCount }) => {
         <div className="h-8 flex items-center w-full text-sm font-bold">
           <div className="p-2 w-16">#</div>
 
-          <div className="p-2 w-40">type</div>
-          <div className="p-2 w-40">name</div>
+          <div className="pr-2 py-2 w-40">
+            <SelectHeader
+              label="type"
+              options={typeOptions}
+              onChange={onChangeHandler('type')}
+              value={[...selectedTypes]}
+            />
+          </div>
+          <div className="pr-2 py-2 w-40">
+            <SelectHeader
+              label="name"
+              options={nameOptions}
+              onChange={onChangeHandler('name')}
+              value={[...selectedNames]}
+            />
+          </div>
 
           <div className="p-2 w-40">element</div>
           <div className="flex-auto p-2 flex justify-between">
@@ -57,7 +170,7 @@ const DomEventsTable = ({ reset, data, eventCount }) => {
                 title="copy log"
                 className="mr-5"
               />
-              <IconButton title="clear event log" onClick={reset}>
+              <IconButton title="clear event log" onClick={onResetHandler}>
                 <TrashcanIcon />
               </IconButton>
             </div>
@@ -76,8 +189,8 @@ const DomEventsTable = ({ reset, data, eventCount }) => {
                   mode="bottom"
                   ref={listRef}
                   height={height}
-                  itemCount={eventCount}
-                  itemData={data}
+                  itemCount={data.filter(filterData).length}
+                  itemData={data.filter(filterData)}
                   itemSize={32}
                   width={width}
                   outerElementType={VirtualScrollable}

@@ -121,6 +121,23 @@ function DomEvents() {
     }
   }, []);
 
+  const typeOptions = Object.values(buffer.current).reduce(
+    (acc, { event }) =>
+      acc.findIndex((evtIncluded) => evtIncluded.value === event.EventType) ===
+      -1
+        ? [...acc, { label: event.EventType, value: event.EventType }]
+        : acc,
+    [],
+  );
+
+  const nameOptions = Object.values(buffer.current).reduce(
+    (acc, { event }) =>
+      acc.findIndex((evtIncluded) => evtIncluded.value === event.name) === -1
+        ? [...acc, { label: event.name, value: event.name }]
+        : acc,
+    [],
+  );
+
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
       <div className="editor markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
@@ -146,6 +163,8 @@ function DomEvents() {
         eventCount={eventCount}
         reset={reset}
         data={buffer.current}
+        typeOptions={typeOptions}
+        nameOptions={nameOptions}
       />
     </div>
   );
