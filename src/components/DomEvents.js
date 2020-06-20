@@ -121,22 +121,18 @@ function DomEvents() {
     }
   }, []);
 
-  const typeOptions = Object.values(buffer.current).reduce(
-    (acc, { event }) =>
-      acc.findIndex((evtIncluded) => evtIncluded.value === event.EventType) ===
-      -1
-        ? [...acc, { label: event.EventType, value: event.EventType }]
-        : acc,
-    [],
-  );
+  const bufferValues = Object.values(buffer.current);
+  const getUniqueEventsByProperty = (property) => [
+    ...new Set(bufferValues.map(({ event }) => event[property])),
+  ];
+  const getOptionsByProperty = (property) =>
+    getUniqueEventsByProperty(property).map((eventProperty) => ({
+      label: eventProperty,
+      value: eventProperty,
+    }));
 
-  const nameOptions = Object.values(buffer.current).reduce(
-    (acc, { event }) =>
-      acc.findIndex((evtIncluded) => evtIncluded.value === event.name) === -1
-        ? [...acc, { label: event.name, value: event.name }]
-        : acc,
-    [],
-  );
+  const typeOptions = getOptionsByProperty('EventType');
+  const nameOptions = getOptionsByProperty('name');
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">

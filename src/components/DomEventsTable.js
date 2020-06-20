@@ -98,16 +98,12 @@ const DomEventsTable = ({
   const listRef = useRef();
   const [selectedTypes, setSelectedTypes] = useState(typeOptions);
   const [selectedNames, setSelectedNames] = useState(defaultNamesOptions);
-  const onChangeHandler = (fieldName) => (selectedOptions, { action }) => {
+  const onChangeHandler = (fieldName) => (selectedOptions) => {
     if (fieldName === 'type') {
       setSelectedTypes(selectedOptions);
     }
     if (fieldName === 'name') {
-      if (action === 'clear') {
-        setSelectedNames(defaultNamesOptions);
-      } else {
-        setSelectedNames(selectedOptions);
-      }
+      setSelectedNames(selectedOptions);
     }
   };
 
