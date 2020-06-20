@@ -211,7 +211,7 @@ function DomEvents() {
               className="p-2 w-16 cursor-pointer"
               onClick={changeSortDirection}
             >
-              # {getSortIcon('id')}
+              # {getSortIcon()}
             </div>
 
             <div className="p-2 w-32 ">type</div>
