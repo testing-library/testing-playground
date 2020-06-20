@@ -39,12 +39,12 @@ function Playground() {
 
       <div className="flex-none h-8" />
 
-      <div className="editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2 overflow-hidden">
+      <div className="editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
         <div className="flex-auto relative h-56 md:h-full">
           <Query query={query} result={result} dispatch={dispatch} />
         </div>
 
-        <div className="flex-auto h-56 md:h-full overflow-hidden">
+        <div className="flex-auto h-56 md:h-full">
           <Result result={result} dispatch={dispatch} />
         </div>
       </div>

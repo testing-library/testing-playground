@@ -125,7 +125,7 @@ export default function setupHighlighter({
   function onPointerDown(event) {
     stopPropagation(event);
 
-    selectNode(event.target, { trigger: 'click' });
+    selectNode(event.target, { origin: event.isTrusted ? 'click' : 'script' });
   }
 
   function onPointerOver(event) {
@@ -145,7 +145,7 @@ export default function setupHighlighter({
     }
 
     showOverlay([target], false);
-    selectNode(target, { trigger: 'hover' });
+    selectNode(target, { origin: event.isTrusted ? 'hover' : 'script' });
   }
 
   function onPointerUp(event) {

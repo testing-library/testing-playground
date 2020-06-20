@@ -11,7 +11,7 @@ function PreviewHint({ roles, suggestion }) {
     </div>
   );
 
-  const snapshot = suggestion.snapshot && (
+  const snapshot = suggestion?.snapshot && (
     <div className="snapshot">
       <div className="py-1">&nbsp;</div>
       <span className="font-bold">Snapshot </span>

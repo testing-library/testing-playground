@@ -5,7 +5,7 @@ import QueryOutput from './QueryOutput';
 function Query({ query, result, dispatch }) {
   return (
     <div className="relative h-full w-full flex flex-col">
-      <div className="query-editor flex-auto relative overflow-hidden">
+      <div className="query-editor flex-auto relative">
         <QueryEditor query={query} dispatch={dispatch} />
       </div>
 

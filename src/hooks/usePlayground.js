@@ -2,6 +2,7 @@ import { useReducer, useEffect } from 'react';
 import parser from '../parser';
 import { initialValues as defaultValues } from '../constants';
 import { withLogging } from '../lib/logger';
+import postMessage from '../lib/postMessage';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -13,6 +14,8 @@ function reducer(state, action) {
       if (action.updateEditor !== false) {
         state.markupEditor.setValue(action.markup);
       }
+
+      postMessage(state.sandbox, action);
 
       return {
         ...state,
@@ -30,10 +33,22 @@ function reducer(state, action) {
       return { ...state, queryEditor: action.editor };
     }
 
+    case 'SET_SANDBOX_FRAME': {
+      postMessage(action.sandbox, {
+        type: 'POPULATE_SANDBOX',
+        markup: state.markup,
+        query: state.query,
+      });
+
+      return { ...state, sandbox: action.sandbox };
+    }
+
     case 'SET_QUERY': {
       if (action.updateEditor !== false && state.queryEditor) {
         state.queryEditor.setValue(action.query);
       }
+
+      postMessage(state.sandbox, action);
 
       return {
         ...state,
