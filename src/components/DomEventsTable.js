@@ -1,4 +1,10 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import IconButton from './IconButton';
 import TrashcanIcon from './icons/TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
@@ -8,17 +14,17 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import CopyButton from './CopyButton';
 import Select from 'react-select';
 
-const defaultNamesOptions = [
-  { label: 'mouseEnter', value: 'mouseEnter' },
-  { label: 'mouseMove', value: 'mouseMove' },
-  { label: 'mouseOver', value: 'mouseOver' },
-  { label: 'mouseOut', value: 'mouseOut' },
-  { label: 'mouseLeave', value: 'mouseLeave' },
-  { label: 'pointerOver', value: 'pointerOver' },
-  { label: 'pointerMove', value: 'pointerMove' },
-  { label: 'pointerEnter', value: 'pointerEnter' },
-  { label: 'pointerLeave', value: 'pointerLeave' },
-  { label: 'pointerOut', value: 'pointerOut' },
+const eventsNameExcludedByDefault = [
+  'mouseEnter',
+  'mouseMove',
+  'mouseOver',
+  'mouseOut',
+  'mouseLeave',
+  'pointerOver',
+  'pointerMove',
+  'pointerEnter',
+  'pointerLeave',
+  'pointerOut',
 ];
 
 function EventRecord({ index, style, data }) {
@@ -96,8 +102,26 @@ const DomEventsTable = ({
   nameOptions,
 }) => {
   const listRef = useRef();
+  const defaultSelectedNames = useMemo(
+    () =>
+      nameOptions.filter(
+        (nameOption) => !eventsNameExcludedByDefault.includes(nameOption.value),
+      ),
+    [nameOptions],
+  );
   const [selectedTypes, setSelectedTypes] = useState(typeOptions);
-  const [selectedNames, setSelectedNames] = useState(defaultNamesOptions);
+  const [selectedNames, setSelectedNames] = useState(defaultSelectedNames);
+
+  useEffect(() => setSelectedTypes(typeOptions), [
+    setSelectedTypes,
+    typeOptions,
+  ]);
+
+  useEffect(() => setSelectedNames(defaultSelectedNames), [
+    setSelectedNames,
+    defaultSelectedNames,
+  ]);
+
   const onChangeHandler = (fieldName) => (selectedOptions) => {
     if (fieldName === 'type') {
       setSelectedTypes(selectedOptions);
@@ -106,22 +130,9 @@ const DomEventsTable = ({
       setSelectedNames(selectedOptions);
     }
   };
-
-  const filterData = ({ event }) => {
-    if (selectedTypes.length && selectedNames.length) {
-      return (
-        selectedTypes.find((type) => type.value === event.EventType) &&
-        selectedNames.find((name) => name.value === event.name)
-      );
-    }
-    if (selectedTypes.length) {
-      return selectedTypes.find((type) => type.value === event.EventType);
-    }
-    if (selectedNames.length) {
-      return selectedNames.find((name) => name.value === event.name);
-    }
-    return true;
-  };
+  const filterData = ({ event }) =>
+    selectedTypes.find((type) => type.value === event.EventType) &&
+    selectedNames.find((name) => name.value === event.name);
 
   const getTextToCopy = () =>
     data
@@ -130,14 +141,18 @@ const DomEventsTable = ({
 
   const onResetHandler = useCallback(() => {
     setSelectedTypes([]);
-    setSelectedNames(defaultNamesOptions);
+    setSelectedNames(
+      nameOptions.filter(
+        (eventName) => !eventsNameExcludedByDefault.includes(eventName),
+      ),
+    );
     reset();
-  }, [setSelectedTypes, setSelectedNames, reset]);
+  }, [setSelectedTypes, setSelectedNames, nameOptions, reset]);
 
   return (
     <div className="editor md:h-56 flex-auto overflow-hidden">
       <div className="h-56 md:h-full w-full flex flex-col">
-        <div className="h-8 flex items-center w-full text-sm font-bold">
+        <div className="h-10 flex items-center w-full text-sm font-bold">
           <div className="p-2 w-16">#</div>
 
           <div className="pr-2 py-2 w-40">
