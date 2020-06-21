@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "Testing Playground",
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
-  "version": "1.0.1",
-  "version_name": "1.0.1",
+  "version": "1.0.2",
+  "version_name": "1.0.2",
   "minimum_chrome_version": "49",
   "icons": {
     "16": "icons/16-production.png",
@@ -31,7 +31,6 @@
     "persistent": false
   },
   "permissions": [
-    "activeTab",
     "clipboardWrite"
   ],
   "content_scripts": [
