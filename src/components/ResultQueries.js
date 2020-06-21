@@ -55,7 +55,7 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
               key={query.method}
               data={data}
               method={query.method}
-              query={possibleQueries[query.method]}
+              query={possibleQueries?.[query.method]}
               dispatch={dispatch}
               active={query.method === activeMethod}
             />
@@ -72,7 +72,7 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
                 key={query.method}
                 data={data}
                 method={query.method}
-                query={possibleQueries[query.method]}
+                query={possibleQueries?.[query.method]}
                 dispatch={dispatch}
                 active={query.method === activeMethod}
               />
@@ -88,7 +88,7 @@ function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
                 key={query.method}
                 data={data}
                 method={query.method}
-                query={possibleQueries[query.method]}
+                query={possibleQueries?.[query.method]}
                 dispatch={dispatch}
                 active={query.method === activeMethod}
               />
