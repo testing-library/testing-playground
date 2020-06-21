@@ -94,7 +94,8 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/66570218?v=4",
       "profile": "https://github.com/connorProgrammes",
       "contributions": [
-        "doc"
+        "doc",
+        "code"
       ]
     },
     {
@@ -102,6 +103,24 @@
       "name": "Jacob M-G Evans",
       "avatar_url": "https://avatars1.githubusercontent.com/u/27247160?v=4",
       "profile": "https://twitter.com/JacobMGEvans",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "sumeesh879",
+      "name": "Sumeesh Nagisetty",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/20029120?v=4",
+      "profile": "https://github.com/sumeesh879",
+      "contributions": [
+        "review"
+      ]
+    },
+    {
+      "login": "flaviohenriquecbc",
+      "name": "Flávio H Freitas",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1553609?v=4",
+      "profile": "http://www.linkedin.com/in/flaviohfreitas",
       "contributions": [
         "code"
       ]

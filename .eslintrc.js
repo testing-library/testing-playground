@@ -4,6 +4,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:prettier/recommended',
     'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -21,6 +22,9 @@ module.exports = {
     jest: true,
   },
   rules: {
+    'arrow-body-style': ['error', 'as-needed'],
+    curly: 'error',
+
     // I'll probably add some typescript types instead
     'react/prop-types': 'off',
   },

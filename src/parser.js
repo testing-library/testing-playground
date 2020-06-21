@@ -3,6 +3,7 @@ import { ensureArray, getQueryAdvise } from './lib';
 import { queries as supportedQueries } from './constants';
 import cssPath from './lib/cssPath';
 import deepEqual from './lib/deepEqual';
+import { getAllPossibileQueries } from './lib/queryAdvise';
 
 import {
   getQueriesForElement,
@@ -123,6 +124,7 @@ function createEvaluator({ rootNode }) {
           data,
           target: element,
           cssPath: cssPath(element, true),
+          queries: getAllPossibileQueries(element),
         };
       });
 

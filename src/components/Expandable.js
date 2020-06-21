@@ -59,7 +59,9 @@ function Expandable({ children, className, variant }) {
       {expanded || !children ? (
         <div>&nbsp;</div>
       ) : (
-        <div className="truncate mr-8">{children}</div>
+        <div className="truncate mr-8 w-full flex justify-between direction">
+          {children}
+        </div>
       )}
 
       <IconButton

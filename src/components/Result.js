@@ -3,7 +3,6 @@ import ErrorBox from './ErrorBox';
 import ResultQueries from './ResultQueries';
 import ResultSuggestion from './ResultSuggestion';
 import Scrollable from './Scrollable';
-import { emptyResult } from '../lib';
 
 function Result({ result, dispatch }) {
   if (result.error) {
@@ -37,30 +36,27 @@ function Result({ result, dispatch }) {
       </div>
     );
   }
-
-  const { data, suggestion } = result.elements?.[0] || emptyResult;
-
+  const { data, suggestion, queries } = result.elements[0];
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
-      <div className="flex-none pb-4 border-b">
-        <ResultSuggestion
-          result={result}
-          dispatch={dispatch}
+      <Scrollable>
+        <div className="pb-4 border-b">
+          <ResultSuggestion
+            result={result}
+            dispatch={dispatch}
+            data={data}
+            possibleQueries={queries}
+            suggestion={suggestion}
+          />
+        </div>
+
+        <ResultQueries
           data={data}
           suggestion={suggestion}
+          activeMethod={result.expression?.method}
+          dispatch={dispatch}
         />
-      </div>
-
-      <div className="flex-auto">
-        <Scrollable>
-          <ResultQueries
-            data={data}
-            suggestion={suggestion}
-            activeMethod={result.expression?.method}
-            dispatch={dispatch}
-          />
-        </Scrollable>
-      </div>
+      </Scrollable>
     </div>
   );
 }

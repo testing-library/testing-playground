@@ -1,6 +1,6 @@
 import React from 'react';
 import { messages } from '../constants';
-import ResultCopyButton from './ResultCopyButton';
+import CopyButton from './CopyButton';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -97,7 +97,11 @@ function ResultSuggestion({ data, suggestion, result, dispatch }) {
               &gt; {suggestion.expression}
               <br />
             </div>
-            <ResultCopyButton expression={suggestion.expression} />
+            <CopyButton
+              title="copy query"
+              text={suggestion.expression}
+              variant="white"
+            />
           </div>
         )}
       </div>
