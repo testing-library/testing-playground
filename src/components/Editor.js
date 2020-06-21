@@ -211,11 +211,7 @@ function handleBlur(cm) {
   const cursor = cm.getCursor();
   let timeout;
 
-  function listener(event) {
-    const {
-      data: { source, type },
-    } = event;
-
+  function listener({ data: { source, type } }) {
     if (source !== 'testing-playground-sandbox' || type !== 'SANDBOX_READY') {
       return;
     }
@@ -242,7 +238,9 @@ function handleBlur(cm) {
   }, threshold);
 }
 
-function Editor({ onLoad, onChange, mode, initialValue }) {
+function Editor(props) {
+  const { onLoad, onChange, mode, initialValue } = props;
+
   const elem = useRef();
   const editor = useRef();
 
@@ -250,18 +248,19 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
     editor.current = CodeMirror.fromTextArea(elem.current, {
       ...baseOptions,
       ...options[mode],
-      extraKeys:
-        typeof onChange === 'function'
-          ? {
-              'Ctrl-Enter': () => {
-                onChange(editor.current.getValue(), { origin: 'user' });
-              },
-              'Cmd-Enter': () => {
-                onChange(editor.current.getValue(), { origin: 'user' });
-              },
-              ...(options[mode].extraKeys || {}),
-            }
-          : options[mode].extraKeys,
+      extraKeys: {
+        'Ctrl-Enter': () => {
+          editor.current.onChange(editor.current.getValue(), {
+            origin: 'user',
+          });
+        },
+        'Cmd-Enter': () => {
+          editor.current.onChange(editor.current.getValue(), {
+            origin: 'user',
+          });
+        },
+        ...(options[mode].extraKeys || {}),
+      },
     });
 
     editor.current.setValue(initialValue || '');
@@ -284,7 +283,7 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
       editor.current.off('keyup', autoComplete);
       editor.current.off('blur', handleBlur);
     };
-  }, [mode, onChange, onLoad, initialValue]);
+  }, [mode, onLoad, initialValue]);
 
   useEffect(() => {
     editor.current.onChange = onChange;

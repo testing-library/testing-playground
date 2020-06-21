@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './codemirror.pcss';
-
 html {
   @apply h-full;
 }
@@ -131,6 +129,22 @@ blockquote cite:before {
 
 .error {
   @apply border text-white bg-red-600 p-4 rounded;
+}
+
+button {
+  @apply inline-flex justify-center items-center;
+}
+
+button > svg:first-child:not(:only-child) {
+  @apply mr-2;
+}
+
+button > svg:last-child:not(:only-child) {
+  @apply ml-2;
+}
+
+button:focus {
+  @apply outline-none;
 }
 
 button:disabled {

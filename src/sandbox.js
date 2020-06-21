@@ -110,6 +110,7 @@ function onSelectNode(node, { origin }) {
 }
 
 function updateSandbox(rootNode, markup, query) {
+  postMessage({ type: 'SANDBOX_BUSY' });
   setInnerHTML(rootNode, markup);
   runQuery(rootNode, query);
   postMessage({ type: 'SANDBOX_READY' });

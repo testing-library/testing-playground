@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import QueryEditor from './QueryEditor';
 import QueryOutput from './QueryOutput';
 
 function Query({ query, result, dispatch }) {
+  const [initialValue] = useState(query);
+
   return (
     <div className="relative h-full w-full flex flex-col">
       <div className="query-editor flex-auto relative">
-        <QueryEditor query={query} dispatch={dispatch} />
+        <QueryEditor initialValue={initialValue} dispatch={dispatch} />
       </div>
 
       <QueryOutput error={result.error?.message} result={result.formatted} />

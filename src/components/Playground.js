@@ -45,6 +45,10 @@ function Playground() {
         </div>
 
         <div className="flex-auto h-56 md:h-full">
+          <div className="-mt-2 mb-1 flex-none space-x-4 text-gray-800 font-mono text-xs font-bold flex justify-between items-center">
+            &nbsp;{' '}
+            {/* I don't like this box being here, but I need a quick way to align this with the query editor*/}
+          </div>
           <Result result={result} dispatch={dispatch} />
         </div>
       </div>
