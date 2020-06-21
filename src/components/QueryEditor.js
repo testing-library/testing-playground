@@ -41,7 +41,7 @@ function QueryEditor(props) {
 
   const dispatchQuery = useCallback(
     (query) => {
-      // I don't like this, but the BUSY > READY post messages are comming in
+      // I don't like this, but the BUSY > READY post messages are coming in
       // at the same time. We're waiting for BUSY, instead of READY
       setRunning(true);
       dispatch({ type: 'SET_QUERY', query, updateEditor: false });

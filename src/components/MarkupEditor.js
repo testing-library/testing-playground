@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Editor from './Editor';
+import debounce from 'lodash.debounce';
 
 function MarkupEditor({ markup, dispatch }) {
   const [initialValue] = useState(markup);
@@ -10,7 +11,10 @@ function MarkupEditor({ markup, dispatch }) {
   );
 
   const onChange = useCallback(
-    (markup) => dispatch({ type: 'SET_MARKUP', markup, updateEditor: false }),
+    debounce(
+      (markup) => dispatch({ type: 'SET_MARKUP', markup, updateEditor: false }),
+      1000,
+    ),
     [dispatch],
   );
 
