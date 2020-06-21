@@ -182,6 +182,7 @@ function handleChange(cm, change) {
 
     case 'paste': {
       formatValue(cm);
+      cm.onChange(cm.getValue(), { origin: change.origin });
       break;
     }
 
