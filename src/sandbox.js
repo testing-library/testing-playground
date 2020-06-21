@@ -39,14 +39,18 @@ function setInnerHTML(node, html) {
   for (let prevScript of node.querySelectorAll('script')) {
     const newScript = doc.createElement('script');
 
-    for (let [key, value] of prevScript.attributes) {
-      newScript[key] = value;
+    for (let attribute of prevScript.attributes) {
+      newScript[attribute.name] = attribute.value;
     }
 
-    newScript.appendChild(
-      doc.createTextNode(`(function() { ${prevScript.innerHTML} })()`),
-    );
+    newScript.type = prevScript.type || 'text/javascript';
 
+    const text =
+      newScript.type === 'text/javascript'
+        ? `(function() { ${prevScript.innerHTML} })()`
+        : prevScript.innerHTML;
+
+    newScript.appendChild(doc.createTextNode(text));
     prevScript.parentNode.replaceChild(newScript, prevScript);
   }
 }
