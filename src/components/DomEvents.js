@@ -1,15 +1,16 @@
 import React, { useRef, useCallback, useState } from 'react';
 
+import { eventMap } from '@testing-library/dom/dist/event-map';
+import throttle from 'lodash.throttle';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { TrashcanIcon } from '@primer/octicons-react';
+
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
 import state from '../lib/state';
-import { eventMap } from '@testing-library/dom/dist/event-map';
 import { VirtualScrollable } from './Scrollable';
-import throttle from 'lodash.throttle';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import IconButton from './IconButton';
-import TrashcanIcon from './icons/TrashcanIcon';
 import CopyButton from './CopyButton';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
