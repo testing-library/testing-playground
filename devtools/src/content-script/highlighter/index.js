@@ -37,8 +37,11 @@ export default function setupHighlighter({
 
   function startInspecting(options) {
     isInspecting = true;
-    stopOnClick = options.stopOnClick !== false;
-    blockEvents = options.blockEvents !== false;
+
+    if (options) {
+      stopOnClick = options.stopOnClick ?? true;
+      blockEvents = options.blockEvents ?? true;
+    }
 
     addEventListeners(view);
   }

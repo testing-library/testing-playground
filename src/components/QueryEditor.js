@@ -28,7 +28,7 @@ function useSandboxBusy() {
 }
 
 function QueryEditor(props) {
-  const { dispatch, initialValue } = props;
+  const { dispatch, initialValue, variant } = props;
   const queryRef = useRef(initialValue);
 
   const [state, setState] = useState('active');
@@ -70,34 +70,39 @@ function QueryEditor(props) {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="-mt-2 mb-1 flex-none space-x-4 text-gray-800 font-mono text-xs font-bold flex justify-between items-center">
-        <button
-          className="opacity-75 hover:opacity-100"
-          onClick={running ? undefined : () => dispatchQuery(queryRef.current)}
-          title="evaluate code (hotkey: ctrl + enter || cmd + enter)"
-        >
-          {running ? <Spinner /> : 'run'}
-        </button>
-
-        <button
-          className="opacity-75 hover:opacity-100"
-          title={`click to ${
-            state === 'active' ? 'disable' : 'enable'
-          } automatic code evaluation`}
-          onClick={() => {
-            if (state === 'active') {
-              setState('paused');
-              dispatchQuery('');
-            } else {
-              setState('active');
-              dispatchQuery(queryRef.current);
+      {variant !== 'minimal' && (
+        <div className="-mt-2 mb-1 flex-none space-x-4 text-gray-800 font-mono text-xs font-bold flex justify-between items-center">
+          <button
+            className="opacity-75 hover:opacity-100"
+            onClick={
+              running ? undefined : () => dispatchQuery(queryRef.current)
             }
-          }}
-        >
-          <SyncIcon size={12} />
-          <span>{state === 'active' ? 'enabled' : 'disabled'}</span>
-        </button>
-      </div>
+            title="evaluate code (hotkey: ctrl + enter || cmd + enter)"
+          >
+            {running ? <Spinner /> : 'run'}
+          </button>
+
+          <button
+            className="opacity-75 hover:opacity-100"
+            title={`click to ${
+              state === 'active' ? 'disable' : 'enable'
+            } automatic code evaluation`}
+            onClick={() => {
+              if (state === 'active') {
+                setState('paused');
+                dispatchQuery('');
+              } else {
+                setState('active');
+                dispatchQuery(queryRef.current);
+              }
+            }}
+          >
+            <SyncIcon size={12} />
+            <span>{state === 'active' ? 'enabled' : 'disabled'}</span>
+          </button>
+        </div>
+      )}
+
       <div className="flex-auto overflow-hidden relative">
         <Editor
           mode="javascript"
