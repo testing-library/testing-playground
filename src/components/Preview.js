@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PreviewHint from './PreviewHint';
-import AddHtml from './AddHtml';
+import EmptyPane from './EmptyPane';
 import { getRoles } from '@testing-library/dom';
 
 function getSandbox(ref) {
@@ -101,7 +101,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
 
       {!markup && (
         <div className="absolute w-full h-full top-0 left-0">
-          <AddHtml />
+          <EmptyPane />
         </div>
       )}
     </div>

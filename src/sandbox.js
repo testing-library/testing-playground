@@ -5,7 +5,6 @@ import Scrollable from './components/Scrollable';
 import setupHighlighter from '../devtools/src/content-script/highlighter';
 import cssPath from './lib/cssPath';
 import { getQueryAdvise } from './lib';
-import debounce from 'lodash.debounce';
 import parser from './parser';
 
 const state = {
@@ -30,6 +29,7 @@ function runQuery(rootNode, query) {
   const result = parser.parse({ rootNode, query });
   state.queriedNodes = result.elements.map((elem) => elem.target);
   state.highlighter.highlight({ nodes: state.queriedNodes });
+  return result;
 }
 
 function setInnerHTML(node, html) {
@@ -113,14 +113,18 @@ function onSelectNode(node, { origin }) {
   postMessage(action);
 }
 
-function updateSandbox(rootNode, markup, query) {
+function updateMarkup(rootNode, markup, query) {
   postMessage({ type: 'SANDBOX_BUSY' });
   setInnerHTML(rootNode, markup);
   runQuery(rootNode, query);
   postMessage({ type: 'SANDBOX_READY' });
 }
 
-const updateSandboxDebounced = debounce(updateSandbox, 250);
+function updateQuery(rootNode, query) {
+  postMessage({ type: 'SANDBOX_BUSY' });
+  runQuery(rootNode, query);
+  postMessage({ type: 'SANDBOX_READY' });
+}
 
 function onMessage({ source, data }) {
   if (source !== top || data.source !== 'testing-playground') {
@@ -131,24 +135,21 @@ function onMessage({ source, data }) {
     case 'POPULATE_SANDBOX': {
       state.query = data.query;
       state.markup = data.markup;
-      break;
-    }
-
-    case 'SET_QUERY': {
-      state.query = data.query;
+      updateMarkup(state.rootNode, state.markup, state.query);
       break;
     }
 
     case 'SET_MARKUP': {
       state.markup = data.markup;
+      updateMarkup(state.rootNode, state.markup, state.query);
       break;
     }
-  }
 
-  if (data.immediate) {
-    updateSandbox(state.rootNode, state.markup, state.query);
-  } else {
-    updateSandboxDebounced(state.rootNode, state.markup, state.query);
+    case 'SET_QUERY': {
+      state.query = data.query;
+      updateQuery(state.rootNode, state.query);
+      break;
+    }
   }
 }
 

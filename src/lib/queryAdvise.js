@@ -112,7 +112,7 @@ export function getQueryAdvise({ rootNode, element }) {
 
 export function getAllPossibileQueries(element) {
   const possibleQueries = queries
-    .filter((query) => query.type !== 'GENERIC')
+    .filter((query) => query.type !== 'MANUAL')
     .map((query) => {
       const method = getFieldName(query.method);
       return getSuggestedQuery(element, 'get', method);

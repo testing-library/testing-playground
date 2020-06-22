@@ -40,26 +40,37 @@ export const queries = [
 
   { method: 'getByTestId', level: 2, type: 'TEST' },
 
-  { method: 'querySelector', level: 3, type: 'GENERIC' },
+  { method: 'querySelector', level: 3, type: 'MANUAL' },
 ];
 
+function getQueryMethods(type) {
+  return queries.filter((x) => x.type === type).map((x) => x.method);
+}
 // some quotes from https://testing-library.com/docs/guide-which-query
 export const messages = [
   {
     heading: 'Queries Accessible to Everyone',
     description: `Queries that reflect the experience of visual/mouse users as well as those that use assistive technology. These should be your top preference.`,
+    type: 'ACCESSIBLE',
+    queries: getQueryMethods('ACCESSIBLE'),
   },
   {
     heading: 'Semantic Queries',
     description: `HTML5 and ARIA compliant selectors. Note that the user experience of interacting with these attributes varies greatly across browsers and assistive technology.`,
+    type: 'SEMANTIC',
+    queries: getQueryMethods('SEMANTIC'),
   },
   {
     heading: 'Test IDs',
     description: `The user cannot see (or hear) these, so this is only recommended for cases where you can't match by role or text or it doesn't make sense (e.g. the text is dynamic).`,
+    type: 'TEST',
+    queries: getQueryMethods('TEST'),
   },
   {
     heading: 'Manual Queries',
     description: `On top of the queries provided by the testing library, you can use the regular querySelector DOM API to query elements. Note that using this as an escape hatch to query by class or id is a bad practice because users can't see or identify these attributes. Use a testid if you have to.`,
+    type: 'MANUAL',
+    queries: getQueryMethods('MANUAL'),
   },
 ];
 

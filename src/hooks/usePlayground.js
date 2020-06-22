@@ -68,6 +68,13 @@ function reducer(state, action) {
   }
 }
 
+function init(initialState) {
+  return {
+    ...initialState,
+    result: parser.parse(initialState),
+  };
+}
+
 function usePlayground(props) {
   let { markup, query, onChange, instanceId, rootNode } = props || {};
 
@@ -76,13 +83,16 @@ function usePlayground(props) {
     query = defaultValues.query;
   }
 
-  const result = parser.parse({ rootNode, markup, query, cacheId: instanceId });
-  const [state, dispatch] = useReducer(withLogging(reducer), {
-    rootNode,
-    markup,
-    query,
-    result,
-  });
+  const [state, dispatch] = useReducer(
+    withLogging(reducer),
+    {
+      rootNode,
+      markup,
+      query,
+      cacheId: instanceId,
+    },
+    init,
+  );
 
   useEffect(() => {
     if (typeof onChange === 'function') {

@@ -153,7 +153,7 @@ const NON_TRIGGER_KEYS = {
 };
 
 function formatValue(cm) {
-  const mode = cm.options.mode.name;
+  const mode = cm.options.mode;
   const value = cm.getValue();
   const formatted = beautify.format(mode, value);
   cm.setValue(formatted);
@@ -231,11 +231,10 @@ function handleBlur(cm) {
   window.addEventListener('message', listener);
 
   // we wait a couple of ms for the SANDBOX_READY event, if that doesn't come
-  // before given treshold, we assume the user left the editor, and allow it
+  // before given threshold, we assume the user left the editor, and allow it
   // lose focus.
   timeout = setTimeout(() => {
     window.removeEventListener('message', listener);
-    formatValue(cm);
   }, threshold);
 }
 
