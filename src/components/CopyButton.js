@@ -1,7 +1,7 @@
 /* global chrome */
 import React, { useState, useEffect } from 'react';
 import IconButton from './IconButton';
-import { ClippyIcon, CheckIcon } from '@primer/octicons-react';
+import { CopyIcon, CheckIcon } from '@primer/octicons-react';
 
 const IS_DEVTOOL = !!(window.chrome && chrome.runtime && chrome.runtime.id);
 
@@ -74,7 +74,7 @@ function CopyButton({ text, title, className, variant }) {
       title={title}
       className={className}
     >
-      {copied ? <CheckIcon /> : <ClippyIcon />}
+      {copied ? <CheckIcon /> : <CopyIcon />}
     </IconButton>
   );
 }

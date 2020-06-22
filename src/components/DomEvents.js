@@ -159,7 +159,7 @@ function DomEvents() {
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
-      <div className="editor markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+      <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
         <div className="flex-auto relative h-56 md:h-full">
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
@@ -178,7 +178,7 @@ function DomEvents() {
 
       <div className="flex-none h-8" />
 
-      <div className="editor md:h-56 flex-auto overflow-hidden">
+      <div className="editor p-4 md:h-56 flex-auto overflow-hidden">
         <div className="h-56 md:h-full w-full flex flex-col">
           <div className="h-8 flex items-center w-full text-sm font-bold">
             <div className="p-2 w-16">#</div>

@@ -69,9 +69,9 @@ function QueryEditor(props) {
   );
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full relative">
       {variant !== 'minimal' && (
-        <div className="-mt-2 mb-1 flex-none space-x-4 text-gray-800 font-mono text-xs font-bold flex justify-between items-center">
+        <div className="h-8 pane-menu w-full absolute  overflow-hidden flex-none space-x-4 text-gray-800 font-mono text-xs font-bold flex justify-between items-center">
           <button
             className="opacity-75 hover:opacity-100"
             onClick={
