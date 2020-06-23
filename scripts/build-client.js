@@ -77,17 +77,15 @@ async function fixHtml({ dest }) {
     /<meta property="og:image" content="\/?(site\.[0-9a-fA-F]{8}\.jpg)">/,
   );
 
-  // temp name: /site.a47b3adf.jpg
-
   const replacer = new RegExp(`/${ogImageName}`, 'g');
   const newContent = htmlContent.replace(
     replacer,
-    'https://testing-playground.com/site.a47b3adf.jpg',
+    'https://testing-playground.com/site.jpg',
     'utf8',
   );
 
   await Promise.all([
-    rename(join(dest, ogImageName), join(dest, 'site.a47b3adf.jpg')),
+    rename(join(dest, ogImageName), join(dest, 'site.jpg')),
     writeFile(join(dest, 'index.html'), newContent, 'utf8'),
   ]);
 }
