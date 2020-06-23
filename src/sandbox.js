@@ -113,15 +113,9 @@ function onSelectNode(node, { origin }) {
   postMessage(action);
 }
 
-function updateMarkup(rootNode, markup, query) {
+function updateSandbox(rootNode, markup, query) {
   postMessage({ type: 'SANDBOX_BUSY' });
   setInnerHTML(rootNode, markup);
-  runQuery(rootNode, query);
-  postMessage({ type: 'SANDBOX_READY' });
-}
-
-function updateQuery(rootNode, query) {
-  postMessage({ type: 'SANDBOX_BUSY' });
   runQuery(rootNode, query);
   postMessage({ type: 'SANDBOX_READY' });
 }
@@ -135,22 +129,21 @@ function onMessage({ source, data }) {
     case 'POPULATE_SANDBOX': {
       state.query = data.query;
       state.markup = data.markup;
-      updateMarkup(state.rootNode, state.markup, state.query);
       break;
     }
 
     case 'SET_MARKUP': {
       state.markup = data.markup;
-      updateMarkup(state.rootNode, state.markup, state.query);
       break;
     }
 
     case 'SET_QUERY': {
       state.query = data.query;
-      updateQuery(state.rootNode, state.query);
       break;
     }
   }
+
+  updateSandbox(state.rootNode, state.markup, state.query);
 }
 
 window.addEventListener('message', onMessage, false);
