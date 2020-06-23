@@ -1,4 +1,11 @@
-const { copy, remove, readFile, writeFile, readdir } = require('fs-extra');
+const {
+  copy,
+  remove,
+  readFile,
+  writeFile,
+  readdir,
+  rename,
+} = require('fs-extra');
 const { resolve, join } = require('path');
 const { build } = require('./build');
 const { openInBrowser } = require('@parcel/utils');
@@ -63,6 +70,26 @@ async function fixWebManifest({ dest }) {
   ]);
 }
 
+async function fixHtml({ dest }) {
+  const htmlContent = await readFile(join(dest, 'index.html'), 'utf8');
+
+  const [, ogImageName] = htmlContent.match(
+    /<meta property="og:image" content="\/?(site\.[0-9a-fA-F]{8}\.jpg)">/,
+  );
+
+  const replacer = new RegExp(`/${ogImageName}`, 'g');
+  const newContent = htmlContent.replace(
+    replacer,
+    'https://testing-playground.com/site.jpg',
+    'utf8',
+  );
+
+  await Promise.all([
+    rename(join(dest, ogImageName), join(dest, 'site.jpg')),
+    writeFile(join(dest, 'index.html'), newContent, 'utf8'),
+  ]);
+}
+
 async function main() {
   const dest = resolve('dist/client');
   await remove(dest);
@@ -80,6 +107,7 @@ async function main() {
   });
 
   await fixWebManifest({ dest });
+  await fixHtml({ dest });
 
   await workbox.generateSW(workboxConfig);
 
