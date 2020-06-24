@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime';
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import Scrollable from './components/Scrollable';
 import setupHighlighter from '../devtools/src/content-script/highlighter';
@@ -56,18 +56,20 @@ function setInnerHTML(node, html) {
 }
 
 function Sandbox() {
-  useEffect(() => {
-    setTimeout(() => {
-      state.rootNode = document.getElementById('sandbox');
+  const setRootNode = useCallback((node) => {
+    if (!node) {
+      return;
+    }
 
-      state.highlighter = setupHighlighter({
-        view: state.rootNode,
-        onSelectNode,
-      });
+    state.rootNode = node;
 
-      // let the parent frame know where ready to eval code
-      postMessage({ type: 'SANDBOX_LOADED' });
-    }, 0);
+    state.highlighter = setupHighlighter({
+      view: state.rootNode,
+      onSelectNode,
+    });
+
+    // let the parent frame know where ready to eval code
+    postMessage({ type: 'SANDBOX_LOADED' });
   }, []);
 
   return (
@@ -82,7 +84,7 @@ function Sandbox() {
         state.highlighter.highlight({ nodes: state.queriedNodes });
       }}
     >
-      <Scrollable id="sandbox" />
+      <Scrollable forwardedRef={setRootNode} id="sandbox" />
     </div>
   );
 }
