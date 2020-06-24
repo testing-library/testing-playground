@@ -111,7 +111,11 @@ export function getAllPossibileQueries(element) {
     .filter((query) => query.type !== 'GENERIC')
     .map((query) => {
       const method = getFieldName(query.method);
-      return getSuggestedQuery(element, 'get', method);
+      try {
+        return getSuggestedQuery(element, 'get', method);
+      } catch (e) {
+        return undefined;
+      }
     })
     .filter((suggestedQuery) => suggestedQuery !== undefined)
     .reduce((obj, suggestedQuery) => {
