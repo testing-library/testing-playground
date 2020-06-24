@@ -1,5 +1,5 @@
 import { getQueryAdvise, getAllPossibileQueries } from './queryAdvise';
-
+import { render } from '../../tests/test-utils';
 const emptyObject = `
   Object {
     "data": Object {},
@@ -43,16 +43,27 @@ it('should return an empty object if element node is a malformed object', () => 
 });
 
 it('should add `screen.` on suggested query returned by getSuggestedQuery', () => {
-  const rootNode = document.createElement('div');
-  const element = document.createElement('button');
-  const result = getQueryAdvise({ rootNode, element });
+  const { container } = render(`<button />`);
+  const element = container.querySelector('button');
+  const result = getQueryAdvise({ rootNode: container, element });
   expect(result.suggestion.expression).toStartWith('screen.');
 });
 
+it('should not throw error if something is wrong in @testing-library/dom', () => {
+  const { container } = render(`
+  <div id="a">One</div>
+  <div id="b">Two</div>
+  <input
+    type="text"
+    aria-labelledby="a b"
+  />`);
+  const input = container.querySelector('input');
+  expect(() => getAllPossibileQueries(input)).not.toThrow();
+});
+
 it('[getAllPossibileQueries] should return an object with all possibile queries', () => {
-  const rootNode = document.createElement('div');
-  const element = document.createElement('button');
-  rootNode.appendChild(element);
+  const { container, rerender } = render(`<button />`);
+  const element = container.firstChild;
   let suggestedQueries = getAllPossibileQueries(element);
 
   expect(suggestedQueries).toMatchInlineSnapshot(`
@@ -68,21 +79,20 @@ it('[getAllPossibileQueries] should return an object with all possibile queries'
       },
     }
   `);
-
-  rootNode.innerHTML = `
-    <label for="username">Username</label>
-    <input 
-      id="username"
-      name="username"
-      placeholder="how should I call you?" 
-      data-testid="uname"
-      title="enter your username"
-      alt="enter your username"
-      value="john-doe"
-      type="text"
-    />
-  `;
-  const input = rootNode.querySelector('input');
+  rerender(`
+  <label for="username">Username</label>
+  <input 
+    id="username"
+    name="username"
+    placeholder="how should I call you?" 
+    data-testid="uname"
+    title="enter your username"
+    alt="enter your username"
+    value="john-doe"
+    type="text"
+  />
+`);
+  const input = container.querySelector('input');
   suggestedQueries = getAllPossibileQueries(input);
 
   expect(suggestedQueries).toMatchInlineSnapshot(`
