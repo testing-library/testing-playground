@@ -5,9 +5,19 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  NODE_VERSION: "12.x"
+  NODE_VERSION: '12.x'
 
 jobs:
+  meta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Assign PR to author
+        uses: samspills/assign-pr-to-author@v1.0
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        with:
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+
   setup:
     name: Setup
     runs-on: ubuntu-latest
@@ -17,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Cache node modules
         id: cache
@@ -42,7 +52,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Fetch all branches
         run: |
@@ -67,7 +77,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE_VERSION }}"
+          node-version: '${{ env.NODE_VERSION }}'
 
       - name: Cache node modules
         uses: actions/cache@v1

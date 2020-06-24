@@ -11,6 +11,7 @@ import { queries } from '@testing-library/dom';
 
 import CodeMirror from 'codemirror';
 import debounce from 'lodash/debounce';
+import beautify from '../lib/beautify';
 
 const baseOptions = {
   autoCloseBrackets: true,
@@ -58,8 +59,12 @@ function getQueryHints(cm) {
   let start = cursor.ch;
   let end = cursor.ch;
 
-  while (start && /\w|\./.test(line.charAt(start - 1))) --start;
-  while (end < line.length && /\w|\./.test(line.charAt(end))) ++end;
+  while (start && /\w|\./.test(line.charAt(start - 1))) {
+    --start;
+  }
+  while (end < line.length && /\w|\./.test(line.charAt(end))) {
+    ++end;
+  }
 
   const word = line.slice(start, end).toLowerCase();
   const offset = word.lastIndexOf('.') + 1;
@@ -169,7 +174,9 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
   }, [mode]);
 
   useEffect(() => {
-    if (!editor.current || typeof onChange !== 'function') return;
+    if (!editor.current || typeof onChange !== 'function') {
+      return;
+    }
 
     editor.current.on(
       'changes',
@@ -193,6 +200,22 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
         });
       }
     });
+
+    const format = () => {
+      const value = editor.current.getValue();
+      const formatted = beautify.format(mode, value);
+      editor.current.setValue(formatted);
+    };
+
+    editor.current.on('change', (_, change) => {
+      if (change.origin !== 'paste') {
+        return;
+      }
+
+      format();
+    });
+
+    editor.current.on('blur', format);
 
     onLoad(editor.current);
   }, [editor.current, onChange]);

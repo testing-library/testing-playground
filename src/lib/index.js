@@ -1,3 +1,3 @@
 export * from './ensureArray';
-export * from './getExpression';
+export * from './getFieldName';
 export * from './queryAdvise';
