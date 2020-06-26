@@ -153,7 +153,8 @@ const NON_TRIGGER_KEYS = {
 };
 
 function formatValue(cm) {
-  const mode = cm.options.mode;
+  // sometimes the mode is stored under `mode` and other times under `mode.name` :/
+  const mode = cm.options.mode.name || cm.options.mode;
   const value = cm.getValue();
   const formatted = beautify.format(mode, value);
   cm.setValue(formatted);
