@@ -19,28 +19,18 @@
       "128": "icons/128-production.png"
     }
   },
-  "web_accessible_resources": [
-    "window/testing-library.js"
-  ],
+  "web_accessible_resources": ["window/testing-library.js"],
   "devtools_page": "devtools/main.html",
   "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-6UcmjVDygSSU8p+3s7E7Kz8EG/ARhPADPRUm9P90HLM='; object-src 'self'",
   "background": {
-    "scripts": [
-      "background/background.js"
-    ],
+    "scripts": ["background/background.js"],
     "persistent": false
   },
-  "permissions": [
-    "clipboardWrite"
-  ],
+  "permissions": ["clipboardWrite"],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content-script/contentScript.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["content-script/contentScript.js"],
       "run_at": "document_start"
     }
   ]
