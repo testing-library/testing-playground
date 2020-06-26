@@ -8,7 +8,7 @@ function postMessage(target, action) {
       source: 'testing-playground',
       ...action,
     },
-    window.location.origin,
+    target.origin,
   );
 }
 

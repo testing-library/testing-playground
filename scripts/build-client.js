@@ -96,10 +96,6 @@ async function main() {
 
   const entries = ['src/index.html', 'src/embed.js', 'src/sandbox.html'];
 
-  if (process.env.NODE_ENV === 'development') {
-    entries.push('src/embed.html');
-  }
-
   const parcel = await build({
     entries,
     dest: 'dist/client',
@@ -117,6 +113,10 @@ async function main() {
     copy('public/icon.png', join(dest, 'icon.png')),
     copy('.well-known', join(dest, '.well-known')),
   ]);
+
+  if (process.env.NODE_ENV === 'development') {
+    copy('src/embed.html', join(dest, 'embed.html'));
+  }
 
   if (parcel.watching) {
     openInBrowser(`http://localhost:${parcel.config.serve.port}`);

@@ -18,7 +18,7 @@ function Expandable({ children, className, variant }) {
     >
       {expanded && (
         <div className="absolute bottom-0 -ml-4 h-full w-full overflow-hidden bg-inherit rounded-inherit">
-          <Scrollable variant={variant} minHeight="100%" maxHeight="100%">
+          <Scrollable variant={variant}>
             <div className="whitespace-pre-wrap p-4">
               {children} <div className="py-2 px-4">&nbsp;</div>
             </div>

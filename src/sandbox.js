@@ -16,12 +16,12 @@ const state = {
 };
 
 function postMessage(action) {
-  top.postMessage(
+  parent.postMessage(
     {
       source: 'testing-playground-sandbox',
       ...action,
     },
-    top.location.origin,
+    parent.location.origin,
   );
 }
 
@@ -33,6 +33,7 @@ function runQuery(rootNode, query) {
 }
 
 function setInnerHTML(node, html) {
+  console.log('set html', { node, html });
   const doc = node.ownerDocument;
   node.innerHTML = html;
 
@@ -123,7 +124,7 @@ function updateSandbox(rootNode, markup, query) {
 }
 
 function onMessage({ source, data }) {
-  if (source !== top || data.source !== 'testing-playground') {
+  if (source !== parent || data.source !== 'testing-playground') {
     return;
   }
 
