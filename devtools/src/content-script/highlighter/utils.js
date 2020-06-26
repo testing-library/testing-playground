@@ -64,7 +64,8 @@ export function mergeRectOffsets(rects) {
 // taking into account any offsets caused by intermediate iframes.
 export function getNestedBoundingClientRect(node, boundaryWindow) {
   const ownerIframe = getOwnerIframe(node);
-  if (ownerIframe && ownerIframe !== boundaryWindow) {
+
+  if (ownerIframe && ownerIframe.contentWindow !== boundaryWindow) {
     const rects = [node.getBoundingClientRect()];
     let currentIframe = ownerIframe;
     let onlyOneMore = false;

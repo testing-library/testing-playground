@@ -115,6 +115,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "flaviohenriquecbc",
+      "name": "Flávio H Freitas",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1553609?v=4",
+      "profile": "http://www.linkedin.com/in/flaviohfreitas",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

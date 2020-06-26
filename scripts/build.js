@@ -33,7 +33,9 @@ async function build({ entries, dest, port, serve = !isProduction }) {
     },
     patchConsole: true,
     mode: isProduction ? 'production' : 'development',
-    sourceMaps: true,
+    minify: isProduction,
+    // sourcemaps are causing warnings in the chrome extension.
+    sourceMaps: !isProduction,
   };
 
   if (serve !== false && port) {

@@ -22,7 +22,7 @@ function Playground() {
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
-      <div className="editor markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+      <div className="editor markup-editor p-4 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
         <div className="flex-auto relative h-56 md:h-full">
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
@@ -39,7 +39,7 @@ function Playground() {
 
       <div className="flex-none h-8" />
 
-      <div className="editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2 overflow-hidden">
+      <div className="editor px-4 pb-4 pt-8 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
         <div className="flex-auto relative h-56 md:h-full">
           <Query query={query} result={result} dispatch={dispatch} />
         </div>

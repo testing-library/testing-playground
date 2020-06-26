@@ -1,193 +1,109 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from 'react';
-import Scrollable from './Scrollable';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PreviewHint from './PreviewHint';
-import AddHtml from './AddHtml';
-import { getQueryAdvise } from '../lib';
+import EmptyPane from './EmptyPane';
+import { getRoles } from '@testing-library/dom';
 
-function selectByCssPath(rootNode, cssPath) {
-  return rootNode?.querySelector(cssPath.toString().replace(/^body > /, ''));
+function getSandbox(ref) {
+  try {
+    const document =
+      ref.current?.contentDocument ||
+      ref.current?.contentWindow?.document ||
+      null;
+
+    if (document) {
+      document.__SANDBOX_ROOT__ =
+        document.__SANDBOX_ROOT__ || document.getElementById('sandbox');
+
+      return {
+        document: document,
+        root: document.__SANDBOX_ROOT__,
+      };
+    }
+  } catch (e) {
+    console.log(
+      'iframe navigated away from this origin, we no longer have access to the document',
+    );
+  }
+
+  return { document: null, root: null };
 }
 
-function Preview({
-  markup,
-  accessibleRoles,
-  elements,
-  dispatch,
-  variant,
-  forwardedRef,
-}) {
-  // Okay, listen up. `highlighted` can be a number of things, as I wanted to
-  // keep a single variable to represent the state. This to reduce bug count
-  // by creating out-of-sync states.
-  //
-  // 1. When the mouse pointer enters the preview area, `highlighted` changes
-  //    to true. True indicates that the highlight no longer indicates the parsed
-  //    element.
-  // 2. When the mouse pointer is pointing at an element, `highlighted` changes
-  //    to the target element. A dom node.
-  // 3. When the mouse pointer leaves that element again, `highlighted` changse
-  //    back to... true. Not to false! To indicate that we still want to use
-  //    the mouse position to control the highlight.
-  // 4. Once the mouse leaves the preview area, `highlighted` switches to false.
-  //    Indicating that the `parsed` element can be highlighted again.
-  const [highlighted, setHighlighted] = useState(false);
+function Preview({ markup, variant, forwardedRef, dispatch }) {
   const [roles, setRoles] = useState([]);
-  const [scripts, setScripts] = useState([]);
-  const htmlRoot = useRef();
+  const [suggestion, setSuggestion] = useState();
 
-  const { suggestion } = getQueryAdvise({
-    rootNode: htmlRoot?.current,
-    element: highlighted,
-  });
+  const frameRef = useRef();
 
   const refSetter = useCallback((node) => {
-    if (typeof forwardedRef === 'function') {
-      forwardedRef(node || null);
-    }
-
-    htmlRoot.current = node;
+    frameRef.current = node;
   }, []);
 
-  useEffect(() => {
-    const container = document.createElement('div');
-    container.innerHTML = markup;
-    const scriptsCollections = container.getElementsByTagName('script');
-    const jsScripts = Array.from(scriptsCollections).filter(
-      (script) => script.type === 'text/javascript' || script.type === '',
-    );
-    setScripts((scripts) => [
-      ...scripts.filter((script) =>
-        jsScripts
-          .map((jsScript) => jsScript.innerHTML)
-          .includes(script.innerHTML),
-      ),
-      ...jsScripts
-        .filter(
-          (jsScript) =>
-            !scripts
-              .map((script) => script.innerHTML)
-              .includes(jsScript.innerHTML),
-        )
-        .map((jsScript) => ({
-          scriptCode: jsScript.innerHTML,
-          toBeRemoved: jsScript.outerHTML,
-          evaluated: false,
-        })),
-    ]);
-  }, [markup, setScripts]);
-
-  const actualMarkup = useMemo(
-    () =>
-      scripts.length
-        ? scripts.reduce(
-            (html, script) => html.replace(script.toBeRemoved, ''),
-            markup,
-          )
-        : markup,
-    [scripts, markup],
-  );
+  const handleLoadIframe = useCallback(() => {
+    dispatch({
+      type: 'SET_SANDBOX_FRAME',
+      sandbox: frameRef.current.contentWindow,
+    });
+  }, [dispatch]);
 
   useEffect(() => {
-    if (htmlRoot.current && highlighted) {
-      scripts
-        .filter((script) => !script.evaluated)
-        .forEach((script) => {
-          try {
-            script.evaluated = true;
-            const executeScript = new Function(script.scriptCode);
-            executeScript();
-          } catch (e) {
-            alert('Failing script inserted in markup!');
-          }
-        });
-    }
-  }, [highlighted, scripts, htmlRoot.current]);
-
-  useEffect(() => {
-    setRoles(Object.keys(accessibleRoles || {}).sort());
-  }, [accessibleRoles]);
-
-  useEffect(() => {
-    if (highlighted) {
-      elements?.forEach((el) => {
-        const target = selectByCssPath(htmlRoot.current, el.cssPath);
-        target?.classList.remove('highlight');
-      });
-      highlighted.classList?.add('highlight');
-    } else {
-      highlighted?.classList?.remove('highlight');
-
-      if (highlighted === false) {
-        elements?.forEach((el) => {
-          const target = selectByCssPath(htmlRoot.current, el.cssPath);
-          target?.classList.add('highlight');
-        });
+    const listener = ({ data: { source, type, suggestion } = {} }) => {
+      if (source !== 'testing-playground-sandbox') {
+        return;
       }
-    }
 
-    return () => highlighted?.classList?.remove('highlight');
-  }, [highlighted, elements]);
+      switch (type) {
+        case 'SANDBOX_LOADED': {
+          const { root } = getSandbox(frameRef);
 
-  const handleClick = (event) => {
-    if (event.target === htmlRoot.current) {
-      return;
-    }
+          //setInnerHTML(root, markup);
+          setRoles(Object.keys(getRoles(root) || {}).sort());
 
-    event.preventDefault();
-    const expression =
-      suggestion.expression ||
-      '// No recommendation available.\n// Add some html attributes, or\n// use container.querySelector(…)';
-    dispatch({ type: 'SET_QUERY', query: expression });
-  };
+          if (typeof forwardedRef === 'function') {
+            forwardedRef(root);
+          }
 
-  const handleMove = (event) => {
-    const target = document.elementFromPoint(event.clientX, event.clientY);
-    if (target === highlighted) {
-      return;
-    }
+          break;
+        }
 
-    if (target === htmlRoot) {
-      setHighlighted(true);
-      return;
-    }
+        case 'SELECT_NODE': {
+          dispatch({ type: 'SET_QUERY', query: suggestion.expression });
+          break;
+        }
 
-    setHighlighted(target);
-  };
+        case 'HOVER_NODE': {
+          setSuggestion(suggestion);
+          break;
+        }
+      }
+    };
 
-  return markup ? (
-    <div
-      className="w-full h-full flex flex-col relative overflow-hidden"
-      onMouseEnter={() => setHighlighted(true)}
-      onMouseLeave={() => setHighlighted(false)}
-    >
-      <div className="flex-auto relative overflow-hidden">
-        <Scrollable>
-          <div
-            id="view"
-            className="preview"
-            onClick={handleClick}
-            onMouseMove={handleMove}
-            ref={refSetter}
-            dangerouslySetInnerHTML={{
-              __html: actualMarkup,
-            }}
-          />
-        </Scrollable>
+    window.addEventListener('message', listener, false);
+    return () => window.removeEventListener('message', listener);
+  }, [dispatch, forwardedRef, markup]);
+
+  return (
+    <div className="w-full h-full flex flex-col relative">
+      <div className="flex-auto relative">
+        <iframe
+          ref={refSetter}
+          src="/sandbox.html"
+          security="restricted"
+          className="w-full h-full"
+          scrolling="no"
+          frameBorder="0"
+          onLoad={handleLoadIframe}
+        />
       </div>
 
-      {variant !== 'minimal' && (
+      {markup && variant !== 'minimal' && (
         <PreviewHint roles={roles} suggestion={suggestion} />
       )}
-    </div>
-  ) : (
-    <div className="w-full h-full flex flex-col relative overflow-hidden">
-      <AddHtml />
+
+      {!markup && (
+        <div className="absolute w-full h-full top-0 left-0">
+          <EmptyPane />
+        </div>
+      )}
     </div>
   );
 }

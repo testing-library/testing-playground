@@ -12,9 +12,11 @@ practices.
 
 <hr />
 
+<!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+<!-- prettier-ignore-end -->
 
 **Playground for [testing-library/dom]**
 
@@ -118,11 +120,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/connorProgrammes"><img src="https://avatars3.githubusercontent.com/u/66570218?v=4" width="100px;" alt=""/><br /><sub><b>ConnorProgrammes</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=connorProgrammes" title="Documentation">📖</a> <a href="https://github.com/testing-library/testing-playground/commits?author=connorProgrammes" title="Code">💻</a></td>
     <td align="center"><a href="https://twitter.com/JacobMGEvans"><img src="https://avatars1.githubusercontent.com/u/27247160?v=4" width="100px;" alt=""/><br /><sub><b>Jacob M-G Evans</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=JacobMGEvans" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/sumeesh879"><img src="https://avatars1.githubusercontent.com/u/20029120?v=4" width="100px;" alt=""/><br /><sub><b>Sumeesh Nagisetty</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/pulls?q=is%3Apr+reviewed-by%3Asumeesh879" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://www.linkedin.com/in/flaviohfreitas"><img src="https://avatars0.githubusercontent.com/u/1553609?v=4" width="100px;" alt=""/><br /><sub><b>Flávio H Freitas</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=flaviohenriquecbc" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

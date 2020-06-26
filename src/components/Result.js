@@ -3,6 +3,7 @@ import ErrorBox from './ErrorBox';
 import ResultQueries from './ResultQueries';
 import ResultSuggestion from './ResultSuggestion';
 import Scrollable from './Scrollable';
+import EmptyPane from './EmptyPane';
 
 function Result({ result, dispatch }) {
   if (result.error) {
@@ -17,25 +18,12 @@ function Result({ result, dispatch }) {
     result.elements.length === 0
   ) {
     return (
-      <div className="space-y-4 text-sm">
-        <div className="min-h-8">
-          <p>
-            I don&apos;t know what to say. This is a playground for{' '}
-            <a
-              href="https://testing-library.com/docs/dom-testing-library/example-intro"
-              rel="noopener noreferrer"
-              target="_blank"
-              className="font-bold"
-            >
-              React Testing Library
-            </a>
-            .<br /> Please insert some html and queries to be adviced on which
-            should be used.
-          </p>
-        </div>
+      <div className="flex flex-col relative w-full h-full top-0 left-0">
+        <EmptyPane />
       </div>
     );
   }
+
   const { data, suggestion, queries } = result.elements[0];
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
@@ -55,6 +43,7 @@ function Result({ result, dispatch }) {
           suggestion={suggestion}
           activeMethod={result.expression?.method}
           dispatch={dispatch}
+          queries={queries}
         />
       </Scrollable>
     </div>
