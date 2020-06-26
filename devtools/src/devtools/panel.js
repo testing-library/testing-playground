@@ -56,7 +56,12 @@ function Panel() {
       </div>
       <div className="grid relative p-2 gap-4 flex-auto grid-cols-1 md:grid-cols-2 grid-equal-cells overflow-hidden">
         <div className="relative">
-          <Query query={''} result={result} dispatch={dispatch} />
+          <Query
+            query={''}
+            result={result}
+            dispatch={dispatch}
+            variant="minimal"
+          />
         </div>
 
         <div className="overflow-hidden">

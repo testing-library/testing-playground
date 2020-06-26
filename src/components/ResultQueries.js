@@ -1,6 +1,6 @@
 import React from 'react';
 import { getFieldName } from '../lib';
-import { queries } from '../constants';
+import { messages as queryGroups } from '../constants';
 
 function Section({ children }) {
   return <div className="space-y-3">{children}</div>;
@@ -42,58 +42,43 @@ const Field = React.memo(function Field({
   );
 });
 
+function QueryGroup({ group, queries, heading, activeMethod, dispatch, data }) {
+  return (
+    <Section key={group.type}>
+      <Heading>{heading}</Heading>
+      {group.queries.map((queryMethod) => (
+        <Field
+          key={queryMethod}
+          data={data}
+          method={queryMethod}
+          query={queries[queryMethod]}
+          dispatch={dispatch}
+          active={queryMethod === activeMethod}
+        />
+      ))}
+    </Section>
+  );
+}
 // for inputs, the role will only work if there is also a type attribute
-function ResultQueries({ data, possibleQueries, dispatch, activeMethod }) {
+function ResultQueries(props) {
   return (
     <div className="grid grid-cols-2 gap-4 pt-4">
-      <Section>
-        <Heading>1. Queries Accessible to Everyone</Heading>
-        {queries
-          .filter((query) => query.type === 'ACCESSIBLE')
-          .map((query) => (
-            <Field
-              key={query.method}
-              data={data}
-              method={query.method}
-              query={possibleQueries?.[query.method]}
-              dispatch={dispatch}
-              active={query.method === activeMethod}
-            />
-          ))}
-      </Section>
-
+      <QueryGroup
+        heading={`1. ${queryGroups[0].heading}`}
+        group={queryGroups[0]}
+        {...props}
+      />
       <div className="space-y-8">
-        <Section>
-          <Heading>2. Semantic Queries</Heading>
-          {queries
-            .filter((query) => query.type === 'SEMANTIC')
-            .map((query) => (
-              <Field
-                key={query.method}
-                data={data}
-                method={query.method}
-                query={possibleQueries?.[query.method]}
-                dispatch={dispatch}
-                active={query.method === activeMethod}
-              />
-            ))}
-        </Section>
-
-        <Section>
-          <Heading>3. TestId</Heading>
-          {queries
-            .filter((query) => query.type === 'TEST')
-            .map((query) => (
-              <Field
-                key={query.method}
-                data={data}
-                method={query.method}
-                query={possibleQueries?.[query.method]}
-                dispatch={dispatch}
-                active={query.method === activeMethod}
-              />
-            ))}
-        </Section>
+        <QueryGroup
+          heading={`2. ${queryGroups[1].heading}`}
+          group={queryGroups[1]}
+          {...props}
+        />
+        <QueryGroup
+          heading={`3. ${queryGroups[2].heading}`}
+          group={queryGroups[2]}
+          {...props}
+        />
       </div>
     </div>
   );

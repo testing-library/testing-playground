@@ -38,7 +38,9 @@
     "postversion": "git push && git push --tags && git checkout master && git merge develop --ff && git push && git checkout -"
   },
   "dependencies": {
+    "@primer/octicons-react": "^10.0.0",
     "@testing-library/dom": "^7.15.0",
+    "@testing-library/user-event": "^12.0.2",
     "codemirror": "5.54.0",
     "crx-bridge": "^2.1.0",
     "deep-diff": "^1.0.2",
@@ -65,7 +67,6 @@
     "@babel/preset-react": "^7.10.1",
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.2.0",
-    "@testing-library/user-event": "^11.4.2",
     "@types/fs-extra": "^9.0.1",
     "babel-eslint": "^10.1.0",
     "chrome-launch": "^1.1.4",
