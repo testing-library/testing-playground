@@ -12,6 +12,8 @@ import {
   logDOM,
 } from '@testing-library/dom';
 
+import userEvent from '@testing-library/user-event';
+
 const debug = (element, maxLength, options) =>
   Array.isArray(element)
     ? element.map((el) => logDOM(el, maxLength, options)).join('\n')
@@ -88,6 +90,8 @@ function getLastExpression(code) {
 function createEvaluator({ rootNode }) {
   const context = Object.assign({}, queries, {
     screen: getScreen(rootNode),
+    userEvent,
+    user: userEvent,
     container: rootNode,
   });
 
@@ -187,6 +191,11 @@ function createSandbox({ markup }) {
   sandbox.body.innerHTML = markup;
 
   let body = markup;
+
+  // mock out userEvent in the fake sandbox
+  Object.keys(context.userEvent).map((x) => {
+    context.userEvent[x] = () => {};
+  });
 
   return {
     rootNode: sandbox.body,

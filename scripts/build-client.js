@@ -67,7 +67,7 @@ async function main() {
   const dest = resolve('dist/client');
   await remove(dest);
 
-  const entries = ['src/index.html', 'src/embed.js'];
+  const entries = ['src/index.html', 'src/embed.js', 'src/sandbox.html'];
 
   if (process.env.NODE_ENV === 'development') {
     entries.push('src/embed.html');

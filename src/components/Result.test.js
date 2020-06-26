@@ -4,27 +4,16 @@ import cases from 'jest-in-case';
 import Result from './Result';
 
 cases(
-  'should show "I don\'t know" if elements is not an array or if is empty',
+  'should show image if elements is not an array or if is empty',
   (opts) => {
-    render(
-      <Result
-        result={{ error: '', expression: {}, elements: opts.elements }}
-      />,
-    );
-    expect(screen.getByText(/i don't know what to say/i)).toBeInTheDocument();
+    const result = { error: '', expression: {}, elements: opts.elements };
+    render(<Result result={result} />);
+
+    expect(screen.getByRole('img')).toBeInTheDocument();
   },
   [
-    {
-      name: 'undefined',
-      elements: undefined,
-    },
-    {
-      name: 'null',
-      elements: null,
-    },
-    {
-      name: 'empty array',
-      elements: [],
-    },
+    { name: 'undefined', elements: undefined },
+    { name: 'null', elements: null },
+    { name: 'empty array', elements: [] },
   ],
 );

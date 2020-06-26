@@ -8,9 +8,9 @@ import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/hint/show-hint';
 import { queries } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
 
 import CodeMirror from 'codemirror';
-import debounce from 'lodash/debounce';
 import beautify from '../lib/beautify';
 
 const baseOptions = {
@@ -26,17 +26,14 @@ const baseOptions = {
 
 const options = {
   html: {
-    ...baseOptions,
     mode: { name: 'text/html', multilineTagIndentPastTag: false },
   },
 
   htmlmixed: {
-    ...baseOptions,
     mode: { name: 'htmlmixed', multilineTagIndentPastTag: false },
   },
 
   javascript: {
-    ...baseOptions,
     mode: 'javascript',
     extraKeys: { 'Ctrl-Space': 'autocomplete' },
     hintOptions: { hint: getQueryHints },
@@ -48,6 +45,7 @@ const suggestions = {
     .filter((x) => x.startsWith('getBy'))
     .sort(),
   container: ['querySelector', 'querySelectorAll'],
+  userEvent: Object.keys(userEvent).sort(),
 };
 
 function getQueryHints(cm) {
@@ -66,7 +64,7 @@ function getQueryHints(cm) {
     ++end;
   }
 
-  const word = line.slice(start, end).toLowerCase();
+  const word = line.slice(start, end); //.toLowerCase();
   const offset = word.lastIndexOf('.') + 1;
   const list = [];
 
@@ -83,8 +81,8 @@ function getQueryHints(cm) {
   } else if (word.includes('.')) {
     // user is already one level deeper, entered `screen.get...`
     const [obj, method] = word.split('.');
-    const values = (suggestions[obj] || []).filter((x) =>
-      x.toLowerCase().includes(method),
+    const values = (suggestions[obj] || []).filter(
+      (x) => x.includes(method), //x.toLowerCase().includes(method.toLowerCase()),
     );
     list.push(...values);
   } else {
@@ -154,16 +152,124 @@ const NON_TRIGGER_KEYS = {
   '222': 'quote',
 };
 
-function Editor({ onLoad, onChange, mode, initialValue }) {
+function formatValue(cm) {
+  const mode = cm.options.mode;
+  const value = cm.getValue();
+  const formatted = beautify.format(mode, value);
+  cm.setValue(formatted);
+}
+
+function autoComplete(cm, event) {
+  const cursor = cm.getDoc().getCursor();
+  const token = cm.getTokenAt(cursor);
+
+  const shouldComplete =
+    !cm.state.completionActive &&
+    !NON_TRIGGER_KEYS[(event.keyCode || event.which).toString()] &&
+    !(token.string === '(' || token.string === ')');
+
+  if (shouldComplete) {
+    CodeMirror.commands.autocomplete(cm, null, {
+      completeSingle: false,
+    });
+  }
+}
+
+function handleChange(cm, change) {
+  switch (change.origin) {
+    case 'setValue':
+      return;
+
+    case 'paste': {
+      formatValue(cm);
+      cm.onChange(cm.getValue(), { origin: change.origin });
+      break;
+    }
+
+    default: {
+      cm.onChange(cm.getValue(), { origin: change.origin });
+      break;
+    }
+  }
+}
+
+// with devtools open, the roundtrip between blur and result is about 200 ms.
+// Close devtools, and it drops down to ~ 5 ms. If you're still getting weird
+// user-event / fireEvent issues, it might be that either 25 or 500 ms is to low for
+// your machine. Pumping up production timeouts can cause more side-effects, but
+// I think we can quite safely increase to ~ 100 ms when neccasary. For the dev
+// environment, I hope you can life with it. The worst thing that happens, is
+// that the query editor loses focus while you're typing your userEvents.
+const threshold = process.env.NODE_ENV === 'production' ? 25 : 500;
+
+// There are two ways that the query editor can use blur. One is if the user
+// decides to leave the editor. The other is caused by evaluating the users
+// script. For example to focus one of the inputs in the sandbox, to enter
+// some text, or click an element. If this happens, we need to restore focus
+// as soon as possible. This is, when the SANDBOX_READY event occurs before
+// the `threshold`ms timeout has passed.
+function handleBlur(cm) {
+  const cursor = cm.getCursor();
+  let timeout;
+
+  function listener({ data: { source, type } }) {
+    if (source !== 'testing-playground-sandbox' || type !== 'SANDBOX_READY') {
+      return;
+    }
+
+    // if we came to here, it means that the time between the `blur` event and
+    // SANDBOX_READY msg was within `threshold` ms. Otherwise, the timeout would
+    // already have removed this listener.
+    clearTimeout(timeout);
+    window.removeEventListener('message', listener);
+    cm.focus();
+    cm.setCursor(cursor);
+  }
+
+  // note, { once: true } doesn't work here! there can be multiple messages, while
+  // we need one with a specific event attribute
+  window.addEventListener('message', listener);
+
+  // we wait a couple of ms for the SANDBOX_READY event, if that doesn't come
+  // before given threshold, we assume the user left the editor, and allow it
+  // lose focus.
+  timeout = setTimeout(() => {
+    window.removeEventListener('message', listener);
+  }, threshold);
+}
+
+function Editor(props) {
+  const { onLoad, onChange, mode, initialValue } = props;
+
   const elem = useRef();
   const editor = useRef();
 
   useEffect(() => {
-    editor.current = CodeMirror.fromTextArea(
-      elem.current,
-      options[mode] || baseOptions,
-    );
+    editor.current = CodeMirror.fromTextArea(elem.current, {
+      ...baseOptions,
+      ...options[mode],
+      extraKeys: {
+        'Ctrl-Enter': () => {
+          editor.current.onChange(editor.current.getValue(), {
+            origin: 'user',
+          });
+        },
+        'Cmd-Enter': () => {
+          editor.current.onChange(editor.current.getValue(), {
+            origin: 'user',
+          });
+        },
+        ...(options[mode].extraKeys || {}),
+      },
+    });
+
     editor.current.setValue(initialValue || '');
+
+    editor.current.on('change', handleChange);
+    editor.current.on('keyup', autoComplete);
+    editor.current.on('blur', handleBlur);
+
+    onLoad(editor.current);
 
     // in some cases, CM loads with a scrollbar visible
     // while it shouldn't be required. Requesting a refresh
@@ -171,54 +277,17 @@ function Editor({ onLoad, onChange, mode, initialValue }) {
     requestAnimationFrame(() => {
       editor.current.refresh();
     });
-  }, [mode]);
+
+    return () => {
+      editor.current.off('change', handleChange);
+      editor.current.off('keyup', autoComplete);
+      editor.current.off('blur', handleBlur);
+    };
+  }, [mode, onLoad, initialValue]);
 
   useEffect(() => {
-    if (!editor.current || typeof onChange !== 'function') {
-      return;
-    }
-
-    editor.current.on(
-      'changes',
-      debounce(() => {
-        onChange(editor.current.getValue());
-      }, 25),
-    );
-
-    editor.current.on('keyup', (editor, event) => {
-      const cursor = editor.getDoc().getCursor();
-      const token = editor.getTokenAt(cursor);
-
-      const shouldComplete =
-        !editor.state.completionActive &&
-        !NON_TRIGGER_KEYS[(event.keyCode || event.which).toString()] &&
-        !(token.string === '(' || token.string === ')');
-
-      if (shouldComplete) {
-        CodeMirror.commands.autocomplete(editor, null, {
-          completeSingle: false,
-        });
-      }
-    });
-
-    const format = () => {
-      const value = editor.current.getValue();
-      const formatted = beautify.format(mode, value);
-      editor.current.setValue(formatted);
-    };
-
-    editor.current.on('change', (_, change) => {
-      if (change.origin !== 'paste') {
-        return;
-      }
-
-      format();
-    });
-
-    editor.current.on('blur', format);
-
-    onLoad(editor.current);
-  }, [editor.current, onChange]);
+    editor.current.onChange = onChange;
+  }, [onChange]);
 
   return (
     <div className="w-full h-full">
