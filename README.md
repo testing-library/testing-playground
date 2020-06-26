@@ -136,8 +136,8 @@ Contributions of any kind welcome!
 [playground]: https://testing-playground.com
 [playground-next]: https://develop.testing-playground.com
 [embed-demo]: https://codepen.io/smeijer/pen/yLYWZmK
-[roadmap.md]: https://github.com/testing-library/testing-playground/blob/master/ROADMAP.md
-[contributing.md]: https://github.com/testing-library/testing-playground/blob/master/CONTRIBUTING.md
+[roadmap.md]: https://github.com/testing-library/testing-playground/blob/develop/ROADMAP.md
+[contributing.md]: https://github.com/testing-library/testing-playground/blob/develop/CONTRIBUTING.md
 [issue tracker]: https://github.com/testing-library/testing-playground/issues
 [all-contributors]: https://github.com/all-contributors/all-contributors
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key

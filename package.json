@@ -35,7 +35,7 @@
     "bump:minor": "npm version minor -m 'release: cut the %s release'",
     "bump:major": "npm version major -m 'release: cut the %s release'",
     "preversion": "npm run test",
-    "postversion": "git push && git push --tags && git checkout master && git merge develop --ff && git push && git checkout -"
+    "postversion": "git push && git push --tags && git checkout live && git merge develop --ff && git push && git checkout -"
   },
   "dependencies": {
     "@primer/octicons-react": "^10.0.0",
