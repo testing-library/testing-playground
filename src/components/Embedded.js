@@ -23,6 +23,14 @@ const SUPPORTED_PANES = {
   result: true,
 };
 
+const styles = {
+  offscreen: {
+    position: 'absolute',
+    left: -300,
+    width: 100,
+  },
+};
+
 // TODO: we should support readonly mode
 function Embedded() {
   const [{ markup, query, result }, dispatch] = usePlayground({
@@ -61,6 +69,18 @@ function Embedded() {
     <div
       className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
     >
+      {/*the sandbox must always be rendered!*/}
+      {!panes.includes('preview') && (
+        <div style={styles.offscreen}>
+          <Preview
+            markup={markup}
+            elements={result.elements}
+            accessibleRoles={result.accessibleRoles}
+            dispatch={dispatch}
+          />
+        </div>
+      )}
+
       {panes.map((area) => {
         switch (area) {
           case 'preview':
@@ -68,7 +88,8 @@ function Embedded() {
               <Preview
                 key={area}
                 markup={markup}
-                result={result}
+                elements={result.elements}
+                accessibleRoles={result.accessibleRoles}
                 dispatch={dispatch}
               />
             );
@@ -83,6 +104,7 @@ function Embedded() {
                 query={query}
                 result={result}
                 dispatch={dispatch}
+                variant="minimal"
               />
             );
           case 'result':
