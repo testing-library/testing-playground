@@ -11,7 +11,7 @@ function Login() {
     }
     console.log(accessToken);
     history.push('/');
-  });
+  }, [history]);
 
   return null;
 }
