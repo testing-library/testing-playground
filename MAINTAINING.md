@@ -47,7 +47,7 @@ to release. See the next section on Releases for more about that.
 
 ## Release
 
-Our releases are automatic. They happen whenever code lands into `master`. A
+Our releases are automatic. They happen whenever code lands into `live`. A
 netlify build gets kicked off, and when tagged a changelog is published on
 GitHub. The changelog is generated based on the git commit messages. With this
 in mind, **please brush up on [the commit message convention][commit] which

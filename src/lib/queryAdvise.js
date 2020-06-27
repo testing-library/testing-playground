@@ -38,17 +38,41 @@ export function getData({ rootNode, element }) {
   };
 }
 
+function flattenDOM(node) {
+  return [
+    node,
+    ...Array.from(node.children).reduce(
+      (acc, child) => [...acc, ...flattenDOM(child)],
+      [],
+    ),
+  ];
+}
+
+function getSnapshot(element) {
+  const innerItems = flattenDOM(element);
+  const snapshot = innerItems
+    .map((el) => {
+      const suggestion = getSuggestedQuery(el);
+      return suggestion && `screen.${suggestion.toString()};`;
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  return snapshot;
+}
+
 // TODO:
 // TestingLibraryDom.getSuggestedQuery($0, 'get').toString()
 export const emptyResult = { data: {}, suggestion: {} };
 export function getQueryAdvise({ rootNode, element }) {
   if (
-    !rootNode ||
+    rootNode === element ||
     rootNode?.nodeType !== Node.ELEMENT_NODE ||
     element?.nodeType !== Node.ELEMENT_NODE
   ) {
     return emptyResult;
   }
+
   const suggestedQuery = getSuggestedQuery(element);
   const data = getData({ rootNode, element });
 
@@ -61,21 +85,25 @@ export function getQueryAdvise({ rootNode, element }) {
       suggestion: {
         level: 3,
         expression: `container.querySelector('${path}')`,
+        snapshot: getSnapshot(element),
         method: '',
         ...messages[3],
       },
       data,
     };
   }
+
   const { level } = queries.find(
     ({ method }) => method === suggestedQuery.queryMethod,
   );
+
   const suggestion = {
     expression: `screen.${suggestedQuery.toString()}`,
     level,
     method: suggestedQuery.queryMethod,
     ...messages[level],
   };
+
   return {
     data,
     suggestion,
@@ -84,7 +112,7 @@ export function getQueryAdvise({ rootNode, element }) {
 
 export function getAllPossibileQueries(element) {
   const possibleQueries = queries
-    .filter((query) => query.type !== 'GENERIC')
+    .filter((query) => query.type !== 'MANUAL')
     .map((query) => {
       const method = getFieldName(query.method);
       return getSuggestedQuery(element, 'get', method);

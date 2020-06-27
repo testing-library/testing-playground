@@ -1,6 +1,6 @@
 {
   "name": "testing-playground",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
   "author": "Stephan Meijer <stephan.meijer@gmail.com>",
   "homepage": "https://testing-playground.com",
@@ -14,8 +14,8 @@
   },
   "scripts": {
     "start": "run-s start:client",
-    "start:client": "node ./scripts/build-client",
-    "start:devtools": "node ./scripts/build-devtools",
+    "start:client": "cross-env NODE_ENV=development node ./scripts/build-client",
+    "start:devtools": "cross-env NODE_ENV=development node ./scripts/build-devtools",
     "build": "run-s clean build:*",
     "build:client": "cross-env NODE_ENV=production node ./scripts/build-client",
     "build:server": "cross-env NODE_ENV=production node ./scripts/build-lambda",
@@ -35,10 +35,12 @@
     "bump:minor": "npm version minor -m 'release: cut the %s release'",
     "bump:major": "npm version major -m 'release: cut the %s release'",
     "preversion": "npm run test",
-    "postversion": "git push && git push --tags && git checkout master && git merge develop --ff && git push && git checkout -"
+    "postversion": "git push && git push --tags && git checkout live && git merge develop --ff && git push && git checkout -"
   },
   "dependencies": {
-    "@testing-library/dom": "^7.15.0",
+    "@primer/octicons-react": "^10.0.0",
+    "@testing-library/dom": "^7.18.1",
+    "@testing-library/user-event": "^12.0.11",
     "codemirror": "5.54.0",
     "crx-bridge": "^2.1.0",
     "deep-diff": "^1.0.2",
@@ -66,7 +68,7 @@
     "@babel/preset-react": "^7.10.1",
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.2.0",
-    "@testing-library/user-event": "^11.4.2",
+    "@testing-library/react-hooks": "^3.3.0",
     "@types/fs-extra": "^9.0.1",
     "babel-eslint": "^10.1.0",
     "chrome-launch": "^1.1.4",
@@ -91,6 +93,7 @@
     "postcss-import": "^12.0.1",
     "postcss-modules": "^2.0.0",
     "prettier": "^2.0.5",
+    "react-test-renderer": "^16.13.1",
     "rimraf": "^3.0.2",
     "tailwindcss": "^1.4.6",
     "workbox-build": "^5.1.3"
