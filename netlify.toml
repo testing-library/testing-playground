@@ -2,3 +2,6 @@
   command = "npm run build"
   functions = "./dist/server"
   publish = "./dist/client"
+
+[dev]
+  functions = "./src/lambda"

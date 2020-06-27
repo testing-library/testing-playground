@@ -1,11 +1,10 @@
 .rts2_cache*
-.idea
 .cache
 .parcel-cache
 
 dist/
 node_modules/
-local/
 
 # Local Netlify folder
 .netlify
+.env

@@ -47,6 +47,7 @@
     "crx-bridge": "^2.1.0",
     "deep-diff": "^1.0.2",
     "dom-accessibility-api": "^0.4.4",
+    "isomorphic-fetch": "^2.2.1",
     "js-beautify": "^1.11.0",
     "lodash.debounce": "4.0.8",
     "lodash.throttle": "^4.1.1",
