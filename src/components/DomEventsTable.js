@@ -159,10 +159,15 @@ const DomEventsTable = ({
     </IconButton>
   );
 
+  const [itemCount, itemData] = useMemo(() => {
+    const eventsFiltered = data.filter(filterData);
+    return [eventsFiltered.length, eventsFiltered];
+  }, [data, filterData]);
+
   return (
     <div className="editor p-4 md:h-56 flex-auto overflow-hidden">
       <div className="h-56 md:h-full w-full flex flex-col">
-        <div className="h-8 flex items-center w-full text-sm font-bold">
+        <div className="h-10 flex items-center w-full text-sm font-bold">
           <div
             className="p-2 w-16 cursor-pointer flex justify-between items-center"
             onClick={onChangeSortDirection}
@@ -214,8 +219,8 @@ const DomEventsTable = ({
                   mode={appendMode}
                   ref={listRef}
                   height={height}
-                  itemCount={data.filter(filterData).length}
-                  itemData={data.filter(filterData)}
+                  itemCount={itemCount}
+                  itemData={itemData}
                   itemSize={32}
                   width={width}
                   outerElementType={VirtualScrollable}
