@@ -31,6 +31,13 @@ const styles = {
 
 export const pad = (num, maxLength) => `${num}`.padStart(0, maxLength);
 
+function omit(keys, object) {
+  return Object.entries(object).reduce((acc, [key, value]) => {
+    acc[key] = keys.includes(key) ? '_ignored_' : value;
+    return acc;
+  }, {});
+}
+
 function formatTime(time) {
   return `${pad(time.getHours(), 2)}:${pad(time.getMinutes(), 2)}:${pad(
     time.getSeconds(),
@@ -60,10 +67,16 @@ function renderDiff(diff) {
   }
 }
 
+// debug can be `false`, `true` or `diff`. On production, logging is disabled
+// when debug is `undefined` and can be enabled by setting it to either `true`
+// or `diff`. On develop, it's enabled when `undefined`, and can be disabled
+// by setting it to `false`.
+const debug = localStorage.getItem('debug');
+const logLevel = debug === 'false' ? false : debug === 'true' ? true : debug;
 const isLoggingEnabled =
-  process.env.NODE_ENV === 'development'
-    ? localStorage.getItem('debug') !== false
-    : localStorage.getItem('debug') === true;
+  process.env.NODE_ENV === 'development' ? logLevel !== false : !!logLevel;
+const isDiffEnabled = logLevel === 'diff';
+const diffIgnoreKeys = ['markupEditor', 'queryEditor', 'sandbox'];
 
 export function withLogging(reducerFn) {
   if (!isLoggingEnabled) {
@@ -79,7 +92,6 @@ export function withLogging(reducerFn) {
     const newState = reducerFn(prevState, action);
 
     const took = timer.now() - started;
-    const diff = differ(prevState, newState);
 
     const header = [
       [
@@ -94,7 +106,7 @@ export function withLogging(reducerFn) {
     ];
 
     if (supportsGroups) {
-      console.group(...header);
+      console.groupCollapsed(...header);
     } else {
       console.log(...header);
     }
@@ -103,29 +115,38 @@ export function withLogging(reducerFn) {
     console.log('%c action     %O', styles.action, action);
     console.log('%c new state  %O', styles.nextState, newState);
 
-    if (!diff) {
-      console.log(
-        '%c diff       %cno state change!',
-        styles.prevState,
-        styles.error,
-      );
+    if (!isDiffEnabled) {
+      console.log('%c diff      %c _disabled_', styles.prevState, styles.note);
     } else {
-      if (supportsGroups) {
-        console.groupCollapsed(' diff');
-      } else {
-        console.log('diff');
-      }
+      const diff = differ(
+        omit(diffIgnoreKeys, prevState),
+        omit(diffIgnoreKeys, newState),
+      );
 
-      diff.forEach((elem) => {
+      if (!diff) {
         console.log(
-          `%c ${styles.diff[elem.kind].text}`,
-          styles.diff[elem.kind].style,
-          ...renderDiff(elem),
+          '%c diff       %cno state change!',
+          styles.prevState,
+          styles.error,
         );
-      });
+      } else {
+        if (supportsGroups) {
+          console.groupCollapsed(' diff');
+        } else {
+          console.log('diff');
+        }
 
-      if (supportsGroups) {
-        console.groupEnd();
+        diff.forEach((elem) => {
+          console.log(
+            `%c ${styles.diff[elem.kind].text}`,
+            styles.diff[elem.kind].style,
+            ...renderDiff(elem),
+          );
+        });
+
+        if (supportsGroups) {
+          console.groupEnd();
+        }
       }
     }
 

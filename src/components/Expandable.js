@@ -1,29 +1,7 @@
 import React, { useState } from 'react';
 import IconButton from './IconButton';
 import Scrollable from './Scrollable';
-
-const iconStyle = { width: 24, height: 24 };
-function ChevronUp() {
-  return (
-    <svg style={iconStyle} viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z"
-      />
-    </svg>
-  );
-}
-
-function ChevronDown() {
-  return (
-    <svg style={iconStyle} viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
-      />
-    </svg>
-  );
-}
+import { ChevronUpIcon, ChevronDownIcon } from '@primer/octicons-react';
 
 function Expandable({ children, className, variant }) {
   const [expanded, setExpanded] = useState(false);
@@ -40,7 +18,7 @@ function Expandable({ children, className, variant }) {
     >
       {expanded && (
         <div className="absolute bottom-0 -ml-4 h-full w-full overflow-hidden bg-inherit rounded-inherit">
-          <Scrollable variant={variant} minHeight="100%" maxHeight="100%">
+          <Scrollable variant={variant}>
             <div className="whitespace-pre-wrap p-4">
               {children} <div className="py-2 px-4">&nbsp;</div>
             </div>
@@ -51,7 +29,7 @@ function Expandable({ children, className, variant }) {
             variant={variant}
             onClick={() => setExpanded(!expanded)}
           >
-            <ChevronDown />
+            <ChevronDownIcon />
           </IconButton>
         </div>
       )}
@@ -69,7 +47,7 @@ function Expandable({ children, className, variant }) {
         variant={variant}
         onClick={() => setExpanded(!expanded)}
       >
-        <ChevronUp />
+        <ChevronUpIcon />
       </IconButton>
     </div>
   );

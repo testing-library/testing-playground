@@ -1,11 +1,11 @@
 import React, { useRef, useCallback, useState } from 'react';
+import { eventMap } from '@testing-library/dom/dist/event-map';
+import throttle from 'lodash.throttle';
 
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
 import state from '../lib/state';
-import { eventMap } from '@testing-library/dom/dist/event-map';
-import throttle from 'lodash.throttle';
 import DomEventsTable from './DomEventsTable';
 
 function onStateChange({ markup, query, result }) {
@@ -79,18 +79,26 @@ function addLoggingEvents(node, log) {
   return eventListeners;
 }
 
-const noop = () => {};
 function DomEvents() {
+  const buffer = useRef([]);
+  const previewRef = useRef();
+
+  const sortDirection = useRef('asc');
+  const [appendMode, setAppendMode] = useState('bottom');
   const [{ markup, result }, dispatch] = usePlayground({
     onChange: onStateChange,
     ...initialValues,
   });
 
-  const buffer = useRef([]);
-  const previewRef = useRef();
-
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
+
+  const changeSortDirection = () => {
+    const newDirection = sortDirection.current === 'desc' ? 'asc' : 'desc';
+    buffer.current = buffer.current.reverse();
+    setAppendMode(newDirection === 'desc' ? 'top' : 'bottom');
+    sortDirection.current = newDirection;
+  };
 
   const reset = () => {
     buffer.current = [];
@@ -108,8 +116,19 @@ function DomEvents() {
     if (node) {
       previewRef.current = node;
       const eventListeners = addLoggingEvents(node, (event) => {
-        event.id = buffer.current.length;
-        buffer.current.push(event);
+        const log = {
+          id: buffer.current.length + 1,
+          type: event.event.EventType,
+          name: event.event.name,
+          element: event.target.tagName,
+          selector: event.target.toString(),
+        };
+        if (sortDirection.current === 'desc') {
+          buffer.current.splice(0, 0, log);
+        } else {
+          buffer.current.push(log);
+        }
+
         setTimeout(flush, 0);
       });
       setEventListeners(eventListeners);
@@ -123,7 +142,7 @@ function DomEvents() {
 
   const bufferValues = Object.values(buffer.current);
   const getUniqueEventsByProperty = (property) => [
-    ...new Set(bufferValues.map(({ event }) => event[property])),
+    ...new Set(bufferValues.map((event) => event[property])),
   ];
   const getOptionsByProperty = (property) =>
     getUniqueEventsByProperty(property).map((eventProperty) => ({
@@ -131,12 +150,12 @@ function DomEvents() {
       value: eventProperty,
     }));
 
-  const typeOptions = getOptionsByProperty('EventType');
+  const typeOptions = getOptionsByProperty('type');
   const nameOptions = getOptionsByProperty('name');
 
   return (
     <div className="flex flex-col h-auto md:h-full w-full">
-      <div className="editor markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+      <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
         <div className="flex-auto relative h-56 md:h-full">
           <MarkupEditor markup={markup} dispatch={dispatch} />
         </div>
@@ -147,7 +166,7 @@ function DomEvents() {
             markup={markup}
             elements={result.elements}
             accessibleRoles={result.accessibleRoles}
-            dispatch={noop}
+            dispatch={dispatch}
             variant="minimal"
           />
         </div>
@@ -161,6 +180,8 @@ function DomEvents() {
         data={buffer.current}
         typeOptions={typeOptions}
         nameOptions={nameOptions}
+        onChangeSortDirection={changeSortDirection}
+        appendMode={appendMode}
       />
     </div>
   );

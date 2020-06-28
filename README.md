@@ -12,9 +12,11 @@ practices.
 
 <hr />
 
+<!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+<!-- prettier-ignore-end -->
 
 **Playground for [testing-library/dom]**
 
@@ -124,6 +126,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -133,8 +136,8 @@ Contributions of any kind welcome!
 [playground]: https://testing-playground.com
 [playground-next]: https://develop.testing-playground.com
 [embed-demo]: https://codepen.io/smeijer/pen/yLYWZmK
-[roadmap.md]: https://github.com/testing-library/testing-playground/blob/master/ROADMAP.md
-[contributing.md]: https://github.com/testing-library/testing-playground/blob/master/CONTRIBUTING.md
+[roadmap.md]: https://github.com/testing-library/testing-playground/blob/develop/ROADMAP.md
+[contributing.md]: https://github.com/testing-library/testing-playground/blob/develop/CONTRIBUTING.md
 [issue tracker]: https://github.com/testing-library/testing-playground/issues
 [all-contributors]: https://github.com/all-contributors/all-contributors
 [emojis]: https://github.com/all-contributors/all-contributors#emoji-key

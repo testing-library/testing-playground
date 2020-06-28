@@ -5,14 +5,18 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
+import Select from 'react-select';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  TrashcanIcon,
+} from '@primer/octicons-react';
 import IconButton from './IconButton';
-import TrashcanIcon from './icons/TrashcanIcon';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
 import { VirtualScrollable } from './Scrollable';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import CopyButton from './CopyButton';
-import Select from 'react-select';
 
 const eventsNameExcludedByDefault = [
   'mouseEnter',
@@ -28,7 +32,7 @@ const eventsNameExcludedByDefault = [
 ];
 
 function EventRecord({ index, style, data }) {
-  const { id, event, target } = data[index];
+  const { id, type, name, element, selector } = data[index];
 
   return (
     <div
@@ -39,13 +43,11 @@ function EventRecord({ index, style, data }) {
     >
       <div className="p-2 flex-none w-16">{id}</div>
 
-      <div className="p-2 flex-none w-40">{event.EventType}</div>
-      <div className="p-2 flex-none w-40">{event.name}</div>
+      <div className="p-2 flex-none w-40">{type}</div>
+      <div className="p-2 flex-none w-40">{name}</div>
 
-      <div className="p-2 flex-none w-40">{target.tagName}</div>
-      <div className="p-2 flex-auto whitespace-no-wrap">
-        {target.toString()}
-      </div>
+      <div className="p-2 flex-none w-40">{element}</div>
+      <div className="p-2 flex-auto whitespace-no-wrap">{selector}</div>
     </div>
   );
 }
@@ -100,6 +102,8 @@ const DomEventsTable = ({
   eventCount,
   typeOptions,
   nameOptions,
+  onChangeSortDirection,
+  appendMode,
 }) => {
   const listRef = useRef();
   const defaultSelectedNames = useMemo(
@@ -130,8 +134,8 @@ const DomEventsTable = ({
       setSelectedNames(selectedOptions);
     }
   };
-  const filterData = ({ event }) =>
-    selectedTypes.find((type) => type.value === event.EventType) &&
+  const filterData = (event) =>
+    selectedTypes.find((type) => type.value === event.type) &&
     selectedNames.find((name) => name.value === event.name);
 
   const getTextToCopy = () =>
@@ -149,12 +153,22 @@ const DomEventsTable = ({
     reset();
   }, [setSelectedTypes, setSelectedNames, nameOptions, reset]);
 
-  return (
-    <div className="editor md:h-56 flex-auto overflow-hidden">
-      <div className="h-56 md:h-full w-full flex flex-col">
-        <div className="h-10 flex items-center w-full text-sm font-bold">
-          <div className="p-2 w-16">#</div>
+  const getSortIcon = () => (
+    <IconButton>
+      {appendMode === 'top' ? <ChevronDownIcon /> : <ChevronUpIcon />}
+    </IconButton>
+  );
 
+  return (
+    <div className="editor p-4 md:h-56 flex-auto overflow-hidden">
+      <div className="h-56 md:h-full w-full flex flex-col">
+        <div className="h-8 flex items-center w-full text-sm font-bold">
+          <div
+            className="p-2 w-16 cursor-pointer flex justify-between items-center"
+            onClick={onChangeSortDirection}
+          >
+            # {getSortIcon()}
+          </div>
           <div className="pr-2 py-2 w-40">
             <SelectHeader
               label="type"
@@ -172,7 +186,7 @@ const DomEventsTable = ({
             />
           </div>
 
-          <div className="p-2 w-40">element</div>
+          <div className="p-2 w-40 ">element</div>
           <div className="flex-auto p-2 flex justify-between">
             <span>selector</span>
             <div>
@@ -197,7 +211,7 @@ const DomEventsTable = ({
             <AutoSizer>
               {({ width, height }) => (
                 <StickyList
-                  mode="bottom"
+                  mode={appendMode}
                   ref={listRef}
                   height={height}
                   itemCount={data.filter(filterData).length}

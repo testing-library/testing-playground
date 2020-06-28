@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './codemirror.pcss';
-
 html {
   @apply h-full;
 }
@@ -12,8 +10,12 @@ body {
   @apply text-base;
 }
 
-body:not(.embedded) {
+body:not(.embedded, .sandbox) {
   @apply bg-gray-100;
+}
+
+body.sandbox {
+  @apply w-full h-full overflow-hidden;
 }
 
 /* purgecss ignore */
@@ -24,6 +26,10 @@ body.embedded #app {
 
 nav a:not(.title):hover {
   text-decoration: underline;
+}
+
+.pane-menu {
+  top: -2rem;
 }
 
 .footer {
@@ -48,7 +54,7 @@ nav a:not(.title):hover {
 }
 
 .editor {
-  @apply bg-white rounded shadow p-4 grid relative;
+  @apply bg-white rounded shadow grid relative;
 }
 
 .editor > .h-full-within {
@@ -127,6 +133,22 @@ blockquote cite:before {
 
 .error {
   @apply border text-white bg-red-600 p-4 rounded;
+}
+
+button {
+  @apply inline-flex justify-center items-center;
+}
+
+button > svg:first-child:not(:only-child) {
+  @apply mr-2;
+}
+
+button > svg:last-child:not(:only-child) {
+  @apply ml-2;
+}
+
+button:focus {
+  @apply outline-none;
 }
 
 button:disabled {

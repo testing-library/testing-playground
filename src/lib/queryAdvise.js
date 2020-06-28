@@ -66,12 +66,13 @@ function getSnapshot(element) {
 export const emptyResult = { data: {}, suggestion: {} };
 export function getQueryAdvise({ rootNode, element }) {
   if (
-    !rootNode ||
+    rootNode === element ||
     rootNode?.nodeType !== Node.ELEMENT_NODE ||
     element?.nodeType !== Node.ELEMENT_NODE
   ) {
     return emptyResult;
   }
+
   const suggestedQuery = getSuggestedQuery(element);
   const data = getData({ rootNode, element });
 
@@ -91,15 +92,18 @@ export function getQueryAdvise({ rootNode, element }) {
       data,
     };
   }
+
   const { level } = queries.find(
     ({ method }) => method === suggestedQuery.queryMethod,
   );
+
   const suggestion = {
     expression: `screen.${suggestedQuery.toString()}`,
     level,
     method: suggestedQuery.queryMethod,
     ...messages[level],
   };
+
   return {
     data,
     suggestion,
@@ -108,7 +112,7 @@ export function getQueryAdvise({ rootNode, element }) {
 
 export function getAllPossibileQueries(element) {
   const possibleQueries = queries
-    .filter((query) => query.type !== 'GENERIC')
+    .filter((query) => query.type !== 'MANUAL')
     .map((query) => {
       const method = getFieldName(query.method);
       return getSuggestedQuery(element, 'get', method);
