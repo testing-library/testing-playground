@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@primer/octicons-react": "^10.0.0",
+    "@reach/dialog": "^0.10.5",
     "@testing-library/dom": "^7.18.1",
     "@testing-library/user-event": "^12.0.11",
     "codemirror": "5.54.0",
