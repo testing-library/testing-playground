@@ -140,5 +140,5 @@ Contributions of any kind welcome!
 [contributing.md]: https://github.com/testing-library/testing-playground/blob/develop/CONTRIBUTING.md
 [issue tracker]: https://github.com/testing-library/testing-playground/issues
 [all-contributors]: https://github.com/all-contributors/all-contributors
-[emojis]: https://github.com/all-contributors/all-contributors#emoji-key
+[emojis]: https://allcontributors.org/docs/en/emoji-key
 [emojione]: https://www.emojione.com/emoji/1f9e
