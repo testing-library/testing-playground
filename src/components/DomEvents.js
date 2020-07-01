@@ -14,6 +14,7 @@ import IconButton from './IconButton';
 import CopyButton from './CopyButton';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
+import Layout from './Layout';
 
 function onStateChange({ markup, query, result }) {
   state.save({ markup, query });
@@ -114,7 +115,7 @@ function DomEvents() {
 
   const sortDirection = useRef('asc');
   const [appendMode, setAppendMode] = useState('bottom');
-  const [{ markup, result }, dispatch] = usePlayground({
+  const [{ markup, result, settings }, dispatch] = usePlayground({
     onChange: onStateChange,
     ...initialValues,
   });
@@ -185,82 +186,84 @@ function DomEvents() {
   }, []);
 
   return (
-    <div className="flex flex-col h-auto md:h-full w-full">
-      <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
-        <div className="flex-auto relative h-56 md:h-full">
-          <MarkupEditor markup={markup} dispatch={dispatch} />
-        </div>
-
-        <div className="flex-auto h-56 md:h-full">
-          <Preview
-            forwardedRef={setPreviewRef}
-            markup={markup}
-            elements={result.elements}
-            accessibleRoles={result.accessibleRoles}
-            dispatch={dispatch}
-            variant="minimal"
-          />
-        </div>
-      </div>
-
-      <div className="flex-none h-8" />
-
-      <div className="editor p-4 md:h-56 flex-auto overflow-hidden">
-        <div className="h-56 md:h-full w-full flex flex-col">
-          <div className="h-8 flex items-center w-full text-sm font-bold">
-            <div
-              className="p-2 w-16 cursor-pointer flex justify-between items-center"
-              onClick={changeSortDirection}
-            >
-              # {getSortIcon()}
-            </div>
-
-            <div className="p-2 w-32 ">type</div>
-            <div className="p-2 w-32 ">name</div>
-
-            <div className="p-2 w-40 ">element</div>
-            <div className="flex-auto p-2 flex justify-between">
-              <span>selector</span>
-              <div>
-                <CopyButton
-                  text={getTextToCopy}
-                  title="copy log"
-                  className="mr-5"
-                />
-                <IconButton title="clear event log" onClick={reset}>
-                  <TrashcanIcon />
-                </IconButton>
-              </div>
-            </div>
+    <Layout dispatch={dispatch} status={status} settings={settings}>
+      <div className="flex flex-col h-auto md:h-full w-full">
+        <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+          <div className="flex-auto relative h-56 md:h-full">
+            <MarkupEditor markup={markup} dispatch={dispatch} />
           </div>
 
-          <div className="flex-auto relative overflow-hidden">
-            {buffer.current.length === 0 ? (
-              <div className="flex w-full h-full opacity-50 items-end justify-center">
-                <EmptyStreetImg height="80%" />
+          <div className="flex-auto h-56 md:h-full">
+            <Preview
+              forwardedRef={setPreviewRef}
+              markup={markup}
+              elements={result.elements}
+              accessibleRoles={result.accessibleRoles}
+              dispatch={dispatch}
+              variant="minimal"
+            />
+          </div>
+        </div>
+
+        <div className="flex-none h-8" />
+
+        <div className="editor p-4 md:h-56 flex-auto overflow-hidden">
+          <div className="h-56 md:h-full w-full flex flex-col">
+            <div className="h-8 flex items-center w-full text-sm font-bold">
+              <div
+                className="p-2 w-16 cursor-pointer flex justify-between items-center"
+                onClick={changeSortDirection}
+              >
+                # {getSortIcon()}
               </div>
-            ) : (
-              <AutoSizer>
-                {({ width, height }) => (
-                  <StickyList
-                    mode={appendMode}
-                    ref={listRef}
-                    height={height}
-                    itemCount={eventCount}
-                    itemData={buffer.current}
-                    itemSize={32}
-                    width={width}
-                    outerElementType={VirtualScrollable}
-                  >
-                    {EventRecord}
-                  </StickyList>
-                )}
-              </AutoSizer>
-            )}
+
+              <div className="p-2 w-32 ">type</div>
+              <div className="p-2 w-32 ">name</div>
+
+              <div className="p-2 w-40 ">element</div>
+              <div className="flex-auto p-2 flex justify-between">
+                <span>selector</span>
+                <div>
+                  <CopyButton
+                    text={getTextToCopy}
+                    title="copy log"
+                    className="mr-5"
+                  />
+                  <IconButton title="clear event log" onClick={reset}>
+                    <TrashcanIcon />
+                  </IconButton>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-auto relative overflow-hidden">
+              {buffer.current.length === 0 ? (
+                <div className="flex w-full h-full opacity-50 items-end justify-center">
+                  <EmptyStreetImg height="80%" />
+                </div>
+              ) : (
+                <AutoSizer>
+                  {({ width, height }) => (
+                    <StickyList
+                      mode={appendMode}
+                      ref={listRef}
+                      height={height}
+                      itemCount={eventCount}
+                      itemData={buffer.current}
+                      itemSize={32}
+                      width={width}
+                      outerElementType={VirtualScrollable}
+                    >
+                      {EventRecord}
+                    </StickyList>
+                  )}
+                </AutoSizer>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

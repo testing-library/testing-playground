@@ -112,7 +112,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://timdeschryver.dev"><img src="https://avatars1.githubusercontent.com/u/28659384?v=4" width="100px;" alt=""/><br /><sub><b>Tim Deschryver</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=timdeschryver" title="Code">💻</a></td>
     <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars0.githubusercontent.com/u/1500684?v=4" width="100px;" alt=""/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="#ideas-kentcdodds" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://michaeldeboey.be"><img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt=""/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=MichaelDeBoey" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/delca85"><img src="https://avatars1.githubusercontent.com/u/4076043?v=4" width="100px;" alt=""/><br /><sub><b>Bianca Del Carretto</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=delca85" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/delca85"><img src="https://avatars1.githubusercontent.com/u/4076043?v=4" width="100px;" alt=""/><br /><sub><b>Bianca Del Carretto</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=delca85" title="Code">💻</a> <a href="https://github.com/testing-library/testing-playground/commits?author=delca85" title="Documentation">📖</a></td>
     <td align="center"><a href="http://gerritalex.de"><img src="https://avatars1.githubusercontent.com/u/29307652?v=4" width="100px;" alt=""/><br /><sub><b>Gerrit Alex</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=ljosberinn" title="Code">💻</a> <a href="https://github.com/testing-library/testing-playground/commits?author=ljosberinn" title="Tests">⚠️</a></td>
   </tr>
   <tr>
@@ -140,5 +140,5 @@ Contributions of any kind welcome!
 [contributing.md]: https://github.com/testing-library/testing-playground/blob/develop/CONTRIBUTING.md
 [issue tracker]: https://github.com/testing-library/testing-playground/issues
 [all-contributors]: https://github.com/all-contributors/all-contributors
-[emojis]: https://github.com/all-contributors/all-contributors#emoji-key
+[emojis]: https://allcontributors.org/docs/en/emoji-key
 [emojione]: https://www.emojione.com/emoji/1f9e

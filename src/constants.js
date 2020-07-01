@@ -1,17 +1,39 @@
 export const initialValues = {
   markup: `
-<label for="username">Username</label>
-<input 
-  id="username"
-  name="username"
-  placeholder="how should I call you?" 
-  data-testid="uname"
-  title="enter your username"
-  alt="enter your username"
-  value="john-doe"
-  type="text"
-/>
-<button name="signup" type="submit">signup</button>
+<form>
+  <div>
+    <label for="email">Email address</label>
+    <input
+      type="email"
+      id="email"
+      aria-describedby="email-help"
+      placeholder="Enter email"
+    />
+    <small id="email-help">It's safe with us. We hate spam!</small>
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+    />
+  </div>
+  <div>
+    <label for="terms">
+      <input
+        type="checkbox"
+        id="terms"
+      />
+      <span>
+        I accept the <a href="https://www.example.com"> terms and conditions</a>
+      </span>
+    </label>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
 `.trim(),
 
   query: `
@@ -76,7 +98,7 @@ export const messages = [
 
 export const links = {
   testing_library_docs: {
-    title: 'Docs',
+    title: 'Introduction',
     url: 'https://testing-library.com/docs/dom-testing-library/intro',
   },
 

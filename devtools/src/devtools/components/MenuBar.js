@@ -43,9 +43,9 @@ function MenuBar({ cssPath, suggestion }) {
       <button
         className="focus:outline-none"
         title="select element"
-        onClick={() =>
-          Bridge.sendMessage('START_INSPECTING', null, 'content-script')
-        }
+        onClick={() => {
+          Bridge.sendMessage('TOGGLE_INSPECTING', null, 'content-script');
+        }}
       >
         <SelectIcon />
       </button>
