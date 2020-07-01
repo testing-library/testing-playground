@@ -9,14 +9,21 @@ import InspectIcon from './InspectIcon';
 import LogIcon from './LogIcon';
 
 function MenuBar({ cssPath, suggestion }) {
+  const isIspecting = React.useRef(false);
   return (
     <div className="h-8 p-2 border-b space-x-4 flex">
       <button
         className="focus:outline-none"
         title="select element"
-        onClick={() =>
-          Bridge.sendMessage('START_INSPECTING', null, 'content-script')
-        }
+        onClick={() => {
+          if (!isIspecting.current) {
+            Bridge.sendMessage('START_INSPECTING', null, 'content-script');
+            isIspecting.current = true;
+          } else {
+            Bridge.sendMessage('STOP_INSPECTING', null, 'content-script');
+            isIspecting.current = false;
+          }
+        }}
       >
         <SelectIcon />
       </button>
