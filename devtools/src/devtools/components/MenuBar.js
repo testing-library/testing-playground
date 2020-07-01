@@ -1,43 +1,19 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import Bridge from 'crx-bridge';
-import { SettingsIcon } from '@primer/octicons-react';
-import { Dialog } from '@reach/dialog';
 
 import inspectedWindow from '../lib/inspectedWindow';
 
-import SelectIcon from './SelectIcon';
-import LayersIcon from './LayersIcon';
-import InspectIcon from './InspectIcon';
-import LogIcon from './LogIcon';
+// we don't use octicons here, as that style doesn't really fit in devtools
+import SelectIcon from './Icons/SelectIcon';
+import LayersIcon from './Icons/LayersIcon';
+import InspectIcon from './Icons/InspectIcon';
+import SettingsIcon from './Icons/SettingsIcon';
+import LogIcon from './Icons/LogIcon';
+import { Menu, MenuButton, MenuPopover } from '../../../../src/components/Menu';
+import Settings from '../../../../src/components/Settings';
+import { getSettings, setSettings } from '../lib/settings';
 
 function MenuBar({ cssPath, suggestion }) {
-  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const [testIdCustomAttribute, setTestIdCustomAttribute] = useState(
-    'data-testid',
-  );
-
-  const onClickSettingsHandler = useCallback(
-    () => setSettingsModalVisible(true),
-    [setSettingsModalVisible],
-  );
-  const onCloseSettingsModalHandler = useCallback(
-    () => setSettingsModalVisible(false),
-    [setSettingsModalVisible],
-  );
-
-  const onTestIdCustomAttributeChangeHandler = useCallback(
-    (event) => setTestIdCustomAttribute(event.target.value),
-    [setTestIdCustomAttribute],
-  );
-
-  const onClickSettingsModalOkButtonHandler = useCallback(() => {
-    Bridge.sendMessage(
-      'SET_CUSTOM_TEST_ID',
-      { customTestIdAttribute: testIdCustomAttribute },
-      'content-script',
-    );
-    onCloseSettingsModalHandler();
-  }, [testIdCustomAttribute, onCloseSettingsModalHandler]);
   return (
     <div className="h-8 p-2 border-b space-x-4 flex">
       <button
@@ -62,30 +38,22 @@ function MenuBar({ cssPath, suggestion }) {
 
       <div className="flex-auto" />
 
-      <button
-        className="focus:outline-none"
-        title="View settings"
-        onClick={onClickSettingsHandler}
-      >
-        <SettingsIcon />
-      </button>
-      <Dialog
-        isOpen={settingsModalVisible}
-        onDismiss={onCloseSettingsModalHandler}
-        aria-label="settings-modal"
-      >
-        <input
-          type="text"
-          value={testIdCustomAttribute}
-          onChange={onTestIdCustomAttributeChangeHandler}
-        />
-        <button
-          onClick={onClickSettingsModalOkButtonHandler}
-          disabled={!testIdCustomAttribute}
-        >
-          <span>Ok</span>
-        </button>
-      </Dialog>
+      <Menu>
+        <MenuButton>
+          <SettingsIcon />
+        </MenuButton>
+
+        <MenuPopover>
+          <Settings
+            dispatch={({ type, ...data }) => {
+              if (type === 'SET_SETTINGS') {
+                setSettings(data);
+              }
+            }}
+            settings={getSettings()}
+          />
+        </MenuPopover>
+      </Menu>
 
       <button
         className="focus:outline-none"

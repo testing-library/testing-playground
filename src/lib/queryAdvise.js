@@ -1,6 +1,6 @@
 import { messages, queries } from '../constants';
 import { computeAccessibleName, getRole } from 'dom-accessibility-api';
-import { getSuggestedQuery } from '@testing-library/dom';
+import { getSuggestedQuery, getConfig } from '@testing-library/dom';
 import cssPath from './cssPath';
 import { getFieldName } from './';
 
@@ -34,7 +34,10 @@ export function getData({ rootNode, element }) {
     altText: element.getAttribute('alt'),
     title: element.getAttribute('title'),
 
-    testId: element.getAttribute('data-testid'),
+    // it might be better to get this from the playground context instead of
+    // pulling it out of testing-library, but that one is easier to fetch, and
+    // at the end, it's the same.
+    testId: element.getAttribute(getConfig().testIdAttribute),
   };
 }
 
