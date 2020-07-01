@@ -1,20 +1,15 @@
 import React from 'react';
 import Header from './Header';
-import Footer from './Footer';
 import { ToastContainer } from 'react-toastify';
 
-function Layout({ children }) {
+function Layout({ children, dispatch, status, settings }) {
   return (
     <div className="flex flex-col h-screen">
       <div className="mb-8 flex-none">
-        <Header />
+        <Header dispatch={dispatch} status={status} settings={settings} />
       </div>
 
-      <div className="px-8 flex-grow flex-shrink">{children}</div>
-
-      <div className="flex-none">
-        <Footer />
-      </div>
+      <div className="px-8 mb-8 flex-grow flex-shrink">{children}</div>
 
       <ToastContainer />
     </div>
