@@ -14,6 +14,11 @@ import {
 
 import userEvent from '@testing-library/user-event';
 
+// Patch RegeXP so we have a (better) way to serialize for message transport
+RegExp.prototype.toJSON = function () {
+  return { $regexp: this.source, $flags: this.flags };
+};
+
 const debug = (element, maxLength, options) =>
   Array.isArray(element)
     ? element.map((el) => logDOM(el, maxLength, options)).join('\n')
