@@ -36,6 +36,7 @@ function reducer(state, action, exec) {
     }
 
     case 'SET_SANDBOX_FRAME': {
+      exec({ type: 'APPLY_SETTINGS' });
       exec({ type: 'UPDATE_SANDBOX', immediate: true });
       return { ...state, sandbox: action.sandbox };
     }
@@ -93,10 +94,7 @@ function reducer(state, action, exec) {
     case 'SET_SETTINGS': {
       // eslint-disable-next-line no-unused-vars
       const { type, ...settings } = action;
-
-      if (typeof action.autoRun === 'boolean') {
-        exec({ type: 'UPDATE_SANDBOX', immediate });
-      }
+      exec({ type: 'APPLY_SETTINGS' });
 
       const nextSettings = {
         ...state.settings,
@@ -141,6 +139,8 @@ function init(props) {
     ),
   };
 
+  parser.configure(state.settings);
+
   return {
     ...state,
     result: parser.parse(state),
@@ -154,6 +154,13 @@ const populateSandbox = (state, effect, dispatch) => {
     type: 'UPDATE_SANDBOX',
     markup: state.markup,
     query: state.settings.autoRun ? state.query : '',
+  });
+};
+
+const configureSandbox = (state) => {
+  postMessage(state.sandbox, {
+    type: 'CONFIGURE_SANDBOX',
+    settings: state.settings,
   });
 };
 
@@ -194,6 +201,12 @@ const effectMap = {
 
   SAVE_SETTINGS: (state) => {
     localStorage.setItem('playground_settings', JSON.stringify(state.settings));
+  },
+
+  APPLY_SETTINGS: (state, effect, dispatch) => {
+    parser.configure(state.settings);
+    configureSandbox(state, effect, dispatch);
+    populateSandboxDebounced(state, effect, dispatch);
   },
 };
 

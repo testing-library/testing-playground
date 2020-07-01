@@ -1,5 +1,4 @@
 import React from 'react';
-import 'react-toggle/style.css';
 import Input from './Input';
 import CopyButton from './CopyButton';
 

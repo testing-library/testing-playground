@@ -258,8 +258,8 @@ function runUnsafe({ rootNode, query }) {
   return result;
 }
 
-function configure(configuration) {
-  testingLibraryConfigure(configuration);
+function configure({ testIdAttribute }) {
+  testingLibraryConfigure({ testIdAttribute });
 }
 
 function parse({ rootNode, markup, query, cacheId, prevResult }) {

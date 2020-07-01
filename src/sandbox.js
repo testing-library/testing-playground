@@ -13,6 +13,9 @@ const state = {
   query: '',
   rootNode: null,
   highlighter: null,
+  settings: {
+    testIdAttribute: 'data-testid',
+  },
 };
 
 function postMessage(action) {
@@ -131,6 +134,12 @@ function onMessage({ source, data }) {
     case 'UPDATE_SANDBOX': {
       state.query = data.query;
       state.markup = data.markup;
+      break;
+    }
+
+    case 'CONFIGURE_SANDBOX': {
+      state.settings = { ...state.settings, ...data.settings };
+      parser.configure(state.settings);
       break;
     }
   }

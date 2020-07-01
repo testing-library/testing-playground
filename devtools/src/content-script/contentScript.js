@@ -46,8 +46,8 @@ function init() {
     return { result };
   });
 
-  Bridge.onMessage('SET_CUSTOM_TEST_ID', function ({ data }) {
-    parser.configure({ testIdAttribute: data.customTestIdAttribute });
+  Bridge.onMessage('SET_SETTINGS', function ({ data }) {
+    parser.configure(data);
   });
 
   // when the selected element is changed by using the element inspector,
