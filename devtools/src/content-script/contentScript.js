@@ -46,6 +46,10 @@ function init() {
     return { result };
   });
 
+  Bridge.onMessage('SET_CUSTOM_TEST_ID', function ({ data }) {
+    parser.configure({ testIdAttribute: data.customTestIdAttribute });
+  });
+
   // when the selected element is changed by using the element inspector,
   // this method will be called from devtools/main.js
   hook.onSelectionChanged = function onSelectionChanged(el) {

@@ -10,6 +10,7 @@ import {
   queries,
   getRoles,
   logDOM,
+  configure as testingLibraryConfigure,
 } from '@testing-library/dom';
 
 import userEvent from '@testing-library/user-event';
@@ -99,7 +100,6 @@ function createEvaluator({ rootNode }) {
     user: userEvent,
     container: rootNode,
   });
-
   const evaluator = Function.apply(null, [
     ...Object.keys(context),
     'expr',
@@ -258,6 +258,10 @@ function runUnsafe({ rootNode, query }) {
   return result;
 }
 
+function configure(configuration) {
+  testingLibraryConfigure(configuration);
+}
+
 function parse({ rootNode, markup, query, cacheId, prevResult }) {
   if (typeof markup !== 'string' && !rootNode) {
     throw new Error('either markup or rootNode should be provided');
@@ -295,4 +299,5 @@ function parse({ rootNode, markup, query, cacheId, prevResult }) {
 
 export default {
   parse,
+  configure,
 };

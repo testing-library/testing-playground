@@ -1,5 +1,5 @@
 import 'regenerator-runtime/runtime';
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import Bridge from 'crx-bridge';
 import Query from '../../../src/components/Query';
