@@ -22,24 +22,27 @@ function handler(event, context, callback) {
       redirect_uri: `${host}/auth-callback`,
     })
     .then((result) => {
+      const body = {
+        token: result.token.access_token,
+      };
       const response = {
-        statusCode: 302,
+        statusCode: 200,
         headers: {
-          Location: `${host}/login?access_token=${result.token.access_token}`,
           'Cache-Control': 'no-cache',
+          'Content-Type': 'application/json',
         },
-        body: '',
+        body: JSON.stringify(body),
       };
       return callback(null, response);
     })
-    .catch((error) => {
-      return callback(null, {
+    .catch((error) =>
+      callback(null, {
         statusCode: error.statusCode || 500,
         body: JSON.stringify({
           error: error.message,
         }),
-      });
-    });
+      }),
+    );
 }
 
 module.exports = { handler };
