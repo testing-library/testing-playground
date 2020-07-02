@@ -32,8 +32,17 @@ export default function setupHighlighter({
   Bridge.onMessage('CLEAR_HIGHLIGHTS', withMessageData(clearHighlights));
   Bridge.onMessage('HIGHLIGHT_ELEMENTS', withMessageData(highlightElements));
   Bridge.onMessage('SHUTDOWN', withMessageData(stopInspecting));
+  Bridge.onMessage('TOGGLE_INSPECTING', withMessageData(toggleInspecting));
   Bridge.onMessage('START_INSPECTING', withMessageData(startInspecting));
   Bridge.onMessage('STOP_INSPECTING', withMessageData(stopInspecting));
+
+  function toggleInspecting(options) {
+    if (isInspecting) {
+      stopInspecting();
+    } else {
+      startInspecting(options);
+    }
+  }
 
   function startInspecting(options) {
     isInspecting = true;

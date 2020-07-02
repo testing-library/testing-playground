@@ -3,10 +3,15 @@ import Bridge from 'crx-bridge';
 
 import inspectedWindow from '../lib/inspectedWindow';
 
-import SelectIcon from './SelectIcon';
-import LayersIcon from './LayersIcon';
-import InspectIcon from './InspectIcon';
-import LogIcon from './LogIcon';
+// we don't use octicons here, as that style doesn't really fit in devtools
+import SelectIcon from './Icons/SelectIcon';
+import LayersIcon from './Icons/LayersIcon';
+import InspectIcon from './Icons/InspectIcon';
+import SettingsIcon from './Icons/SettingsIcon';
+import LogIcon from './Icons/LogIcon';
+import { Menu, MenuButton, MenuPopover } from '../../../../src/components/Menu';
+import Settings from '../../../../src/components/Settings';
+import { getSettings, setSettings } from '../lib/settings';
 
 function MenuBar({ cssPath, suggestion }) {
   return (
@@ -14,9 +19,9 @@ function MenuBar({ cssPath, suggestion }) {
       <button
         className="focus:outline-none"
         title="select element"
-        onClick={() =>
-          Bridge.sendMessage('START_INSPECTING', null, 'content-script')
-        }
+        onClick={() => {
+          Bridge.sendMessage('TOGGLE_INSPECTING', null, 'content-script');
+        }}
       >
         <SelectIcon />
       </button>
@@ -32,6 +37,23 @@ function MenuBar({ cssPath, suggestion }) {
       </button>
 
       <div className="flex-auto" />
+
+      <Menu>
+        <MenuButton>
+          <SettingsIcon />
+        </MenuButton>
+
+        <MenuPopover>
+          <Settings
+            dispatch={({ type, ...data }) => {
+              if (type === 'SET_SETTINGS') {
+                setSettings(data);
+              }
+            }}
+            settings={getSettings()}
+          />
+        </MenuPopover>
+      </Menu>
 
       <button
         className="focus:outline-none"
