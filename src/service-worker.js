@@ -26,9 +26,7 @@ if (process.env.NODE_ENV === 'production') {
                 </button>
               </p>,
               {
-                position: 'bottom-left',
                 autoClose: false,
-                closeOnClick: false,
               },
             );
           }

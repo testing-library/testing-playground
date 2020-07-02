@@ -6,4 +6,9 @@
 @import './app.pcss';
 @import './codemirror.pcss';
 @import './spinner.pcss';
-@import 'react-toggle/style.css';
+@import './toggle.pcss';
+
+:root {
+  --reach-menu-button: 1;
+  --reach-dialog: 1;
+}

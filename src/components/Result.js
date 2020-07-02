@@ -6,13 +6,14 @@ import Scrollable from './Scrollable';
 import EmptyPane from './EmptyPane';
 
 function Result({ result, dispatch }) {
-  if (result.error) {
+  if (result?.error) {
     return (
       <ErrorBox caption={result.error.message} body={result.error.details} />
     );
   }
 
   if (
+    !result ||
     !result.expression ||
     !Array.isArray(result.elements) ||
     result.elements.length === 0

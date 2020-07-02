@@ -13,7 +13,7 @@ function incorrectParams(error) {
 function json(data) {
   return {
     statusCode: 200,
-    body: JSON.stringify(data, '', '  '),
+    body: JSON.stringify(data, null, '  '),
   };
 }
 
@@ -66,7 +66,8 @@ async function saveGist({ id, description, files }) {
   });
 
   const data = await response.json();
-  const permaLink = `https://testing-playground.com/gist/${data.id}/${data.history[0].version}`;
+  const link = `https://testing-playground.com/gist/${data.id}`;
+  const permaLink = `${link}/${data.history[0].version}`;
 
   if (!id || data.description !== permaLink) {
     // in case the id wasn't provided, we're creating a new gist. Update
@@ -76,7 +77,7 @@ async function saveGist({ id, description, files }) {
       method: 'PATCH',
       headers: { authorization },
       body: JSON.stringify({
-        description: permaLink,
+        description: link,
       }),
     });
   }
@@ -112,7 +113,7 @@ async function handler(event, context, callback) {
   // github can fork gists, but doesn't allow forking under the same account
   // and it also doesn't allow forking specific revisions (commits). Hence
   // we just fetch the gist, and submit it as a new one instead.
-  if (method === 'POST' && action === 'fork') {
+  if (method === 'POST' && (action === 'fork' || version === 'fork')) {
     const { files } = await getGist({ id, version });
 
     // we still verify the files, as we can't be sure that the gist hasn't been

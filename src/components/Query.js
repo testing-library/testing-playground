@@ -15,7 +15,7 @@ function Query({ query, result, dispatch, variant }) {
         />
       </div>
 
-      <QueryOutput error={result.error?.message} result={result.formatted} />
+      <QueryOutput error={result?.error?.message} result={result?.formatted} />
     </div>
   );
 }

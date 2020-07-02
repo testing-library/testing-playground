@@ -8,7 +8,7 @@ import { TrashcanIcon } from '@primer/octicons-react';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-import state from '../lib/state';
+import state from '../lib/state/state';
 import { VirtualScrollable } from './Scrollable';
 import IconButton from './IconButton';
 import CopyButton from './CopyButton';
@@ -17,11 +17,11 @@ import StickyList from './StickyList';
 import Layout from './Layout';
 
 function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
+  state.url.save({ markup, query });
   state.updateTitle(result?.expression?.expression);
 }
 
-const initialValues = state.load() || {};
+const initialValues = state.url.load() || {};
 
 function targetToString() {
   return [

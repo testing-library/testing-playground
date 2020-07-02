@@ -8,15 +8,12 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/embed">
-          <Embedded />
-        </Route>
-        <Route path="/events">
-          <DomEvents />
-        </Route>
-        <Route path="/">
-          <Playground />
-        </Route>
+        <Route path="/embed" component={Embedded} />
+        <Route path="/events" component={DomEvents} />
+        <Route
+          path={['/gist/:gistId/:gistVersion?', '/']}
+          component={Playground}
+        />
       </Switch>
     </Router>
   );

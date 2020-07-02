@@ -12,6 +12,8 @@ import {
   FileCodeIcon,
   FileIcon,
   SyncIcon,
+  UploadIcon,
+  RepoForkedIcon,
 } from '@primer/octicons-react';
 import Settings from './Settings';
 import Share from './Share';
@@ -21,7 +23,7 @@ const headerLinks = [
   links.common_mistakes,
 ];
 
-function Header({ status, settings, dispatch }) {
+function Header({ status, dirty, canSave, canFork, settings, dispatch }) {
   return (
     <nav className="text-white w-full h-16">
       <div className="flex items-center justify-between bg-gray-900 px-8 h-16">
@@ -42,7 +44,11 @@ function Header({ status, settings, dispatch }) {
         <div className="flex items-center text-sm h-full relative">
           <Menu>
             <MenuButton>
-              <FileCodeIcon size={12} />
+              {status === 'saving' ? (
+                <SyncIcon size={12} className="spinner" />
+              ) : (
+                <FileCodeIcon size={12} />
+              )}
               <span>playground</span>
             </MenuButton>
 
@@ -52,21 +58,26 @@ function Header({ status, settings, dispatch }) {
                 <span>New</span>
               </MenuLink>
 
-              {/*reserved for future implementation*/}
-              {/*<MenuLink as="button">*/}
-              {/*  <UploadIcon size={12} />*/}
-              {/*  <span>Save</span>*/}
-              {/*</MenuLink>*/}
+              <MenuLink
+                as="button"
+                disabled={!canSave}
+                onClick={() => dispatch({ type: 'SAVE' })}
+              >
+                <UploadIcon size={12} />
+                <span>Save</span>
+              </MenuLink>
 
-              {/*reserved for future implementation*/}
-              {/*<MenuLink as="button">*/}
-              {/*  <RepoForkedIcon size={12} />*/}
-              {/*  <span>Fork</span>*/}
-              {/*</MenuLink>*/}
+              <MenuLink
+                as="button"
+                disabled={!canFork}
+                onClick={() => dispatch({ type: 'FORK' })}
+              >
+                <RepoForkedIcon size={12} />
+                <span>Fork</span>
+              </MenuLink>
 
               <div className="border-b border-gray-200 mx-4 my-2" />
 
-              {/*reserved for future implementation, see #54 */}
               <Modal>
                 <ModalOpenButton>
                   <MenuLink as="button">
@@ -75,7 +86,7 @@ function Header({ status, settings, dispatch }) {
                   </MenuLink>
                 </ModalOpenButton>
                 <ModalContents>
-                  <Share />
+                  <Share dirty={dirty} />
                 </ModalContents>
               </Modal>
 
