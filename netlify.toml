@@ -5,3 +5,6 @@
 
 [dev]
   functions = "./src/lambda"
+
+[template.environment]
+  GITHUB_GIST_TOKEN = "set token that has gist access"
