@@ -88,7 +88,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
           ref={refSetter}
           src="/sandbox.html"
           security="restricted"
-          className="w-full h-full"
+          className="absolute w-full h-full"
           scrolling="no"
           frameBorder="0"
           onLoad={handleLoadIframe}
