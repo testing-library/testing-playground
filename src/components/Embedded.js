@@ -23,16 +23,22 @@ const styles = {
 };
 
 // TODO: we should support readonly mode
-function Embedded() {
-  const { gistId, gistVersion } = useParams();
-  const [state, dispatch] = usePlayground({ gistId, gistVersion });
+function Embedded(props) {
+  const params = useParams();
+  const [state, dispatch] = usePlayground({
+    gistId: props.gistId || params.gistId,
+    gistVersion: props.gistVersion || params.gistVersion,
+  });
   const { markup, query, result } = state;
 
   const location = useLocation();
-  const params = queryString.parse(location.search);
+  const searchParams = queryString.parse(location.search);
 
-  const panes = params.panes
-    ? Array.from(new Set(params.panes.split(',')))
+  const panes = props.panes
+    ? props.panes
+    : searchParams.panes
+    ? searchParams.panes
+        .split(',')
         .map((x) => x.trim())
         .filter((x) => SUPPORTED_PANES[x])
     : ['markup', 'preview', 'query', 'result'];
@@ -51,6 +57,10 @@ function Embedded() {
       : 'grid-cols-1';
 
   useEffect(() => {
+    if (window === top) {
+      return;
+    }
+
     document.body.classList.add('embedded');
     return () => document.body.classList.remove('embedded');
   }, []);
@@ -71,12 +81,12 @@ function Embedded() {
         </div>
       )}
 
-      {panes.map((area) => {
+      {panes.map((area, idx) => {
         switch (area) {
           case 'preview':
             return (
               <Preview
-                key={area}
+                key={`${area}-${idx}`}
                 markup={markup}
                 elements={result?.elements}
                 accessibleRoles={result?.accessibleRoles}
@@ -85,12 +95,16 @@ function Embedded() {
             );
           case 'markup':
             return (
-              <MarkupEditor key={area} markup={markup} dispatch={dispatch} />
+              <MarkupEditor
+                key={`${area}-${idx}`}
+                markup={markup}
+                dispatch={dispatch}
+              />
             );
           case 'query':
             return (
               <Query
-                key={area}
+                key={`${area}-${idx}`}
                 query={query}
                 result={result}
                 dispatch={dispatch}
@@ -98,7 +112,13 @@ function Embedded() {
               />
             );
           case 'result':
-            return <Result key={area} result={result} dispatch={dispatch} />;
+            return (
+              <Result
+                key={`${area}-${idx}`}
+                result={result}
+                dispatch={dispatch}
+              />
+            );
           default:
             return null;
         }

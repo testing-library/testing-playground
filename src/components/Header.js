@@ -14,9 +14,12 @@ import {
   SyncIcon,
   UploadIcon,
   RepoForkedIcon,
+  CodeIcon,
 } from '@primer/octicons-react';
 import Settings from './Settings';
 import Share from './Share';
+import Embed from './Embed';
+
 const headerLinks = [
   links.testing_library_docs,
   links.which_query,
@@ -25,6 +28,7 @@ const headerLinks = [
 
 function Header({
   gistId,
+  gistVersion,
   status,
   dirty,
   canSave,
@@ -98,12 +102,21 @@ function Header({
                 </ModalContents>
               </Modal>
 
-              {/*reserved for future implementation, see #54 */}
-              {/*reserved for future implementation*/}
-              {/*<MenuLink as="button">*/}
-              {/*  <CodeIcon size={12} />*/}
-              {/*  <span>Embed</span>*/}
-              {/*</MenuLink>*/}
+              <Modal>
+                <ModalOpenButton>
+                  <MenuLink as="button" disabled={!gistId}>
+                    <CodeIcon size={12} />
+                    <span>Embed</span>
+                  </MenuLink>
+                </ModalOpenButton>
+                <ModalContents>
+                  <Embed
+                    dirty={dirty}
+                    gistId={gistId}
+                    gistVersion={gistVersion}
+                  />
+                </ModalContents>
+              </Modal>
             </MenuList>
           </Menu>
 

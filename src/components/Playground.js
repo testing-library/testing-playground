@@ -40,6 +40,7 @@ function Playground() {
     <Layout
       dispatch={dispatch}
       gistId={gistId}
+      gistVersion={gistVersion}
       dirty={dirty}
       status={status}
       settings={settings}
