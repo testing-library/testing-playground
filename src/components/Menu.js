@@ -4,7 +4,7 @@ import * as ReachMenu from '@reach/menu-button';
 export const Menu = ReachMenu.Menu;
 
 export const MenuButton = (props) => (
-  <ReachMenu.MenuButton className="text-sm space-x-4 px-4" {...props} />
+  <ReachMenu.MenuButton className="text-sm space-x-2 px-4" {...props} />
 );
 
 export const MenuPopover = (props) => (
@@ -24,7 +24,7 @@ export const MenuList = (props) => (
 export const MenuLink = (props) => (
   <ReachMenu.MenuLink
     as="a"
-    className="hover:bg-blue-200 px-4 py-2 space-x-4 text-sm whitespace-no-wrap focus:outline-none flex justify-start w-full"
+    className="hover:bg-blue-200 px-4 py-2 space-x-2 text-sm whitespace-no-wrap focus:outline-none flex justify-start w-full"
     {...props}
   />
 );

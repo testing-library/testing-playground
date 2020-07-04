@@ -1,4 +1,4 @@
-import { compress } from './lib/state';
+import { compress } from './lib/state/url';
 import queryString from 'query-string';
 
 function initPlaygrounds() {

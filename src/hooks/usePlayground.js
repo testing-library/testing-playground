@@ -1,29 +1,39 @@
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import debounce from 'lodash.debounce';
+import { useEffectReducer } from 'use-effect-reducer';
+import memoize from 'memoize-one';
 import parser from '../parser';
 import { initialValues as defaultValues } from '../constants';
 import { withLogging } from '../lib/logger';
 import postMessage from '../lib/postMessage';
-import debounce from 'lodash.debounce';
-import { useEffectReducer } from 'use-effect-reducer';
+import gist from '../api/gist';
+import url from '../lib/state/url';
 
+let history;
+
+// Note: don't place heavy tasks in the reducer, add them to the effects!
+// the reducer is run twice (by react design), while the effect is only run once
 function reducer(state, action, exec) {
   const immediate = action.immediate;
 
   switch (action.type) {
+    // I don't really like the way this RESET method works, but a hard refresh
+    // sucks in UX, and I haven't had the time yet to figure out a way to reset
+    // the full state without providing new values. I was thinking about using a
+    // {key] on <Playground> that is either the {gistId}-{gistVersion} or a
+    // {Date.now()}. Is that really the best way?
     case 'RESET': {
       exec({ type: 'UPDATE_SANDBOX', immediate: true });
       exec({ type: 'UPDATE_EDITOR', editor: '*' });
+      exec({ type: 'REDIRECT', path: '/' });
 
       return {
         ...state,
+        gistId: undefined,
+        gistVersion: undefined,
         markup: defaultValues.markup,
         query: defaultValues.query,
-        result: parser.parse({
-          markup: defaultValues.markup,
-          query: defaultValues.query,
-          rootNode: state.rootNode,
-          prevResult: state.result,
-        }),
       };
     }
 
@@ -50,13 +60,8 @@ function reducer(state, action, exec) {
 
       return {
         ...state,
+        dirty: true,
         markup: action.markup,
-        result: parser.parse({
-          markup: action.markup,
-          query: state.query,
-          rootNode: state.rootNode,
-          prevResult: state.result,
-        }),
       };
     }
 
@@ -69,13 +74,8 @@ function reducer(state, action, exec) {
 
       return {
         ...state,
+        dirty: true,
         query: action.query,
-        result: parser.parse({
-          markup: state.markup,
-          query: action.query,
-          rootNode: state.rootNode,
-          prevResult: state.result,
-        }),
       };
     }
 
@@ -86,6 +86,12 @@ function reducer(state, action, exec) {
       };
     }
 
+    case 'SET_RESULT': {
+      return {
+        ...state,
+        result: action.result,
+      };
+    }
     case 'EVALUATE': {
       exec({ type: 'UPDATE_SANDBOX', immediate });
       return state;
@@ -109,42 +115,30 @@ function reducer(state, action, exec) {
       };
     }
 
+    case 'SAVE': {
+      exec({ type: 'SAVE' });
+
+      return {
+        ...state,
+        dirty: false,
+        status: 'saving',
+      };
+    }
+
+    case 'FORK': {
+      exec({ type: 'FORK' });
+
+      return {
+        ...state,
+        dirty: false,
+        status: 'saving',
+      };
+    }
+
     default: {
       throw new Error('Unknown action type: ' + action.type);
     }
   }
-}
-
-function init(props) {
-  const localSettings = JSON.parse(localStorage.getItem('playground_settings'));
-
-  let { markup, query, instanceId } = props;
-
-  if (!markup && !query) {
-    markup = defaultValues.markup;
-    query = defaultValues.query;
-  }
-
-  const state = {
-    ...props,
-    markup,
-    query,
-    cacheId: instanceId,
-    settings: Object.assign(
-      {
-        autoRun: true,
-        testIdAttribute: 'data-testid',
-      },
-      localSettings,
-    ),
-  };
-
-  parser.configure(state.settings);
-
-  return {
-    ...state,
-    result: parser.parse(state),
-  };
 }
 
 const populateSandbox = (state, effect, dispatch) => {
@@ -153,7 +147,7 @@ const populateSandbox = (state, effect, dispatch) => {
   postMessage(state.sandbox, {
     type: 'UPDATE_SANDBOX',
     markup: state.markup,
-    query: state.settings.autoRun ? state.query : '',
+    query: state.settings.autoRun || effect.immediate ? state.query : '',
   });
 };
 
@@ -165,13 +159,32 @@ const configureSandbox = (state) => {
 };
 
 const populateSandboxDebounced = debounce(populateSandbox, 250);
+const parseDebounced = debounce((data, dispatch) => {
+  const result = parser.parse(data);
+  dispatch({ type: 'SET_RESULT', result });
+}, 250);
 
 const effectMap = {
   UPDATE_SANDBOX: (state, effect, dispatch) => {
+    // sometimes this happens. race-condition? I'm not sure.
+    if (!state.markup && !state.rootNode) {
+      return;
+    }
+
+    const data = {
+      markup: state.markup,
+      query: state.query,
+      rootNode: state.rootNode,
+      prevResult: state.result,
+    };
+
     if (state.settings.autoRun) {
       populateSandboxDebounced(state, effect, dispatch);
+      parseDebounced(data, dispatch);
     } else if (effect.immediate) {
       populateSandbox(state, effect, dispatch);
+      const result = parser.parse(data);
+      dispatch({ type: 'SET_RESULT', result });
     }
   },
 
@@ -208,23 +221,116 @@ const effectMap = {
     configureSandbox(state, effect, dispatch);
     populateSandboxDebounced(state, effect, dispatch);
   },
+
+  LOAD: async (state, effect, dispatch) => {
+    const { settings, markup, query } = await gist.fetch({
+      id: state.gistId,
+      version: state.gistVersion,
+    });
+
+    dispatch({ type: 'SET_SETTINGS', ...settings });
+    dispatch({ type: 'SET_MARKUP', markup });
+    dispatch({ type: 'SET_QUERY', query });
+  },
+
+  SAVE: async (state, effect, dispatch) => {
+    const { id, version } = await gist.save({
+      id: state.gistId,
+      markup: state.markup,
+      query: state.query,
+      settings: state.settings,
+    });
+
+    history.push(`/gist/${id}/${version}`);
+    dispatch({ type: 'SET_STATUS', status: 'idle' });
+  },
+
+  FORK: async (state, effect, dispatch) => {
+    // note that we don't use the fork api, as that one wouldn't take the current
+    // local changes into account. Fork would fork the source gist as is, while
+    // just creating a new gist, uses the local state.
+    const { id, version } = await gist.save({
+      markup: state.markup,
+      query: state.query,
+      settings: state.settings,
+    });
+
+    history.push(`/gist/${id}/${version}`);
+    dispatch({ type: 'SET_STATUS', status: 'idle' });
+  },
+
+  REDIRECT: (state, effect) => {
+    history.push(effect.path);
+  },
 };
+
+function getInitialState(props) {
+  const localSettings = JSON.parse(localStorage.getItem('playground_settings'));
+
+  let { instanceId } = props;
+
+  const state = {
+    ...props,
+    status: 'loading',
+    dirty: false,
+    cacheId: instanceId,
+    settings: Object.assign(
+      {
+        autoRun: true,
+        testIdAttribute: 'data-testid',
+      },
+      localSettings,
+    ),
+  };
+
+  parser.configure(state.settings);
+
+  return (exec) => {
+    if (props.gistId) {
+      exec({ type: 'LOAD' });
+      return state;
+    }
+    // try get state from url (legacy fallback)
+    else {
+      const params = url.load();
+      if (params.markup && params.query) {
+        return {
+          ...state,
+          ...params,
+          dirty: true,
+        };
+      }
+    }
+
+    return {
+      ...state,
+      ...defaultValues,
+    };
+  };
+}
+
+const getInitialStateMemoized = memoize(getInitialState);
 
 function usePlayground(props) {
   const { onChange } = props || {};
 
+  // lift it to the file scope, so that effects can access it
+  history = useHistory();
+
   const [state, dispatch] = useEffectReducer(
     withLogging(reducer),
-    () => init(props),
+    getInitialStateMemoized(props),
     effectMap,
   );
 
+  // call onChange handler when result changes
   useEffect(() => {
     if (typeof onChange === 'function') {
       onChange(state);
     }
   }, [state.result, onChange]);
 
+  // propagate sandbox ready/busy events to playground state
   useEffect(() => {
     const listener = ({ data: { source, type } }) => {
       if (source !== 'testing-playground-sandbox') {
@@ -240,7 +346,7 @@ function usePlayground(props) {
 
     window.addEventListener('message', listener);
     return () => window.removeEventListener('message', listener);
-  }, [state.sandbox]);
+  }, [state.sandbox, dispatch]);
 
   return [state, dispatch];
 }

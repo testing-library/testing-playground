@@ -23,7 +23,11 @@ function reviver(obj) {
 
 // we use our own stringify method instead of the one from @testing-library/dom,
 // because it might have been removed for message transport.
-function suggestionToString({ queryArgs, queryMethod }) {
+function suggestionToString({ queryMethod, queryArgs } = {}) {
+  if (!queryMethod || !queryArgs) {
+    return '';
+  }
+
   let [text, options] = queryArgs;
 
   text = typeof text === 'string' ? `'${text}'` : reviver(text);

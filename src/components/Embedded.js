@@ -1,20 +1,11 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import state from '../lib/state';
-
+import { useLocation, useParams } from 'react-router-dom';
 import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load();
 
 const SUPPORTED_PANES = {
   markup: true,
@@ -33,10 +24,9 @@ const styles = {
 
 // TODO: we should support readonly mode
 function Embedded() {
-  const [{ markup, query, result }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
-  });
+  const { gistId, gistVersion } = useParams();
+  const [state, dispatch] = usePlayground({ gistId, gistVersion });
+  const { markup, query, result } = state;
 
   const location = useLocation();
   const params = queryString.parse(location.search);
@@ -74,8 +64,8 @@ function Embedded() {
         <div style={styles.offscreen}>
           <Preview
             markup={markup}
-            elements={result.elements}
-            accessibleRoles={result.accessibleRoles}
+            elements={result?.elements}
+            accessibleRoles={result?.accessibleRoles}
             dispatch={dispatch}
           />
         </div>
@@ -88,8 +78,8 @@ function Embedded() {
               <Preview
                 key={area}
                 markup={markup}
-                elements={result.elements}
-                accessibleRoles={result.accessibleRoles}
+                elements={result?.elements}
+                accessibleRoles={result?.accessibleRoles}
                 dispatch={dispatch}
               />
             );

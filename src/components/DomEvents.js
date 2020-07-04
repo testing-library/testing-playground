@@ -8,20 +8,13 @@ import { TrashcanIcon } from '@primer/octicons-react';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-import state from '../lib/state';
 import { VirtualScrollable } from './Scrollable';
 import IconButton from './IconButton';
 import CopyButton from './CopyButton';
 import EmptyStreetImg from '../images/EmptyStreetImg';
 import StickyList from './StickyList';
 import Layout from './Layout';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load() || {};
+import { useParams } from 'react-router-dom';
 
 function targetToString() {
   return [
@@ -109,16 +102,16 @@ function EventRecord({ index, style, data }) {
 }
 
 function DomEvents() {
+  const { gistId, gistVersion } = useParams();
+
   const buffer = useRef([]);
   const previewRef = useRef();
   const listRef = useRef();
 
   const sortDirection = useRef('asc');
   const [appendMode, setAppendMode] = useState('bottom');
-  const [{ markup, result, settings }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
-  });
+  const [state, dispatch] = usePlayground({ gistId, gistVersion });
+  const { markup, result, status, dirty, settings } = state;
 
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
@@ -186,7 +179,13 @@ function DomEvents() {
   }, []);
 
   return (
-    <Layout dispatch={dispatch} status={status} settings={settings}>
+    <Layout
+      dispatch={dispatch}
+      gistId={gistId}
+      dirty={dirty}
+      status={status}
+      settings={settings}
+    >
       <div className="flex flex-col h-auto md:h-full w-full">
         <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
           <div className="flex-auto relative h-56 md:h-full">
@@ -197,8 +196,8 @@ function DomEvents() {
             <Preview
               forwardedRef={setPreviewRef}
               markup={markup}
-              elements={result.elements}
-              accessibleRoles={result.accessibleRoles}
+              elements={result?.elements}
+              accessibleRoles={result?.accessibleRoles}
               dispatch={dispatch}
               variant="minimal"
             />
