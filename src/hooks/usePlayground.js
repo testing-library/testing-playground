@@ -294,10 +294,6 @@ function getInitialState(props) {
     else {
       const params = url.load();
       if (params.markup && params.query) {
-        // we redirect to the root, and set the dirty flag, to demote the
-        // sharing of legacy urls.
-        exec({ type: 'REDIRECT', path: '/' });
-
         return {
           ...state,
           ...params,

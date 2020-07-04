@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/embed" component={Embedded} />
+        <Route path="/embed/:gistId?/:gistVersion?" component={Embedded} />
         <Route path="/events" component={DomEvents} />
         <Route
           path={['/gist/:gistId/:gistVersion?', '/']}
