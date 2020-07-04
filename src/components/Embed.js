@@ -31,7 +31,7 @@ function Embed({ dirty, gistId, gistVersion }) {
   const height = 300;
 
   const embedUrl =
-    `${location.origin}/embed/${gistId}/${gistVersion}` +
+    [location.origin, 'embed', gistId, gistVersion].filter(Boolean).join('/') +
     `?panes=${panes.join(',')}`;
 
   const embedCode = `<iframe src="${embedUrl}" height="${height}" width="100%" scrolling="no" frameBorder="0" allowTransparency="true" title="Testing Playground" style="overflow: hidden; display: block; width: 100%"></iframe>`;

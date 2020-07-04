@@ -104,7 +104,7 @@ function Header({
 
               <Modal>
                 <ModalOpenButton>
-                  <MenuLink as="button" disabled={!gistId}>
+                  <MenuLink as="button">
                     <CodeIcon size={12} />
                     <span>Embed</span>
                   </MenuLink>
