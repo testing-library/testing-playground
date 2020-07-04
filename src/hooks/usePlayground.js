@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import debounce from 'lodash.debounce';
+import { useEffectReducer } from 'use-effect-reducer';
+import memoize from 'memoize-one';
 import parser from '../parser';
 import { initialValues as defaultValues } from '../constants';
 import { withLogging } from '../lib/logger';
 import postMessage from '../lib/postMessage';
-import debounce from 'lodash.debounce';
-import { useEffectReducer } from 'use-effect-reducer';
 import gist from '../api/gist';
-import memoize from 'memoize-one';
-import { useHistory } from 'react-router-dom';
+import url from '../lib/state/url';
 
 let history;
 
-// TODO: move parser into an effect, reducers are called
-//   twice (by react design), while the effect is only run once
+// Note: don't place heavy tasks in the reducer, add them to the effects!
+// the reducer is run twice (by react design), while the effect is only run once
 function reducer(state, action, exec) {
   const immediate = action.immediate;
 
@@ -288,6 +289,21 @@ function getInitialState(props) {
     if (props.gistId) {
       exec({ type: 'LOAD' });
       return state;
+    }
+    // try get state from url (legacy fallback)
+    else {
+      const params = url.load();
+      if (params.markup && params.query) {
+        // we redirect to the root, and set the dirty flag, to demote the
+        // sharing of legacy urls.
+        exec({ type: 'REDIRECT', path: '/' });
+
+        return {
+          ...state,
+          ...params,
+          dirty: true,
+        };
+      }
     }
 
     return {

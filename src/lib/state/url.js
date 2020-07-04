@@ -44,6 +44,7 @@ function load() {
   const { hash, search } = window.location;
 
   // try to migrate old hash based format
+  // .com/#markupLz&queryLz
   if (hash.includes('&')) {
     const [markup, query] = hash.slice(1).split('&');
     const decompressed = decompress({ markup, query });
@@ -53,6 +54,7 @@ function load() {
     }
   }
 
+  // .com?markup=markupLz&query=queryLz
   const { markup, query } = queryString.parse(search);
   return decompress({ markup, query });
 }
