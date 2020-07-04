@@ -184,6 +184,15 @@ function Header({
 
               <div className="border-b border-gray-200 mx-4 my-2" />
 
+              <MenuLink
+                href="https://chrome.google.com/webstore/detail/testing-playground/hejbmebodbijjdhflfknehhcgaklhano"
+                target="_blank"
+              >
+                Chrome Extension
+              </MenuLink>
+
+              <div className="border-b border-gray-200 mx-4 my-2" />
+
               {headerLinks.map((x) => (
                 <MenuLink key={x.title} href={x.url} target="_blank">
                   {x.title}
