@@ -40,15 +40,13 @@ function Embed({ dirty, gistId, gistVersion }) {
   return (
     <div className="settings text-sm pb-2">
       <div className="space-y-6">
-        <section className="flex flex-col space-y-4">
-          {dirty && (
-            <div className="bg-blue-100 p-2 text-xs rounded my-2 text-blue-800">
-              Please note that this playground has
-              <strong> unsaved changes </strong>. The embed
-              <strong> will not include </strong> your latest changes!
-            </div>
-          )}
-        </section>
+        {dirty && (
+          <section className="bg-blue-100 p-2 text-xs rounded my-2 text-blue-800">
+            Please note that this playground has
+            <strong> unsaved changes </strong>. The embed
+            <strong> will not include </strong> your latest changes!
+          </section>
+        )}
 
         <section className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
@@ -66,44 +64,50 @@ function Embed({ dirty, gistId, gistVersion }) {
             </TabButton>
           </div>
 
-          <div className="px-4 gap-4 grid grid-flow-col mb-1">
-            {panes.map((selected, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <div className="text-left space-x-2">
-                  {possiblePanes.map((name) => (
-                    <TabButton
-                      key={name}
-                      onClick={() =>
-                        setPanes((current) => {
-                          const next = [...current];
-                          next[idx] = name;
-                          return next;
-                        })
-                      }
-                      active={selected === name}
-                    >
-                      {name}
-                    </TabButton>
-                  ))}
+          <div className="bg-gray-200 px-4 pb-4 -mx-4">
+            <div className="px-4 gap-4 grid grid-flow-col py-1">
+              {panes.map((selected, idx) => (
+                <div key={idx} className="flex items-center justify-between">
+                  <div className="text-left space-x-2">
+                    {possiblePanes.map((name) => (
+                      <TabButton
+                        key={name}
+                        onClick={() =>
+                          setPanes((current) => {
+                            const next = [...current];
+                            next[idx] = name;
+                            return next;
+                          })
+                        }
+                        active={selected === name}
+                      >
+                        {name}
+                      </TabButton>
+                    ))}
+                  </div>
+                  <TabButton
+                    disabled={panes.length === 1}
+                    onClick={() => setPanes(panes.filter((_, i) => i !== idx))}
+                  >
+                    <span>
+                      <XIcon size={12} />
+                    </span>
+                  </TabButton>
                 </div>
-                <TabButton
-                  disabled={panes.length === 1}
-                  onClick={() => setPanes(panes.filter((_, i) => i !== idx))}
-                >
-                  <span>
-                    <XIcon size={12} />
-                  </span>
-                </TabButton>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div style={{ width, height }}>
-            <Embedded panes={panes} gistId={gistId} gistVersion={gistVersion} />
+            <div style={{ width, height }}>
+              <Embedded
+                panes={panes}
+                gistId={gistId}
+                gistVersion={gistVersion}
+              />
+            </div>
           </div>
         </section>
 
-        <section className="flex flex-col space-y-4">
+        <section className="flex flex-col space-y-4" style={{ width }}>
           <h3 className="text-sm font-bold">Copy & Paste</h3>
 
           <label className="text-xs">
