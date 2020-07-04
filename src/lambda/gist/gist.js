@@ -39,6 +39,7 @@ function matchExpectedFiles(files) {
 async function getGist({ id, version }) {
   const response = await fetch(
     [ENDPOINT, id, version].filter(Boolean).join('/'),
+    { headers: { authorization } },
   );
 
   const { files } = await response.json();
