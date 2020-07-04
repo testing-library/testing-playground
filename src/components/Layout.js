@@ -2,12 +2,21 @@ import React from 'react';
 import Header from './Header';
 import { ToastContainer } from 'react-toastify';
 
-function Layout({ children, dirty, gistId, dispatch, status, settings }) {
+function Layout({
+  children,
+  dirty,
+  gistId,
+  gistVersion,
+  dispatch,
+  status,
+  settings,
+}) {
   return (
     <div className="flex flex-col h-screen">
       <div className="mb-8 flex-none">
         <Header
           gistId={gistId}
+          gistVersion={gistVersion}
           dirty={dirty}
           canSave={!!dirty}
           canFork={!!gistId}

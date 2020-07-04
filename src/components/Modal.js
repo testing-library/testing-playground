@@ -8,7 +8,7 @@ const callAll = (...fns) => (...args) => fns.forEach((fn) => fn && fn(...args));
 const ModalContext = React.createContext();
 
 function Modal(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(props.open ?? false);
 
   return <ModalContext.Provider value={[isOpen, setIsOpen]} {...props} />;
 }
