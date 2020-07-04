@@ -5,7 +5,7 @@ const headers = {
 function getBody({ markup, query, settings }) {
   return JSON.stringify({
     files: {
-      'playground.json': { content: JSON.stringify(settings) },
+      'playground.json': { content: JSON.stringify(settings, null, '  ') },
       'source.html': { content: markup },
       'source.js': { content: query },
     },
