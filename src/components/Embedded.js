@@ -6,6 +6,7 @@ import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
+import Loader from './Loader';
 
 const SUPPORTED_PANES = {
   markup: true,
@@ -29,7 +30,8 @@ function Embedded(props) {
     gistId: props.gistId || params.gistId,
     gistVersion: props.gistVersion || params.gistVersion,
   });
-  const { markup, query, result } = state;
+  const { markup, query, result, status } = state;
+  const isLoading = status === 'loading';
 
   const location = useLocation();
   const searchParams = queryString.parse(location.search);
@@ -66,63 +68,70 @@ function Embedded(props) {
   }, []);
 
   return (
-    <div
-      className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
-    >
-      {/*the sandbox must always be rendered!*/}
-      {!panes.includes('preview') && (
-        <div style={styles.offscreen}>
-          <Preview
-            markup={markup}
-            elements={result?.elements}
-            accessibleRoles={result?.accessibleRoles}
-            dispatch={dispatch}
-          />
-        </div>
-      )}
+    <div className="relative w-full h-full">
+      <Loader loading={isLoading} />
+      <div
+        className={[
+          `h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded fade`,
+          columnClass,
+          isLoading ? 'opacity-0' : 'opacity-100',
+        ].join(' ')}
+      >
+        {/*the sandbox must always be rendered!*/}
+        {!panes.includes('preview') && (
+          <div style={styles.offscreen}>
+            <Preview
+              markup={markup}
+              elements={result?.elements}
+              accessibleRoles={result?.accessibleRoles}
+              dispatch={dispatch}
+            />
+          </div>
+        )}
 
-      {panes.map((area, idx) => {
-        switch (area) {
-          case 'preview':
-            return (
-              <Preview
-                key={`${area}-${idx}`}
-                markup={markup}
-                elements={result?.elements}
-                accessibleRoles={result?.accessibleRoles}
-                dispatch={dispatch}
-              />
-            );
-          case 'markup':
-            return (
-              <MarkupEditor
-                key={`${area}-${idx}`}
-                markup={markup}
-                dispatch={dispatch}
-              />
-            );
-          case 'query':
-            return (
-              <Query
-                key={`${area}-${idx}`}
-                query={query}
-                result={result}
-                dispatch={dispatch}
-                variant="minimal"
-              />
-            );
-          case 'result':
-            return (
-              <Result
-                key={`${area}-${idx}`}
-                result={result}
-                dispatch={dispatch}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
+        {panes.map((area, idx) => {
+          switch (area) {
+            case 'preview':
+              return (
+                <Preview
+                  key={`${area}-${idx}`}
+                  markup={markup}
+                  elements={result?.elements}
+                  accessibleRoles={result?.accessibleRoles}
+                  dispatch={dispatch}
+                />
+              );
+            case 'markup':
+              return (
+                <MarkupEditor
+                  key={`${area}-${idx}`}
+                  markup={markup}
+                  dispatch={dispatch}
+                />
+              );
+            case 'query':
+              return (
+                <Query
+                  key={`${area}-${idx}`}
+                  query={query}
+                  result={result}
+                  dispatch={dispatch}
+                  variant="minimal"
+                />
+              );
+            case 'result':
+              return (
+                <Result
+                  key={`${area}-${idx}`}
+                  result={result}
+                  dispatch={dispatch}
+                />
+              );
+            default:
+              return null;
+          }
+        })}
+      </div>
     </div>
   );
 }
