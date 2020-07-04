@@ -134,9 +134,12 @@ const DomEventsTable = ({
       setSelectedNames(selectedOptions);
     }
   };
-  const filterData = (event) =>
-    selectedTypes.find((type) => type.value === event.type) &&
-    selectedNames.find((name) => name.value === event.name);
+  const filterData = useCallback(
+    (event) =>
+      selectedTypes.find((type) => type.value === event.type) &&
+      selectedNames.find((name) => name.value === event.name),
+    [selectedNames, selectedTypes],
+  );
 
   const getTextToCopy = () =>
     data
