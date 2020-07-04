@@ -7,6 +7,7 @@ function Layout({ children, dirty, gistId, dispatch, status, settings }) {
     <div className="flex flex-col h-screen">
       <div className="mb-8 flex-none">
         <Header
+          gistId={gistId}
           dirty={dirty}
           canSave={!!dirty}
           canFork={!!gistId}

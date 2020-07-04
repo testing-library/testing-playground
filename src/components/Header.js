@@ -23,7 +23,15 @@ const headerLinks = [
   links.common_mistakes,
 ];
 
-function Header({ status, dirty, canSave, canFork, settings, dispatch }) {
+function Header({
+  gistId,
+  status,
+  dirty,
+  canSave,
+  canFork,
+  settings,
+  dispatch,
+}) {
   return (
     <nav className="text-white w-full h-16">
       <div className="flex items-center justify-between bg-gray-900 px-8 h-16">
@@ -80,7 +88,7 @@ function Header({ status, dirty, canSave, canFork, settings, dispatch }) {
 
               <Modal>
                 <ModalOpenButton>
-                  <MenuLink as="button">
+                  <MenuLink as="button" disabled={!gistId}>
                     <ShareAndroidIcon size={12} />
                     <span>Share</span>
                   </MenuLink>
