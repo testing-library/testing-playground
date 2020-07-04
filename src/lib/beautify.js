@@ -2,7 +2,7 @@ import beautify from 'js-beautify';
 
 const beautifyOptions = {
   indent_size: 2,
-  wrap_line_length: 72,
+  wrap_line_length: 80,
   wrap_attributes: 'force-expand-multiline',
 };
 

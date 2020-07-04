@@ -85,11 +85,11 @@ export function withLogging(reducerFn) {
 
   const supportsGroups = typeof console.groupCollapsed === 'function';
 
-  return (prevState, action) => {
+  return (prevState, action, exec) => {
     const started = timer.now();
     const startedTime = new Date();
 
-    const newState = reducerFn(prevState, action);
+    const newState = reducerFn(prevState, action, exec);
 
     const took = timer.now() - started;
 

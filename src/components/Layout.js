@@ -1,22 +1,40 @@
 import React from 'react';
 import Header from './Header';
-import Footer from './Footer';
 import { ToastContainer } from 'react-toastify';
 
-function Layout({ children }) {
+function Layout({
+  children,
+  dirty,
+  gistId,
+  gistVersion,
+  dispatch,
+  status,
+  settings,
+}) {
   return (
     <div className="flex flex-col h-screen">
       <div className="mb-8 flex-none">
-        <Header />
+        <Header
+          gistId={gistId}
+          gistVersion={gistVersion}
+          dirty={dirty}
+          canSave={!!dirty}
+          canFork={!!gistId}
+          dispatch={dispatch}
+          status={status}
+          settings={settings}
+        />
       </div>
 
-      <div className="px-8 flex-grow flex-shrink">{children}</div>
+      <div className="px-8 mb-8 flex-grow flex-shrink relative">{children}</div>
 
-      <div className="flex-none">
-        <Footer />
-      </div>
-
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-right"
+        closeOnClick
+        pauseOnHover
+        autoClose
+        newestOnTop
+      />
     </div>
   );
 }

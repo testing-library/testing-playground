@@ -46,6 +46,10 @@ function init() {
     return { result };
   });
 
+  Bridge.onMessage('SET_SETTINGS', function ({ data }) {
+    parser.configure(data);
+  });
+
   // when the selected element is changed by using the element inspector,
   // this method will be called from devtools/main.js
   hook.onSelectionChanged = function onSelectionChanged(el) {

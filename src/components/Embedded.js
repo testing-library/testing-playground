@@ -1,20 +1,12 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import state from '../lib/state';
-
+import { useLocation, useParams } from 'react-router-dom';
 import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load();
+import Loader from './Loader';
 
 const SUPPORTED_PANES = {
   markup: true,
@@ -32,17 +24,23 @@ const styles = {
 };
 
 // TODO: we should support readonly mode
-function Embedded() {
-  const [{ markup, query, result }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
+function Embedded(props) {
+  const params = useParams();
+  const [state, dispatch] = usePlayground({
+    gistId: props.gistId || params.gistId,
+    gistVersion: props.gistVersion || params.gistVersion,
   });
+  const { markup, query, result, status } = state;
+  const isLoading = status === 'loading';
 
   const location = useLocation();
-  const params = queryString.parse(location.search);
+  const searchParams = queryString.parse(location.search);
 
-  const panes = params.panes
-    ? Array.from(new Set(params.panes.split(',')))
+  const panes = props.panes
+    ? props.panes
+    : searchParams.panes
+    ? searchParams.panes
+        .split(',')
         .map((x) => x.trim())
         .filter((x) => SUPPORTED_PANES[x])
     : ['markup', 'preview', 'query', 'result'];
@@ -61,58 +59,79 @@ function Embedded() {
       : 'grid-cols-1';
 
   useEffect(() => {
+    if (window === top) {
+      return;
+    }
+
     document.body.classList.add('embedded');
     return () => document.body.classList.remove('embedded');
   }, []);
 
   return (
-    <div
-      className={`h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded ${columnClass}`}
-    >
-      {/*the sandbox must always be rendered!*/}
-      {!panes.includes('preview') && (
-        <div style={styles.offscreen}>
-          <Preview
-            markup={markup}
-            elements={result.elements}
-            accessibleRoles={result.accessibleRoles}
-            dispatch={dispatch}
-          />
-        </div>
-      )}
+    <div className="relative w-full h-full">
+      <Loader loading={isLoading} />
+      <div
+        className={[
+          `h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded fade`,
+          columnClass,
+          isLoading ? 'opacity-0' : 'opacity-100',
+        ].join(' ')}
+      >
+        {/*the sandbox must always be rendered!*/}
+        {!panes.includes('preview') && (
+          <div style={styles.offscreen}>
+            <Preview
+              markup={markup}
+              elements={result?.elements}
+              accessibleRoles={result?.accessibleRoles}
+              dispatch={dispatch}
+            />
+          </div>
+        )}
 
-      {panes.map((area) => {
-        switch (area) {
-          case 'preview':
-            return (
-              <Preview
-                key={area}
-                markup={markup}
-                elements={result.elements}
-                accessibleRoles={result.accessibleRoles}
-                dispatch={dispatch}
-              />
-            );
-          case 'markup':
-            return (
-              <MarkupEditor key={area} markup={markup} dispatch={dispatch} />
-            );
-          case 'query':
-            return (
-              <Query
-                key={area}
-                query={query}
-                result={result}
-                dispatch={dispatch}
-                variant="minimal"
-              />
-            );
-          case 'result':
-            return <Result key={area} result={result} dispatch={dispatch} />;
-          default:
-            return null;
-        }
-      })}
+        {panes.map((area, idx) => {
+          switch (area) {
+            case 'preview':
+              return (
+                <Preview
+                  key={`${area}-${idx}`}
+                  markup={markup}
+                  elements={result?.elements}
+                  accessibleRoles={result?.accessibleRoles}
+                  dispatch={dispatch}
+                />
+              );
+            case 'markup':
+              return (
+                <MarkupEditor
+                  key={`${area}-${idx}`}
+                  markup={markup}
+                  dispatch={dispatch}
+                />
+              );
+            case 'query':
+              return (
+                <Query
+                  key={`${area}-${idx}`}
+                  query={query}
+                  result={result}
+                  dispatch={dispatch}
+                  variant="minimal"
+                />
+              );
+            case 'result':
+              return (
+                <Result
+                  key={`${area}-${idx}`}
+                  result={result}
+                  dispatch={dispatch}
+                />
+              );
+            default:
+              return null;
+          }
+        })}
+      </div>
     </div>
   );
 }

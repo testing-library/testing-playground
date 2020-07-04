@@ -7,11 +7,13 @@ html {
 }
 
 body {
-  @apply text-base;
+  @apply text-base bg-gray-300;
 }
 
-body:not(.embedded, .sandbox) {
-  @apply bg-gray-100;
+/* purgecss ignore */
+body.embedded,
+body.sandbox {
+  @apply bg-transparent;
 }
 
 body.sandbox {
@@ -26,6 +28,90 @@ body.embedded #app {
 
 nav a:not(.title):hover {
   text-decoration: underline;
+}
+
+nav button {
+  @apply relative h-full;
+}
+
+nav button:after {
+  @apply block w-full bg-blue-400 absolute pointer-events-none rounded opacity-0 scale-95;
+  content: '';
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  transition: all 0.15s;
+}
+
+nav button:hover:after {
+  @apply opacity-100 scale-100;
+}
+
+div[data-reach-dialog-overlay] {
+  z-index: 10;
+  background: hsla(0, 0%, 0%, 0.33);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+}
+
+div[data-reach-dialog-content] {
+  min-width: 50vw;
+  max-width: 80vw;
+  margin: 10vh auto;
+  background: white;
+  padding: 1rem;
+  outline: none;
+  display: table;
+}
+
+div[data-reach-menu-popover] {
+  margin-top: -1rem;
+  z-index: 10;
+  min-width: 12rem;
+}
+
+.fade {
+  transition: opacity 0.25s;
+}
+
+.settings .react-toggle .react-toggle-track {
+  @apply bg-gray-400;
+  height: 1rem;
+  width: 2rem;
+}
+
+.settings .react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+  @apply bg-gray-600;
+}
+
+.settings .react-toggle .react-toggle-thumb {
+  height: calc(1rem - 2px);
+  width: calc(1rem - 2px);
+}
+
+.settings .react-toggle--checked .react-toggle-track {
+  @apply bg-blue-400;
+}
+
+.settings
+  .react-toggle--checked:hover:not(.react-toggle--disabled)
+  .react-toggle-track {
+  @apply bg-blue-600;
+}
+
+.settings .react-toggle--checked .react-toggle-thumb {
+  left: calc(1rem + 1px);
+  outline: none;
+  box-shadow: none;
+}
+
+.settings .react-toggle--focus .react-toggle-thumb {
+  outline: none;
+  box-shadow: none;
 }
 
 .pane-menu {
@@ -139,20 +225,27 @@ button {
   @apply inline-flex justify-center items-center;
 }
 
-button > svg:first-child:not(:only-child) {
-  @apply mr-2;
-}
-
-button > svg:last-child:not(:only-child) {
-  @apply ml-2;
-}
-
 button:focus {
   @apply outline-none;
 }
 
 button:disabled {
   opacity: 0.2;
+}
+
+.spinner {
+  @apply text-blue-400;
+  animation: spinAround 1000ms infinite linear;
+  transform: scaleX(-1);
+}
+
+@keyframes spinAround {
+  from {
+    transform: scaleX(-1) rotate(360deg);
+  }
+  to {
+    transform: scaleX(-1) rotate(0deg);
+  }
 }
 
 /**
@@ -192,12 +285,30 @@ button:disabled {
   @apply outline-none border border-gray-700;
 }
 
+.preview label {
+  @apply flex items-center;
+}
+
+.preview label > input[type='checkbox'] {
+  display: inline-block;
+  margin: 0 0.5rem 0 0;
+  width: auto;
+}
+
+.preview small {
+  @apply text-xs text-gray-600;
+}
+
 .preview button {
   @apply border border-gray-300 bg-gray-300 text-gray-800 text-sm py-2 px-4 rounded;
 }
 
 .preview button:hover {
   @apply bg-gray-400;
+}
+
+.preview form > div:not(:last-child) {
+  @apply mb-4;
 }
 
 .expanded .snapshot {

@@ -13,6 +13,9 @@ const state = {
   query: '',
   rootNode: null,
   highlighter: null,
+  settings: {
+    testIdAttribute: 'data-testid',
+  },
 };
 
 function postMessage(action) {
@@ -33,7 +36,6 @@ function runQuery(rootNode, query) {
 }
 
 function setInnerHTML(node, html) {
-  console.log('set html', { node, html });
   const doc = node.ownerDocument;
   node.innerHTML = html;
 
@@ -129,19 +131,15 @@ function onMessage({ source, data }) {
   }
 
   switch (data.type) {
-    case 'POPULATE_SANDBOX': {
+    case 'UPDATE_SANDBOX': {
       state.query = data.query;
       state.markup = data.markup;
       break;
     }
 
-    case 'SET_MARKUP': {
-      state.markup = data.markup;
-      break;
-    }
-
-    case 'SET_QUERY': {
-      state.query = data.query;
+    case 'CONFIGURE_SANDBOX': {
+      state.settings = { ...state.settings, ...data.settings };
+      parser.configure(state.settings);
       break;
     }
   }

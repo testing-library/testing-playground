@@ -6,3 +6,9 @@
 @import './app.pcss';
 @import './codemirror.pcss';
 @import './spinner.pcss';
+@import './toggle.pcss';
+
+:root {
+  --reach-menu-button: 1;
+  --reach-dialog: 1;
+}

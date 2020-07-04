@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Playground from './Playground';
-import Layout from './Layout';
 import Embedded from './Embedded';
 import DomEvents from './DomEvents';
 
@@ -9,19 +8,12 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/embed">
-          <Embedded />
-        </Route>
-        <Route path="/events">
-          <Layout>
-            <DomEvents />
-          </Layout>
-        </Route>
-        <Route path="/">
-          <Layout>
-            <Playground />
-          </Layout>
-        </Route>
+        <Route path="/embed/:gistId?/:gistVersion?" component={Embedded} />
+        <Route path="/events" component={DomEvents} />
+        <Route
+          path={['/gist/:gistId/:gistVersion?', '/']}
+          component={Playground}
+        />
       </Switch>
     </Router>
   );

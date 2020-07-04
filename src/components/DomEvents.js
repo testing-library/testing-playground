@@ -5,15 +5,9 @@ import throttle from 'lodash.throttle';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-import state from '../lib/state';
+import Layout from './Layout';
+import { useParams } from 'react-router-dom';
 import DomEventsTable from './DomEventsTable';
-
-function onStateChange({ markup, query, result }) {
-  state.save({ markup, query });
-  state.updateTitle(result?.expression?.expression);
-}
-
-const initialValues = state.load() || {};
 
 function targetToString() {
   return [
@@ -80,15 +74,15 @@ function addLoggingEvents(node, log) {
 }
 
 function DomEvents() {
+  const { gistId, gistVersion } = useParams();
+
   const buffer = useRef([]);
   const previewRef = useRef();
 
   const sortDirection = useRef('asc');
   const [appendMode, setAppendMode] = useState('bottom');
-  const [{ markup, result }, dispatch] = usePlayground({
-    onChange: onStateChange,
-    ...initialValues,
-  });
+  const [state, dispatch] = usePlayground({ gistId, gistVersion });
+  const { markup, result, status, dirty, settings } = state;
 
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
@@ -154,36 +148,42 @@ function DomEvents() {
   const nameOptions = getOptionsByProperty('name');
 
   return (
-    <div className="flex flex-col h-auto md:h-full w-full">
-      <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
-        <div className="flex-auto relative h-56 md:h-full">
-          <MarkupEditor markup={markup} dispatch={dispatch} />
+    <Layout
+      dispatch={dispatch}
+      gistId={gistId}
+      dirty={dirty}
+      status={status}
+      settings={settings}
+    >
+      <div className="flex flex-col h-auto md:h-full w-full">
+        <div className="editor p-4 markup-editor gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+          <div className="flex-auto relative h-56 md:h-full">
+            <MarkupEditor markup={markup} dispatch={dispatch} />
+          </div>
+
+          <div className="flex-auto h-56 md:h-full">
+            <Preview
+              forwardedRef={setPreviewRef}
+              markup={markup}
+              elements={result?.elements}
+              accessibleRoles={result?.accessibleRoles}
+              dispatch={dispatch}
+              variant="minimal"
+            />
+          </div>
         </div>
 
-        <div className="flex-auto h-56 md:h-full">
-          <Preview
-            forwardedRef={setPreviewRef}
-            markup={markup}
-            elements={result.elements}
-            accessibleRoles={result.accessibleRoles}
-            dispatch={dispatch}
-            variant="minimal"
-          />
-        </div>
+        <DomEventsTable
+          eventCount={eventCount}
+          reset={reset}
+          data={buffer.current}
+          typeOptions={typeOptions}
+          nameOptions={nameOptions}
+          onChangeSortDirection={changeSortDirection}
+          appendMode={appendMode}
+        />
       </div>
-
-      <div className="flex-none h-8" />
-
-      <DomEventsTable
-        eventCount={eventCount}
-        reset={reset}
-        data={buffer.current}
-        typeOptions={typeOptions}
-        nameOptions={nameOptions}
-        onChangeSortDirection={changeSortDirection}
-        appendMode={appendMode}
-      />
-    </div>
+    </Layout>
   );
 }
 

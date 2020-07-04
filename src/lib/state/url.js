@@ -4,7 +4,7 @@ import {
 } from 'lz-string';
 import queryString from 'query-string';
 
-import beautify from '../lib/beautify';
+import beautify from '../beautify';
 
 function unindent(string) {
   return (string || '').replace(/[ \t]*[\n][ \t]*/g, '\n');
@@ -44,6 +44,7 @@ function load() {
   const { hash, search } = window.location;
 
   // try to migrate old hash based format
+  // .com/#markupLz&queryLz
   if (hash.includes('&')) {
     const [markup, query] = hash.slice(1).split('&');
     const decompressed = decompress({ markup, query });
@@ -53,26 +54,12 @@ function load() {
     }
   }
 
+  // .com?markup=markupLz&query=queryLz
   const { markup, query } = queryString.parse(search);
   return decompress({ markup, query });
 }
 
-function updateTitle(text) {
-  const title = document.title.split(':')[0];
-
-  if (!text || text.length === 0) {
-    document.title = title;
-    return;
-  }
-
-  const suffix = text.replace(/\s+/g, ' ').substring(0, 1000).trim();
-  document.title = title + ': ' + suffix;
-}
-
-const state = {
+export default {
   save,
   load,
-  updateTitle,
 };
-
-export default state;

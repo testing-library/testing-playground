@@ -10,6 +10,37 @@ function Heading({ children }) {
   return <h3 className="text-xs font-bold">{children}</h3>;
 }
 
+// The reviver parses serialized regexes back to a real regexp.
+// This function is required if the data comes in via message transport
+// think of the chrome-extension.
+function reviver(obj) {
+  if (typeof obj?.$regexp === 'string') {
+    return new RegExp(obj.$regexp, obj.$flags);
+  }
+
+  return obj;
+}
+
+// we use our own stringify method instead of the one from @testing-library/dom,
+// because it might have been removed for message transport.
+function suggestionToString({ queryMethod, queryArgs } = {}) {
+  if (!queryMethod || !queryArgs) {
+    return '';
+  }
+
+  let [text, options] = queryArgs;
+
+  text = typeof text === 'string' ? `'${text}'` : reviver(text);
+
+  options = options
+    ? `, { ${Object.entries(options)
+        .map(([k, v]) => `${k}: ${reviver(v)}`)
+        .join(', ')} }`
+    : '';
+
+  return `${queryMethod}(${text}${options})`;
+}
+
 const Field = React.memo(function Field({
   data,
   method,
@@ -19,11 +50,12 @@ const Field = React.memo(function Field({
 }) {
   const field = getFieldName(method);
   const value = data[field];
+
   const handleClick = value
     ? () => {
         dispatch({
           type: 'SET_QUERY',
-          query: `screen.${query.toString()}`,
+          query: `screen.${suggestionToString(query)}`,
         });
       }
     : undefined;

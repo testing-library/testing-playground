@@ -16,7 +16,7 @@ jobs:
         uses: samspills/assign-pr-to-author@v1.0
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         with:
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          repo-token: '${{ secrets.ACTION_TOKEN }}'
 
   setup:
     name: Setup
