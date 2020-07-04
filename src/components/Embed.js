@@ -64,7 +64,8 @@ function Embed({ dirty, gistId, gistVersion }) {
             </TabButton>
           </div>
 
-          <div className="bg-gray-200 px-4 pb-4 -mx-4">
+          {/* overflow-hidden is required hide the hidden preview panel */}
+          <div className="bg-gray-200 px-4 pb-4 -mx-4 overflow-hidden">
             <div className="px-4 gap-4 grid grid-flow-col py-1">
               {panes.map((selected, idx) => (
                 <div key={idx} className="flex items-center justify-between">
