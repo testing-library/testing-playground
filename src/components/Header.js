@@ -127,7 +127,7 @@ function Header({
                 return;
               }
 
-              dispatch({ type: 'EVALUATE' });
+              dispatch({ type: 'EVALUATE', immediate: true });
             }}
           >
             {status === 'evaluating' ? (
