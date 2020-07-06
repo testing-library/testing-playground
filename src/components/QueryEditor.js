@@ -21,7 +21,7 @@ function QueryEditor(props) {
   );
 
   return (
-    <div className="flex flex-col w-full h-full relative">
+    <div className="flex flex-col w-full h-full">
       <Editor
         mode="javascript"
         initialValue={initialValue}

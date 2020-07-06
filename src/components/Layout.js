@@ -26,7 +26,10 @@ function Layout({
         />
       </div>
 
-      <div className="px-8 mb-8 flex-grow flex-shrink relative">{children}</div>
+      {/*not sure why, but safari needs a height here*/}
+      <div className="px-8 mb-8 md:h-0 flex-grow flex-shrink relative">
+        {children}
+      </div>
 
       <ToastContainer
         position="bottom-right"
