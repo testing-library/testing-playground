@@ -20,9 +20,7 @@ export function getData({ rootNode, element }) {
   return {
     role: element.getAttribute('aria-hidden')
       ? undefined
-      : element.getAttribute('role') ||
-        // input's require a type for the role
-        (tagName === 'INPUT' && type !== 'text' ? '' : getRole(element)),
+      : element.getAttribute('role') || getRole(element),
     name: computeAccessibleName(element),
     tagName: tagName,
     type: type,
