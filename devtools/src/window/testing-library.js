@@ -4,6 +4,8 @@ import {
   getSuggestedQuery,
   fireEvent,
 } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+
 window.__TESTING_PLAYGROUND__ = window.__TESTING_PLAYGROUND__ || {};
 
 function augmentQuery(query) {
@@ -32,6 +34,8 @@ export function setup(view) {
   view.within = within;
 
   view.container = view.document.body;
+  view.userEvent = userEvent;
+  view.user = userEvent;
 }
 
 setup(window);
