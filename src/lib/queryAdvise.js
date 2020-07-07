@@ -27,7 +27,8 @@ export function getData({ rootNode, element }) {
     labelText: labelText,
     placeholderText: element.getAttribute('placeholder'),
     text: element.innerText,
-    displayValue: element.getAttribute('value'),
+    displayValue:
+      tagName.toLowerCase() === 'option' ? '' : element.getAttribute('value'),
 
     altText: element.getAttribute('alt'),
     title: element.getAttribute('title'),
