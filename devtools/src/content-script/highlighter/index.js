@@ -65,6 +65,7 @@ export default function setupHighlighter({
       view.addEventListener('pointerdown', onPointerDown, true);
       view.addEventListener('pointerover', onPointerOver, true);
       view.addEventListener('pointerup', onPointerUp, true);
+      view.addEventListener('change', onChange, true);
     }
   }
 
@@ -99,6 +100,7 @@ export default function setupHighlighter({
       view.removeEventListener('pointerdown', onPointerDown, true);
       view.removeEventListener('pointerover', onPointerOver, true);
       view.removeEventListener('pointerup', onPointerUp, true);
+      view.removeEventListener('change', onChange, true);
     }
   }
 
@@ -162,6 +164,16 @@ export default function setupHighlighter({
 
   function onPointerUp(event) {
     stopPropagation(event);
+  }
+
+  function onChange(event) {
+    stopPropagation(event);
+
+    if (event.target.tagName.toLowerCase() === 'select') {
+      const select = event.target;
+      const option = select.options[select.selectedIndex];
+      selectNode(option, { origin: 'click' });
+    }
   }
 
   const selectNode = throttle(
