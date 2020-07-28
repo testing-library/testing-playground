@@ -6,9 +6,13 @@
 // recent(ly) used element(s), assign an id to them, and then use messaging. But
 // for now, this is way easier.
 
+function escape(str) {
+  return str.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+}
+
 function logQuery(query) {
   chrome.devtools.inspectedWindow.eval(`
-    console.log('${query.replace(/'/g, "\\'")}');
+    console.log('${escape(query)}');
     console.log(eval(${query}));
   `);
 }
