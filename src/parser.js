@@ -1,9 +1,9 @@
 import prettyFormat from 'pretty-format';
-import { ensureArray, getQueryAdvise } from './lib';
+import { ensureArray } from './lib';
 import { queries as supportedQueries } from './constants';
 import cssPath from './lib/cssPath';
 import deepEqual from './lib/deepEqual';
-import { getAllPossibileQueries } from './lib/queryAdvise';
+import { getAllPossibleQueries } from './lib/queryAdvise';
 
 import {
   getQueriesForElement,
@@ -99,7 +99,9 @@ function createEvaluator({ rootNode }) {
     userEvent,
     user: userEvent,
     container: rootNode,
+    within: getQueriesForElement,
   });
+
   const evaluator = Function.apply(null, [
     ...Object.keys(context),
     'expr',
@@ -123,17 +125,13 @@ function createEvaluator({ rootNode }) {
     result.elements = ensureArray(result.data)
       .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
       .map((element) => {
-        const { suggestion, data } = getQueryAdvise({
-          rootNode,
-          element,
-        });
+        const queries = getAllPossibleQueries({ rootNode, element });
+        const suggestion = Object.values(queries).find(Boolean);
 
         return {
+          cssPath: cssPath(element, true).toString(),
           suggestion,
-          data,
-          target: element,
-          cssPath: cssPath(element, true),
-          queries: getAllPossibileQueries(element),
+          queries,
         };
       });
 
@@ -294,6 +292,8 @@ function parse({ rootNode, markup, query, cacheId, prevResult }) {
     }
   }
 
+  // data holds the raw nodes, we don't want to send those out
+  delete result.data;
   return result;
 }
 

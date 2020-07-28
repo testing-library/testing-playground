@@ -6,13 +6,13 @@ import Result from '../../../src/components/Result';
 import inspectedWindow from './lib/inspectedWindow';
 
 function Panel() {
-  const [{ result }, setResult] = useState({});
+  const [result, setResult] = useState({});
 
   useEffect(() => {
-    Bridge.onMessage('SELECT_NODE', (result) => {
-      setResult(result.data);
+    Bridge.onMessage('SELECT_NODE', ({ data }) => {
+      setResult({ elements: [data] });
     });
-  }, []);
+  }, [setResult]);
 
   const dispatch = (action) => {
     switch (action.type) {

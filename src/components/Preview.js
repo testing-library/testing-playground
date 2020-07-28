@@ -66,7 +66,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
         }
 
         case 'SELECT_NODE': {
-          dispatch({ type: 'SET_QUERY', query: suggestion.expression });
+          dispatch({ type: 'SET_QUERY', query: suggestion.snippet });
           break;
         }
 

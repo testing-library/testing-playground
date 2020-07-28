@@ -7,13 +7,13 @@ import Result from '../../../src/components/Result';
 import MenuBar from './components/MenuBar';
 
 function Panel() {
-  const [{ result }, setResult] = useState({ result: {} });
+  const [result, setResult] = useState({});
   const editor = useRef(null);
 
   useEffect(() => {
     Bridge.onMessage('SELECT_NODE', ({ data }) => {
-      setResult(data);
-      editor.current.setValue(data.suggestion?.expression || '');
+      setResult({ elements: [data] });
+      editor.current.setValue(data.suggestion?.snippet || '');
     });
   }, [setResult]);
 
@@ -28,8 +28,8 @@ function Panel() {
               highlight: true,
             },
             'content-script',
-          ).then((data) => {
-            setResult(data);
+          ).then(({ result }) => {
+            setResult(result);
           });
 
           if (action.updateEditor !== false) {
