@@ -311,6 +311,9 @@ function usePlayground(props) {
     if (typeof onChange === 'function') {
       onChange(state);
     }
+    // ignore the exhaustive deps. We really want to call onChange with the full
+    // state object, but only when `state.result` has changed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.result, onChange]);
 
   // propagate sandbox ready/busy events to playground state
