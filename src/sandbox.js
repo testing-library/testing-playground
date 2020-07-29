@@ -119,8 +119,20 @@ function onSelectNode(node, { origin }) {
 function updateSandbox(rootNode, markup, query) {
   postMessage({ type: 'SANDBOX_BUSY' });
   setInnerHTML(rootNode, markup);
-  runQuery(rootNode, query);
-  postMessage({ type: 'SANDBOX_READY' });
+
+  // get and clean result
+  // eslint-disable-next-line no-unused-vars
+  const { markup: m, query: q, ...data } = runQuery(rootNode, query);
+
+  const result = {
+    ...data,
+    accessibleRoles: Object.keys(data.accessibleRoles).reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {}),
+  };
+
+  postMessage({ type: 'SANDBOX_READY', result });
 }
 
 function onMessage({ source, data }) {

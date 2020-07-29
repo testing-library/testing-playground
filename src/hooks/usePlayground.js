@@ -159,10 +159,6 @@ const configureSandbox = (state) => {
 };
 
 const populateSandboxDebounced = debounce(populateSandbox, 250);
-const parseDebounced = debounce((data, dispatch) => {
-  const result = parser.parse(data);
-  dispatch({ type: 'SET_RESULT', result });
-}, 250);
 
 const effectMap = {
   UPDATE_SANDBOX: (state, effect, dispatch) => {
@@ -171,20 +167,10 @@ const effectMap = {
       return;
     }
 
-    const data = {
-      markup: state.markup,
-      query: state.query,
-      rootNode: state.rootNode,
-      prevResult: state.result,
-    };
-
     if (state.settings.autoRun) {
       populateSandboxDebounced(state, effect, dispatch);
-      parseDebounced(data, dispatch);
     } else if (effect.immediate) {
       populateSandbox(state, effect, dispatch);
-      const result = parser.parse(data);
-      dispatch({ type: 'SET_RESULT', result });
     }
   },
 
@@ -267,13 +253,10 @@ const effectMap = {
 function getInitialState(props) {
   const localSettings = JSON.parse(localStorage.getItem('playground_settings'));
 
-  let { instanceId } = props;
-
   const state = {
     ...props,
     status: 'loading',
     dirty: false,
-    cacheId: instanceId,
     settings: Object.assign(
       {
         autoRun: true,
@@ -328,17 +311,21 @@ function usePlayground(props) {
     if (typeof onChange === 'function') {
       onChange(state);
     }
+    // ignore the exhaustive deps. We really want to call onChange with the full
+    // state object, but only when `state.result` has changed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.result, onChange]);
 
   // propagate sandbox ready/busy events to playground state
   useEffect(() => {
-    const listener = ({ data: { source, type } }) => {
+    const listener = ({ data: { source, type, result } }) => {
       if (source !== 'testing-playground-sandbox') {
         return;
       }
 
       if (type === 'SANDBOX_READY') {
         dispatch({ type: 'SET_STATUS', status: 'idle' });
+        dispatch({ type: 'SET_RESULT', result });
       } else if (type === 'SANDBOX_BUSY') {
         dispatch({ type: 'SET_STATUS', status: 'evaluating' });
       }
