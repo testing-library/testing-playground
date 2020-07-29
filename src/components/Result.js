@@ -14,7 +14,6 @@ function Result({ result, dispatch }) {
 
   if (
     !result ||
-    !result.expression ||
     !Array.isArray(result.elements) ||
     result.elements.length === 0
   ) {
@@ -25,7 +24,7 @@ function Result({ result, dispatch }) {
     );
   }
 
-  const { data, suggestion, queries } = result.elements[0];
+  const { queries } = result.elements[0];
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
       <Scrollable>
@@ -33,15 +32,11 @@ function Result({ result, dispatch }) {
           <ResultSuggestion
             result={result}
             dispatch={dispatch}
-            data={data}
-            possibleQueries={queries}
-            suggestion={suggestion}
+            queries={queries}
           />
         </div>
 
         <ResultQueries
-          data={data}
-          suggestion={suggestion}
           activeMethod={result.expression?.method}
           dispatch={dispatch}
           queries={queries}

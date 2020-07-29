@@ -8,31 +8,50 @@ function Code({ children }) {
   return <span className="font-bold font-mono">{children}</span>;
 }
 
-function ResultSuggestion({ data, suggestion, result, dispatch }) {
+const levels = {
+  Role: 0,
+  LabelText: 0,
+  PlaceholderText: 0,
+  Text: 0,
+  DisplayValue: 0,
+  AltText: 1,
+  Title: 1,
+  TestId: 2,
+  generic: 3,
+};
+
+function ResultSuggestion({ queries, result, dispatch }) {
+  const suggestion = Object.values(queries).find(Boolean);
   const used = result?.expression || {};
 
-  const usingAdvisedMethod = suggestion.method === used.method;
-  const hasNameArg = data.name && used.args?.[1]?.includes('name');
+  if (!suggestion) {
+    return `Hmpf. I'm afraid I don't have any suggestions for you.`;
+  }
 
-  const color = usingAdvisedMethod ? 'bg-green-600' : colors[suggestion.level];
+  const usingAdvisedMethod = suggestion.queryMethod === used.method;
+  const nameOption = suggestion.queryArgs[1]?.name;
+  const hasNameArg = nameOption && used.args?.[1]?.includes('name');
+
+  const level = levels[suggestion.queryName] ?? 3;
+  const color = usingAdvisedMethod ? 'bg-green-600' : colors[level];
 
   const target = result?.target || {};
 
   let message;
 
-  if (suggestion.level < used.level) {
+  if (level < used.level) {
     message = (
       <p>
         You&apos;re using <Code>{used.method}</Code>, which falls under{' '}
         <Code>{messages[used.level].heading}</Code>. Upgrading to{' '}
-        <Code>{suggestion.method}</Code> is recommended.
+        <Code>{suggestion.queryMethod}</Code> is recommended.
       </p>
     );
-  } else if (suggestion.level === 0 && suggestion.method !== used.method) {
+  } else if (level === 0 && suggestion.queryMethod !== used.method) {
     message = (
       <p>
         Nice! <Code>{used.method}</Code> is a great selector! Using{' '}
-        <Code>{suggestion.method}</Code> would still be preferable though.
+        <Code>{suggestion.queryMethod}</Code> would still be preferable though.
       </p>
     );
   } else if (target.tagName === 'INPUT' && !target.getAttribute('type')) {
@@ -44,9 +63,9 @@ function ResultSuggestion({ data, suggestion, result, dispatch }) {
       </p>
     );
   } else if (
-    suggestion.level === 0 &&
-    suggestion.method === 'getByRole' &&
-    !data.name
+    level === 0 &&
+    suggestion.queryMethod === 'getByRole' &&
+    !nameOption
   ) {
     message = (
       <p>
@@ -56,9 +75,9 @@ function ResultSuggestion({ data, suggestion, result, dispatch }) {
       </p>
     );
   } else if (
-    suggestion.level === 0 &&
-    suggestion.method === 'getByRole' &&
-    data.name &&
+    level === 0 &&
+    suggestion.queryMethod === 'getByRole' &&
+    nameOption &&
     !hasNameArg
   ) {
     message = (
@@ -83,23 +102,23 @@ function ResultSuggestion({ data, suggestion, result, dispatch }) {
     <div className="space-y-4 text-sm">
       <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
         <div className="font-bold text-xs">suggested query</div>
-        {suggestion.expression && (
+        {suggestion.excerpt && (
           <div className="flex justify-between">
             <div
               className="font-mono cursor-pointer text-xs"
               onClick={() =>
                 dispatch({
                   type: 'SET_QUERY',
-                  query: suggestion.expression,
+                  query: suggestion.snippet,
                 })
               }
             >
-              &gt; {suggestion.expression}
+              &gt; {suggestion.excerpt}
               <br />
             </div>
             <CopyButton
               title="copy query"
-              text={suggestion.expression}
+              text={suggestion.snippet}
               variant="white"
             />
           </div>

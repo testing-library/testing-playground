@@ -3,7 +3,7 @@ import IconButton from './IconButton';
 import Scrollable from './Scrollable';
 import { ChevronUpIcon, ChevronDownIcon } from '@primer/octicons-react';
 
-function Expandable({ children, className, variant }) {
+function Expandable({ excerpt, children, className, variant }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -38,7 +38,7 @@ function Expandable({ children, className, variant }) {
         <div>&nbsp;</div>
       ) : (
         <div className="truncate mr-8 w-full flex justify-between direction">
-          {children}
+          {excerpt || children}
         </div>
       )}
 

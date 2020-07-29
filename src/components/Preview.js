@@ -66,7 +66,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
         }
 
         case 'SELECT_NODE': {
-          dispatch({ type: 'SET_QUERY', query: suggestion.expression });
+          dispatch({ type: 'SET_QUERY', query: suggestion.snippet });
           break;
         }
 
@@ -83,17 +83,15 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
 
   return (
     <div className="w-full h-full flex flex-col relative">
-      <div className="flex-auto relative">
-        <iframe
-          ref={refSetter}
-          src="/sandbox.html"
-          security="restricted"
-          className="w-full h-full"
-          scrolling="no"
-          frameBorder="0"
-          onLoad={handleLoadIframe}
-        />
-      </div>
+      <iframe
+        ref={refSetter}
+        src="/sandbox.html"
+        security="restricted"
+        className="flex-auto"
+        scrolling="no"
+        frameBorder="0"
+        onLoad={handleLoadIframe}
+      />
 
       {markup && variant !== 'minimal' && (
         <PreviewHint roles={roles} suggestion={suggestion} />

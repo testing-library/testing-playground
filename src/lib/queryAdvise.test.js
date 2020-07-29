@@ -1,71 +1,40 @@
-import { getQueryAdvise, getAllPossibileQueries } from './queryAdvise';
+import { getAllPossibleQueries } from './queryAdvise';
 
-const emptyObject = `
-  Object {
-    "data": Object {},
-    "suggestion": Object {},
-  }
-`;
-
-it('should return default suggested query if none was returned by dtl', () => {
-  const rootNode = document.createElement('div');
-  const element = document.createElement('faketag');
-  const result = getQueryAdvise({ rootNode, element });
-  expect(result.suggestion.expression).toEqual(
-    "container.querySelector('faketag')",
-  );
-});
-
-it('should return an empty object if root node is a malformed object', () => {
-  const element = document.createElement('faketag');
-
-  let result = getQueryAdvise({ rootNode: null, element });
-  expect(result).toMatchInlineSnapshot(emptyObject);
-
-  result = getQueryAdvise({ rootNode: '', element });
-  expect(result).toMatchInlineSnapshot(emptyObject);
-
-  result = getQueryAdvise({ rootNode: {}, element });
-  expect(result).toMatchInlineSnapshot(emptyObject);
-});
-
-it('should return an empty object if element node is a malformed object', () => {
-  const rootNode = document.createElement('div');
-
-  let result = getQueryAdvise({ rootNode, element: null });
-  expect(result).toMatchInlineSnapshot(emptyObject);
-
-  result = getQueryAdvise({ rootNode, element: '' });
-  expect(result).toMatchInlineSnapshot(emptyObject);
-
-  result = getQueryAdvise({ rootNode, element: {} });
-  expect(result).toMatchInlineSnapshot(emptyObject);
-});
-
-it('should add `screen.` on suggested query returned by getSuggestedQuery', () => {
-  const rootNode = document.createElement('div');
-  const element = document.createElement('button');
-  const result = getQueryAdvise({ rootNode, element });
-  expect(result.suggestion.expression).toStartWith('screen.');
-});
-
-it('[getAllPossibileQueries] should return an object with all possibile queries', () => {
+it('[getAllPossibleQueries] should return an object with all possibile queries', () => {
   const rootNode = document.createElement('div');
   const element = document.createElement('button');
   rootNode.appendChild(element);
-  let suggestedQueries = getAllPossibileQueries(element);
+  let suggestedQueries = getAllPossibleQueries({ rootNode, element });
 
   expect(suggestedQueries).toMatchInlineSnapshot(`
     Object {
-      "getByRole": Object {
+      "AltText": undefined,
+      "DisplayValue": undefined,
+      "LabelText": undefined,
+      "PlaceholderText": undefined,
+      "Role": Object {
+        "excerpt": "getByRole('button')",
         "queryArgs": Array [
           "button",
         ],
         "queryMethod": "getByRole",
         "queryName": "Role",
-        "toString": [Function],
+        "snippet": "screen.getByRole('button')",
         "variant": "get",
       },
+      "Selector": Object {
+        "excerpt": "querySelector('div > button')",
+        "queryArgs": Array [
+          "div > button",
+        ],
+        "queryMethod": "querySelector",
+        "queryName": "Selector",
+        "snapshot": "screen.getByRole('button');",
+        "snippet": "container.querySelector('div > button')",
+      },
+      "TestId": undefined,
+      "Text": undefined,
+      "Title": undefined,
     }
   `);
 
@@ -83,47 +52,52 @@ it('[getAllPossibileQueries] should return an object with all possibile queries'
     />
   `;
   const input = rootNode.querySelector('input');
-  suggestedQueries = getAllPossibileQueries(input);
+  suggestedQueries = getAllPossibleQueries({ rootNode, element: input });
 
   expect(suggestedQueries).toMatchInlineSnapshot(`
     Object {
-      "getByAltText": Object {
+      "AltText": Object {
+        "excerpt": "getByAltText(/enter your username/i)",
         "queryArgs": Array [
           /enter your username/i,
         ],
         "queryMethod": "getByAltText",
         "queryName": "AltText",
-        "toString": [Function],
+        "snippet": "screen.getByAltText(/enter your username/i)",
         "variant": "get",
       },
-      "getByDisplayValue": Object {
+      "DisplayValue": Object {
+        "excerpt": "getByDisplayValue(/john-doe/i)",
         "queryArgs": Array [
           /john-doe/i,
         ],
         "queryMethod": "getByDisplayValue",
         "queryName": "DisplayValue",
-        "toString": [Function],
+        "snippet": "screen.getByDisplayValue(/john-doe/i)",
         "variant": "get",
       },
-      "getByLabelText": Object {
+      "LabelText": Object {
+        "excerpt": "getByLabelText(/username/i)",
         "queryArgs": Array [
           /username/i,
         ],
         "queryMethod": "getByLabelText",
         "queryName": "LabelText",
-        "toString": [Function],
+        "snippet": "screen.getByLabelText(/username/i)",
         "variant": "get",
       },
-      "getByPlaceholderText": Object {
+      "PlaceholderText": Object {
+        "excerpt": "getByPlaceholderText(/how should i call you?/i)",
         "queryArgs": Array [
           /how should i call you\\?/i,
         ],
         "queryMethod": "getByPlaceholderText",
         "queryName": "PlaceholderText",
-        "toString": [Function],
+        "snippet": "screen.getByPlaceholderText(/how should i call you?/i)",
         "variant": "get",
       },
-      "getByRole": Object {
+      "Role": Object {
+        "excerpt": "getByRole('textbox', { name: /username/i })",
         "queryArgs": Array [
           "textbox",
           Object {
@@ -132,25 +106,40 @@ it('[getAllPossibileQueries] should return an object with all possibile queries'
         ],
         "queryMethod": "getByRole",
         "queryName": "Role",
-        "toString": [Function],
+        "snippet": "screen.getByRole('textbox', {
+      name: /username/i
+    })",
         "variant": "get",
       },
-      "getByTestId": Object {
+      "Selector": Object {
+        "excerpt": "querySelector('#username')",
+        "queryArgs": Array [
+          "#username",
+        ],
+        "queryMethod": "querySelector",
+        "queryName": "Selector",
+        "snapshot": "screen.getByRole('textbox', { name: /username/i });",
+        "snippet": "container.querySelector('#username')",
+      },
+      "TestId": Object {
+        "excerpt": "getByTestId('uname')",
         "queryArgs": Array [
           "uname",
         ],
         "queryMethod": "getByTestId",
         "queryName": "TestId",
-        "toString": [Function],
+        "snippet": "screen.getByTestId('uname')",
         "variant": "get",
       },
-      "getByTitle": Object {
+      "Text": undefined,
+      "Title": Object {
+        "excerpt": "getByTitle(/enter your username/i)",
         "queryArgs": Array [
           /enter your username/i,
         ],
         "queryMethod": "getByTitle",
         "queryName": "Title",
-        "toString": [Function],
+        "snippet": "screen.getByTitle(/enter your username/i)",
         "variant": "get",
       },
     }

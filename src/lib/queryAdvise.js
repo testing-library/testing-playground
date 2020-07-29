@@ -1,45 +1,6 @@
-import { messages, queries } from '../constants';
-import { computeAccessibleName, getRole } from 'dom-accessibility-api';
-import { getSuggestedQuery, getConfig } from '@testing-library/dom';
+import { getSuggestedQuery, queries as queryFns } from '@testing-library/dom';
 import cssPath from './cssPath';
-import { getFieldName } from './';
-
-export function getData({ rootNode, element }) {
-  const type = element.getAttribute('type');
-  const tagName = element.tagName;
-
-  // escape id to prevent querySelector from tripping over corrupted html like:
-  //   <input id="button\n<button> & <input id=\ntype="text" />
-  const id = (element.getAttribute('id') || '')
-    .replace(/\s/g, '')
-    .replace(/"/g, '\\"');
-
-  const labelElem = id ? rootNode.querySelector(`[for="${id}"]`) : null;
-  const labelText = labelElem ? labelElem.innerText : null;
-
-  return {
-    role: element.getAttribute('aria-hidden')
-      ? undefined
-      : element.getAttribute('role') ||
-        // input's require a type for the role
-        (tagName === 'INPUT' && type !== 'text' ? '' : getRole(element)),
-    name: computeAccessibleName(element),
-    tagName: tagName,
-    type: type,
-    labelText: labelText,
-    placeholderText: element.getAttribute('placeholder'),
-    text: element.innerText,
-    displayValue: element.getAttribute('value'),
-
-    altText: element.getAttribute('alt'),
-    title: element.getAttribute('title'),
-
-    // it might be better to get this from the playground context instead of
-    // pulling it out of testing-library, but that one is easier to fetch, and
-    // at the end, it's the same.
-    testId: element.getAttribute(getConfig().testIdAttribute),
-  };
-}
+import beautify from './beautify';
 
 function flattenDOM(node) {
   return [
@@ -64,67 +25,99 @@ function getSnapshot(element) {
   return snapshot;
 }
 
-// TODO:
-// TestingLibraryDom.getSuggestedQuery($0, 'get').toString()
-export const emptyResult = { data: {}, suggestion: {} };
-export function getQueryAdvise({ rootNode, element }) {
-  if (
-    rootNode === element ||
-    rootNode?.nodeType !== Node.ELEMENT_NODE ||
-    element?.nodeType !== Node.ELEMENT_NODE
-  ) {
-    return emptyResult;
-  }
-
-  const suggestedQuery = getSuggestedQuery(element);
-  const data = getData({ rootNode, element });
-
-  if (!suggestedQuery) {
-    // this will always work, but returns something potentially nasty, like:
-    // '#tsf > div:nth-child(2) > div:nth-child(1) > div:nth-child(4)'
-    const path = cssPath(element, true);
-
-    return {
-      suggestion: {
-        level: 3,
-        expression: `container.querySelector('${path}')`,
-        snapshot: getSnapshot(element),
-        method: '',
-        ...messages[3],
-      },
-      data,
-    };
-  }
-
-  const { level } = queries.find(
-    ({ method }) => method === suggestedQuery.queryMethod,
-  );
-
-  const suggestion = {
-    expression: `screen.${suggestedQuery.toString()}`,
-    level,
-    method: suggestedQuery.queryMethod,
-    ...messages[level],
-  };
-
-  return {
-    data,
-    suggestion,
-  };
+function getAll(rootNode, { queryName, queryArgs }) {
+  // use queryBy here, we don't want to throw on no-results-found
+  return queryFns[`queryAllBy${queryName}`](rootNode, ...queryArgs);
 }
 
-export function getAllPossibileQueries(element) {
-  const possibleQueries = queries
-    .filter((query) => query.type !== 'MANUAL')
-    .map((query) => {
-      const method = getFieldName(query.method);
-      return getSuggestedQuery(element, 'get', method);
-    })
-    .filter((suggestedQuery) => suggestedQuery !== undefined)
-    .reduce((obj, suggestedQuery) => {
-      obj[suggestedQuery.queryMethod] = suggestedQuery;
-      return obj;
-    }, {});
+function matchesSingleElement(rootNode, query) {
+  return getAll(rootNode, query)?.length === 1;
+}
 
-  return possibleQueries;
+/**
+ * Check if the viewQuery only matches a single element within the rootNode
+ * and if the elementQuery only matches a single element within the view
+ *
+ * @param rootNode HTMLElement
+ * @param viewQuery QuerySuggestion
+ * @param elementQuery QuerySuggestion
+ * @returns {boolean}
+ */
+function matchesSingleElementInView(rootNode, viewQuery, elementQuery) {
+  const elements = getAll(rootNode, viewQuery);
+
+  if (elements.length !== 1) {
+    return false;
+  }
+
+  return getAll(elements[0], elementQuery).length === 1;
+}
+
+function getCodeSnippet(rootNode, element, elementQuery) {
+  // query the element on `screen`, if it results in a single element
+  if (matchesSingleElement(rootNode, elementQuery)) {
+    return beautify.js(`screen.${elementQuery}`);
+  }
+
+  // turns out, there are multiple matches. We're going to try to scope
+  // the query by using the `within` helper method.
+  let node = element;
+  while (node && node !== rootNode) {
+    const view = getSuggestedQuery(node, 'get');
+
+    if (view && matchesSingleElementInView(rootNode, view, elementQuery)) {
+      const prop = view.queryName === 'Role' ? view.queryArgs[0] : 'view';
+      return beautify.js(`
+        const ${prop} = screen.${view};
+        
+        within(${prop}).${elementQuery};
+      `);
+    }
+
+    node = node.parentNode;
+  }
+
+  // can't construct a working query? :/
+  return '// sorry, I failed to provide something useful';
+}
+
+const queryMethods = [
+  'Role',
+  'LabelText',
+  'PlaceholderText',
+  'Text',
+  'DisplayValue',
+  'AltText',
+  'Title',
+  'TestId',
+];
+
+export function getAllPossibleQueries({ rootNode, element }) {
+  const result = {};
+
+  for (const method of queryMethods) {
+    let suggestion = getSuggestedQuery(element, 'get', method);
+
+    if (suggestion) {
+      suggestion.snippet = getCodeSnippet(rootNode, element, suggestion);
+      suggestion.excerpt = suggestion.toString();
+
+      // toString can't be serialized for message transport
+      delete suggestion.toString;
+    }
+
+    result[method] = suggestion;
+  }
+
+  const path = cssPath(element, true).toString();
+  result.Selector = {
+    queryMethod: 'querySelector',
+    queryName: 'Selector',
+    queryArgs: [path],
+    snippet: `container.querySelector('${path}')`,
+    excerpt: `querySelector('${path}')`,
+    snapshot: getSnapshot(element),
+  };
+
+  return result;
 }

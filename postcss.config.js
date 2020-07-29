@@ -22,8 +22,13 @@ if (IS_PRODUCTION) {
         'devtools/**/*.js',
         'devtools/**/*.html',
       ],
-      whitelist: ['body', /CodeMirror/, /react-toggle/],
-      whitelistPatternsChildren: [/CodeMirror/, /cm-s-dracula/, /react-toggle/],
+      whitelist: ['body', /CodeMirror/, /react-toggle/, /data-reach/],
+      whitelistPatternsChildren: [
+        /CodeMirror/,
+        /cm-s-dracula/,
+        /react-toggle/,
+        /data-reach/,
+      ],
       defaultExtractor: TailwindExtractor.extract,
     }),
   );

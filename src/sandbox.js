@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Scrollable from './components/Scrollable';
 import setupHighlighter from '../devtools/src/content-script/highlighter';
 import cssPath from './lib/cssPath';
-import { getQueryAdvise } from './lib';
+import { getAllPossibleQueries } from './lib';
 import parser from './parser';
 
 const state = {
@@ -30,7 +30,8 @@ function postMessage(action) {
 
 function runQuery(rootNode, query) {
   const result = parser.parse({ rootNode, query });
-  state.queriedNodes = result.elements.map((elem) => elem.target);
+  const selector = result.elements.map((x) => x.cssPath).join(', ');
+  state.queriedNodes = Array.from(rootNode.querySelectorAll(selector));
   state.highlighter.highlight({ nodes: state.queriedNodes });
   return result;
 }
@@ -97,32 +98,42 @@ function onSelectNode(node, { origin }) {
     return;
   }
 
-  const { suggestion, data } = getQueryAdvise({
+  const queries = getAllPossibleQueries({
     element: node,
     rootNode: state.rootNode,
   });
 
-  if (!suggestion?.expression) {
+  const suggestion = Object.values(queries).find(Boolean);
+  if (!suggestion) {
     return;
   }
 
   const action = {
     type: origin === 'click' ? 'SELECT_NODE' : 'HOVER_NODE',
     suggestion,
-    data,
     cssPath: cssPath(node, true).toString(),
   };
 
-  // toString can't be serialized for postMessage
-  delete action.query?.toString;
   postMessage(action);
 }
 
 function updateSandbox(rootNode, markup, query) {
   postMessage({ type: 'SANDBOX_BUSY' });
   setInnerHTML(rootNode, markup);
-  runQuery(rootNode, query);
-  postMessage({ type: 'SANDBOX_READY' });
+
+  // get and clean result
+  // eslint-disable-next-line no-unused-vars
+  const { markup: m, query: q, ...data } = runQuery(rootNode, query);
+
+  const result = {
+    ...data,
+    accessibleRoles: Object.keys(data.accessibleRoles).reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {}),
+  };
+
+  postMessage({ type: 'SANDBOX_READY', result });
 }
 
 function onMessage({ source, data }) {

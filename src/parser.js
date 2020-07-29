@@ -1,9 +1,9 @@
 import prettyFormat from 'pretty-format';
-import { ensureArray, getQueryAdvise } from './lib';
+import { ensureArray } from './lib';
 import { queries as supportedQueries } from './constants';
 import cssPath from './lib/cssPath';
 import deepEqual from './lib/deepEqual';
-import { getAllPossibileQueries } from './lib/queryAdvise';
+import { getAllPossibleQueries } from './lib/queryAdvise';
 
 import {
   getQueriesForElement,
@@ -99,7 +99,9 @@ function createEvaluator({ rootNode }) {
     userEvent,
     user: userEvent,
     container: rootNode,
+    within: getQueriesForElement,
   });
+
   const evaluator = Function.apply(null, [
     ...Object.keys(context),
     'expr',
@@ -123,17 +125,13 @@ function createEvaluator({ rootNode }) {
     result.elements = ensureArray(result.data)
       .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
       .map((element) => {
-        const { suggestion, data } = getQueryAdvise({
-          rootNode,
-          element,
-        });
+        const queries = getAllPossibleQueries({ rootNode, element });
+        const suggestion = Object.values(queries).find(Boolean);
 
         return {
+          cssPath: cssPath(element, true).toString(),
           suggestion,
-          data,
-          target: element,
-          cssPath: cssPath(element, true),
-          queries: getAllPossibileQueries(element),
+          queries,
         };
       });
 
@@ -149,99 +147,6 @@ function createEvaluator({ rootNode }) {
   }
 
   return { context, evaluator, exec, wrap };
-}
-
-function createSandbox({ markup }) {
-  // render the frame in a container, so we can set "display: none". If the
-  // hiding would be done in the frame itself, testing-library would mark the
-  // entire dom as being inaccessible. Now we don't have this problem :)
-  const container = document.createElement('div');
-  container.setAttribute(
-    'style',
-    'width: 1px; height: 1px; overflow: hidden; display: none;',
-  );
-
-  const frame = document.createElement('iframe');
-  frame.setAttribute('security', 'restricted');
-  frame.setAttribute('scrolling', 'no');
-  frame.setAttribute('frameBorder', '0');
-  frame.setAttribute('allowTransparency', 'true');
-  frame.setAttribute(
-    'sandbox',
-    'allow-same-origin allow-scripts allow-popups allow-forms',
-  );
-  frame.setAttribute(
-    'style',
-    'width: 800px; height: 600px; top: 0; left: 0px; border: 3px solid red;',
-  );
-  container.appendChild(frame);
-  document.body.appendChild(container);
-
-  const sandbox = frame.contentDocument || frame.contentWindow.document;
-  const { context, evaluator, wrap } = createEvaluator({
-    rootNode: sandbox.body,
-  });
-
-  const script = sandbox.createElement('script');
-  script.setAttribute('type', 'text/javascript');
-  script.innerHTML = `
-    window.exec = function exec(context, expr) {
-      const evaluator = ${evaluator};
-      
-      return evaluator.apply(null, [...Object.values(context), (expr || '').trim()]);
-    }
-  `;
-
-  sandbox.head.appendChild(script);
-  sandbox.body.innerHTML = markup;
-
-  let body = markup;
-
-  // mock out userEvent in the fake sandbox
-  Object.keys(context.userEvent).map((x) => {
-    context.userEvent[x] = () => {};
-  });
-
-  return {
-    rootNode: sandbox.body,
-    ensureMarkup: (html) => {
-      if (body !== html) {
-        sandbox.body.innerHTML = html;
-        body = html;
-      }
-    },
-    eval: (query) =>
-      wrap(() => frame.contentWindow.exec(context, query), { markup, query }),
-    destroy: () => document.body.removeChild(container),
-  };
-}
-
-const sandboxes = {};
-
-/**
- * runInSandbox
- *
- * Create a sandbox in which the body element is populated with the
- * provided html `markup`. The javascript `query` is injected into
- * the document for evaluation.
- *
- * By providing a `cacheId`, the sandbox can be persisted. This
- * allows one to reuse an instance, and thereby speed up successive
- * queries.
- */
-function runInSandbox({ markup, query, cacheId }) {
-  const sandbox = sandboxes[cacheId] || createSandbox({ markup });
-  sandbox.ensureMarkup(markup);
-
-  const result = sandbox.eval(query);
-
-  if (cacheId && !sandboxes[cacheId]) {
-    sandboxes[cacheId] = sandbox;
-  } else {
-    sandbox.destroy();
-  }
-
-  return result;
 }
 
 function runUnsafe({ rootNode, query }) {
@@ -262,14 +167,12 @@ function configure({ testIdAttribute }) {
   testingLibraryConfigure({ testIdAttribute });
 }
 
-function parse({ rootNode, markup, query, cacheId, prevResult }) {
-  if (typeof markup !== 'string' && !rootNode) {
-    throw new Error('either markup or rootNode should be provided');
+function parse({ rootNode, query, prevResult }) {
+  if (!rootNode) {
+    throw new Error(`rootNode should be provided`);
   }
 
-  const result = rootNode
-    ? runUnsafe({ rootNode, query })
-    : runInSandbox({ markup, query, cacheId });
+  const result = runUnsafe({ rootNode, query });
 
   result.expression = getLastExpression(query);
 
@@ -294,6 +197,8 @@ function parse({ rootNode, markup, query, cacheId, prevResult }) {
     }
   }
 
+  // data holds the raw nodes, we don't want to send those out
+  delete result.data;
   return result;
 }
 
