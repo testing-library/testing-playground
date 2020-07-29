@@ -30,7 +30,8 @@ function postMessage(action) {
 
 function runQuery(rootNode, query) {
   const result = parser.parse({ rootNode, query });
-  state.queriedNodes = result.elements.map((elem) => elem.target);
+  const selector = result.elements.map((x) => x.cssPath).join(', ');
+  state.queriedNodes = Array.from(rootNode.querySelectorAll(selector));
   state.highlighter.highlight({ nodes: state.queriedNodes });
   return result;
 }
