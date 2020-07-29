@@ -3,6 +3,7 @@ import {
   within,
   getSuggestedQuery,
   fireEvent,
+  getRoles,
 } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
@@ -29,6 +30,7 @@ export function setup(view) {
     view[prop] = view.screen[prop];
   }
 
+  view.getRoles = getRoles;
   view.fireEvent = fireEvent;
   view.getSuggestedQuery = getSuggestedQuery;
   view.within = within;
