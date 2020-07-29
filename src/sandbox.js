@@ -31,7 +31,10 @@ function postMessage(action) {
 function runQuery(rootNode, query) {
   const result = parser.parse({ rootNode, query });
   const selector = result.elements.map((x) => x.cssPath).join(', ');
-  state.queriedNodes = Array.from(rootNode.querySelectorAll(selector));
+  state.queriedNodes =
+    result.elements.length > 0
+      ? Array.from(rootNode.querySelectorAll(selector))
+      : [];
   state.highlighter.highlight({ nodes: state.queriedNodes });
   return result;
 }
