@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Scrollable from './components/Scrollable';
 import setupHighlighter from '../devtools/src/content-script/highlighter';
 import cssPath from './lib/cssPath';
-import { getQueryAdvise } from './lib';
+import { getAllPossibleQueries } from './lib';
 import parser from './parser';
 
 const state = {
@@ -97,24 +97,22 @@ function onSelectNode(node, { origin }) {
     return;
   }
 
-  const { suggestion, data } = getQueryAdvise({
+  const queries = getAllPossibleQueries({
     element: node,
     rootNode: state.rootNode,
   });
 
-  if (!suggestion?.expression) {
+  const suggestion = Object.values(queries).find(Boolean);
+  if (!suggestion) {
     return;
   }
 
   const action = {
     type: origin === 'click' ? 'SELECT_NODE' : 'HOVER_NODE',
     suggestion,
-    data,
     cssPath: cssPath(node, true).toString(),
   };
 
-  // toString can't be serialized for postMessage
-  delete action.query?.toString;
   postMessage(action);
 }
 

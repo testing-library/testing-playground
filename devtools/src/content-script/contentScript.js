@@ -2,10 +2,11 @@ import Bridge from 'crx-bridge';
 import setupHighlighter from './highlighter';
 
 import parser from '../../../src/parser';
-import { getQueryAdvise } from '../../../src/lib';
+import { getAllPossibleQueries } from '../../../src/lib';
 import inject from './lib/inject';
 import { setup } from '../window/testing-library';
 import onDocReady from './lib/onDocReady';
+import cssPath from '../../../src/lib/cssPath';
 
 function init() {
   inject('../window/testing-library.js');
@@ -17,17 +18,22 @@ function init() {
   hook.highlighter = setupHighlighter({ view: window, onSelectNode });
 
   function onSelectNode(node) {
-    const { data, suggestion } = getQueryAdvise({
+    const queries = getAllPossibleQueries({
       rootNode: document.body,
       element: node,
     });
 
-    const result = parser.parse({
-      rootNode: document.body,
-      query: suggestion.expression,
-    });
+    const suggestion = Object.values(queries).find(Boolean);
 
-    Bridge.sendMessage('SELECT_NODE', { result, data, suggestion }, 'devtools');
+    Bridge.sendMessage(
+      'SELECT_NODE',
+      {
+        suggestion,
+        queries,
+        cssPath: cssPath(node, true).toString(),
+      },
+      'devtools',
+    );
   }
 
   Bridge.onMessage('PARSE_QUERY', function ({ data }) {

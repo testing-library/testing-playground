@@ -1,5 +1,4 @@
 import React from 'react';
-import { getFieldName } from '../lib';
 import { messages as queryGroups } from '../constants';
 
 function Section({ children }) {
@@ -10,52 +9,15 @@ function Heading({ children }) {
   return <h3 className="text-xs font-bold">{children}</h3>;
 }
 
-// The reviver parses serialized regexes back to a real regexp.
-// This function is required if the data comes in via message transport
-// think of the chrome-extension.
-function reviver(obj) {
-  if (typeof obj?.$regexp === 'string') {
-    return new RegExp(obj.$regexp, obj.$flags);
-  }
-
-  return obj;
-}
-
-// we use our own stringify method instead of the one from @testing-library/dom,
-// because it might have been removed for message transport.
-function suggestionToString({ queryMethod, queryArgs } = {}) {
-  if (!queryMethod || !queryArgs) {
-    return '';
-  }
-
-  let [text, options] = queryArgs;
-
-  text = typeof text === 'string' ? `'${text}'` : reviver(text);
-
-  options = options
-    ? `, { ${Object.entries(options)
-        .map(([k, v]) => `${k}: ${reviver(v)}`)
-        .join(', ')} }`
-    : '';
-
-  return `${queryMethod}(${text}${options})`;
-}
-
-const Field = React.memo(function Field({
-  data,
-  method,
-  query,
-  dispatch,
-  active,
-}) {
-  const field = getFieldName(method);
-  const value = data[field];
+const Field = React.memo(function Field({ method, query, dispatch, active }) {
+  const arg = query?.queryArgs[0] || '';
+  const value = arg.source || arg.$regexp || arg;
 
   const handleClick = value
     ? () => {
         dispatch({
           type: 'SET_QUERY',
-          query: `screen.${suggestionToString(query)}`,
+          query: query.snippet,
         });
       }
     : undefined;
@@ -66,7 +28,7 @@ const Field = React.memo(function Field({
       data-clickable={!!handleClick}
       onClick={handleClick}
     >
-      <div className="font-light text-gray-800">{field}</div>
+      <div className="font-light text-gray-800">{method}</div>
       <div className="truncate">
         {value || <span className="text-gray-400">n/a</span>}
       </div>
@@ -74,16 +36,15 @@ const Field = React.memo(function Field({
   );
 });
 
-function QueryGroup({ group, queries, heading, activeMethod, dispatch, data }) {
+function QueryGroup({ group, queries, heading, activeMethod, dispatch }) {
   return (
     <Section key={group.type}>
       <Heading>{heading}</Heading>
       {group.queries.map((queryMethod) => (
         <Field
           key={queryMethod}
-          data={data}
-          method={queryMethod}
-          query={queries[queryMethod]}
+          method={queryMethod.replace('getBy', '')}
+          query={queries[queryMethod.replace('getBy', '')]}
           dispatch={dispatch}
           active={queryMethod === activeMethod}
         />
