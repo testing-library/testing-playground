@@ -48,7 +48,7 @@ function Header({
                 src={icon}
                 alt="Testing Playground mascot Froggy"
               />
-              ️ <span>Testing Playground</span>
+              ️ <span className="hidden sm:block">Testing Playground</span>
             </h1>
           </a>
         </div>
