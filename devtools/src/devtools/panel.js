@@ -32,7 +32,7 @@ function Panel() {
             setResult(result);
           });
 
-          if (action.updateEditor !== false) {
+          if (action.origin !== 'EDITOR') {
             editor.current.setValue(action.query);
           }
           break;

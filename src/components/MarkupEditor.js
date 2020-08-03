@@ -14,7 +14,7 @@ function MarkupEditor({ markup, dispatch }) {
       dispatch({
         type: 'SET_MARKUP',
         markup,
-        updateEditor: false,
+        origin: 'EDITOR',
         immediate: origin === 'user',
       }),
     [dispatch],
