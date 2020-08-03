@@ -70,7 +70,9 @@ function reducer(state, action, exec) {
         exec({ type: 'UPDATE_EDITOR', editor: 'query' });
       }
 
-      exec({ type: 'UPDATE_SANDBOX', immediate });
+      if (action.origin !== 'SANDBOX') {
+        exec({ type: 'UPDATE_SANDBOX', immediate });
+      }
 
       return {
         ...state,

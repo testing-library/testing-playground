@@ -66,7 +66,11 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
         }
 
         case 'SELECT_NODE': {
-          dispatch({ type: 'SET_QUERY', query: suggestion.snippet });
+          dispatch({
+            type: 'SET_QUERY',
+            query: suggestion.snippet,
+            origin: 'SANDBOX',
+          });
           break;
         }
 
