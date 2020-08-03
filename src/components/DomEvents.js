@@ -1,13 +1,20 @@
 import React, { useRef, useCallback, useState } from 'react';
 import { eventMap } from '@testing-library/dom/dist/event-map';
+import { ChevronUpIcon, ChevronDownIcon } from '@primer/octicons-react';
 import throttle from 'lodash.throttle';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { TrashcanIcon } from '@primer/octicons-react';
 
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
+import { VirtualScrollable } from './Scrollable';
+import IconButton from './IconButton';
+import CopyButton from './CopyButton';
+import EmptyStreetImg from '../images/EmptyStreetImg';
+import StickyList from './StickyList';
 import Layout from './Layout';
 import { useParams } from 'react-router-dom';
-import DomEventsTable from './DomEventsTable';
 
 function targetToString() {
   return [
@@ -73,11 +80,33 @@ function addLoggingEvents(node, log) {
   return eventListeners;
 }
 
+function EventRecord({ index, style, data }) {
+  const { id, type, name, element, selector } = data[index];
+
+  return (
+    <div
+      className={`w-full h-8 flex items-center text-sm ${
+        index % 2 ? 'bg-gray-100' : ''
+      }`}
+      style={style}
+    >
+      <div className="p-2 flex-none w-16">{id}</div>
+
+      <div className="p-2 flex-none w-32">{type}</div>
+      <div className="p-2 flex-none w-32">{name}</div>
+
+      <div className="p-2 flex-none w-40">{element}</div>
+      <div className="p-2 flex-auto whitespace-no-wrap">{selector}</div>
+    </div>
+  );
+}
+
 function DomEvents() {
   const { gistId, gistVersion } = useParams();
 
   const buffer = useRef([]);
   const previewRef = useRef();
+  const listRef = useRef();
 
   const sortDirection = useRef('asc');
   const [appendMode, setAppendMode] = useState('bottom');
@@ -86,6 +115,16 @@ function DomEvents() {
 
   const [eventCount, setEventCount] = useState(0);
   const [eventListeners, setEventListeners] = useState([]);
+
+  const getSortIcon = () => (
+    <IconButton>
+      {sortDirection.current === 'desc' ? (
+        <ChevronDownIcon />
+      ) : (
+        <ChevronUpIcon />
+      )}
+    </IconButton>
+  );
 
   const changeSortDirection = () => {
     const newDirection = sortDirection.current === 'desc' ? 'asc' : 'desc';
@@ -98,6 +137,11 @@ function DomEvents() {
     buffer.current = [];
     setEventCount(0);
   };
+
+  const getTextToCopy = () =>
+    buffer.current
+      .map((log) => `${log.target.toString()} - ${log.event.EventType}`)
+      .join('\n');
 
   const flush = useCallback(
     throttle(() => setEventCount(buffer.current.length), 16, {
@@ -134,19 +178,6 @@ function DomEvents() {
     }
   }, []);
 
-  const bufferValues = Object.values(buffer.current);
-  const getUniqueEventsByProperty = (property) => [
-    ...new Set(bufferValues.map((event) => event[property])),
-  ];
-  const getOptionsByProperty = (property) =>
-    getUniqueEventsByProperty(property).map((eventProperty) => ({
-      label: eventProperty,
-      value: eventProperty,
-    }));
-
-  const typeOptions = getOptionsByProperty('type');
-  const nameOptions = getOptionsByProperty('name');
-
   return (
     <Layout
       dispatch={dispatch}
@@ -173,15 +204,63 @@ function DomEvents() {
           </div>
         </div>
 
-        <DomEventsTable
-          eventCount={eventCount}
-          reset={reset}
-          data={buffer.current}
-          typeOptions={typeOptions}
-          nameOptions={nameOptions}
-          onChangeSortDirection={changeSortDirection}
-          appendMode={appendMode}
-        />
+        <div className="flex-none h-8" />
+
+        <div className="editor p-4 md:h-56 flex-auto overflow-hidden">
+          <div className="h-56 md:h-full w-full flex flex-col">
+            <div className="h-8 flex items-center w-full text-sm font-bold">
+              <div
+                className="p-2 w-16 cursor-pointer flex justify-between items-center"
+                onClick={changeSortDirection}
+              >
+                # {getSortIcon()}
+              </div>
+
+              <div className="p-2 w-32 ">type</div>
+              <div className="p-2 w-32 ">name</div>
+
+              <div className="p-2 w-40 ">element</div>
+              <div className="flex-auto p-2 flex justify-between">
+                <span>selector</span>
+                <div>
+                  <CopyButton
+                    text={getTextToCopy}
+                    title="copy log"
+                    className="mr-5"
+                  />
+                  <IconButton title="clear event log" onClick={reset}>
+                    <TrashcanIcon />
+                  </IconButton>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-auto relative overflow-hidden">
+              {buffer.current.length === 0 ? (
+                <div className="flex w-full h-full opacity-50 items-end justify-center">
+                  <EmptyStreetImg height="80%" />
+                </div>
+              ) : (
+                <AutoSizer>
+                  {({ width, height }) => (
+                    <StickyList
+                      mode={appendMode}
+                      ref={listRef}
+                      height={height}
+                      itemCount={eventCount}
+                      itemData={buffer.current}
+                      itemSize={32}
+                      width={width}
+                      outerElementType={VirtualScrollable}
+                    >
+                      {EventRecord}
+                    </StickyList>
+                  )}
+                </AutoSizer>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   );
