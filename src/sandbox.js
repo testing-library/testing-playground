@@ -60,6 +60,14 @@ function setInnerHTML(node, html) {
     newScript.appendChild(doc.createTextNode(text));
     prevScript.parentNode.replaceChild(newScript, prevScript);
   }
+
+  for (let anchor of node.querySelectorAll('a')) {
+    anchor.addEventListener('click', (e) => {
+      if (!e.ctrlKey && !e.shiftKey) {
+        e.preventDefault();
+      }
+    });
+  }
 }
 
 function Sandbox() {
