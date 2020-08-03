@@ -14,7 +14,7 @@ function QueryEditor(props) {
       dispatch({
         type: 'SET_QUERY',
         query,
-        updateEditor: false,
+        origin: 'EDITOR',
         immediate: origin === 'user',
       }),
     [dispatch],

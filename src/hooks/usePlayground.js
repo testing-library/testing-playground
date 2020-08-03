@@ -52,7 +52,7 @@ function reducer(state, action, exec) {
     }
 
     case 'SET_MARKUP': {
-      if (action.updateEditor !== false) {
+      if (action.origin !== 'EDITOR') {
         exec({ type: 'UPDATE_EDITOR', editor: 'markup' });
       }
 
@@ -66,11 +66,13 @@ function reducer(state, action, exec) {
     }
 
     case 'SET_QUERY': {
-      if (action.updateEditor !== false) {
+      if (action.origin !== 'EDITOR') {
         exec({ type: 'UPDATE_EDITOR', editor: 'query' });
       }
 
-      exec({ type: 'UPDATE_SANDBOX', immediate });
+      if (action.origin !== 'SANDBOX') {
+        exec({ type: 'UPDATE_SANDBOX', immediate });
+      }
 
       return {
         ...state,

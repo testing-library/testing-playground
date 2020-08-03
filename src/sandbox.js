@@ -125,6 +125,12 @@ function onSelectNode(node, { origin }) {
     cssPath: cssPath(node, true).toString(),
   };
 
+  if (action.type === 'SELECT_NODE') {
+    // optimistically update the highlighted node
+    state.queriedNodes = [node];
+    state.highlighter.highlight({ nodes: state.queriedNodes });
+  }
+
   postMessage(action);
 }
 
