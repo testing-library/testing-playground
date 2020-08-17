@@ -30,13 +30,28 @@ function postMessage(action) {
 
 function runQuery(rootNode, query) {
   const result = parser.parse({ rootNode, query });
-  const selector = result.elements.map((x) => x.cssPath).join(', ');
+  const { elements, expression, formatted } = result;
+  const selector = elements.map((x) => x.cssPath).join(', ');
+
   state.queriedNodes =
-    result.elements.length > 0
-      ? Array.from(rootNode.querySelectorAll(selector))
-      : [];
+    elements.length > 0 ? Array.from(rootNode.querySelectorAll(selector)) : [];
+
   state.highlighter.highlight({ nodes: state.queriedNodes });
-  return result;
+
+  const accessibleRoles = Object.keys(result.accessibleRoles).reduce(
+    (acc, key) => {
+      acc[key] = true;
+      return acc;
+    },
+    {},
+  );
+
+  return {
+    elements,
+    expression,
+    formatted,
+    accessibleRoles,
+  };
 }
 
 function setInnerHTML(node, html) {
@@ -132,24 +147,21 @@ function onSelectNode(node, { origin }) {
   }
 
   postMessage(action);
+
+  if (action.type === 'SELECT_NODE') {
+    // we patched the highlight optimistically, but we also
+    // need to inform the state manager. Complete the update
+    state.query = action.suggestion.snippet;
+    const result = runQuery(state.rootNode, state.query);
+    postMessage({ type: 'SANDBOX_READY', result });
+  }
 }
 
 function updateSandbox(rootNode, markup, query) {
   postMessage({ type: 'SANDBOX_BUSY' });
   setInnerHTML(rootNode, markup);
 
-  // get and clean result
-  // eslint-disable-next-line no-unused-vars
-  const { markup: m, query: q, ...data } = runQuery(rootNode, query);
-
-  const result = {
-    ...data,
-    accessibleRoles: Object.keys(data.accessibleRoles).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {}),
-  };
-
+  const result = runQuery(rootNode, query);
   postMessage({ type: 'SANDBOX_READY', result });
 }
 
