@@ -21,6 +21,7 @@ function Settings({ settings, dispatch }) {
   };
 
   const showBehavior = typeof settings.autoRun !== 'undefined';
+  const showDarkMode = typeof settings.darkMode !== 'undefined';
   const showTestingLibrary = typeof settings.testIdAttribute !== 'undefined';
 
   return (
@@ -40,7 +41,22 @@ function Settings({ settings, dispatch }) {
           </div>
         )}
 
-        {showBehavior && showTestingLibrary && <Divider />}
+        {showBehavior && showDarkMode && <Divider />}
+
+        {showDarkMode && (
+          <div>
+            <h3 className="text-sm font-bold mb-2">Dark Mode</h3>
+            <label className="flex space-x-4 items-center">
+              <Toggle
+                icons={false}
+                defaultChecked={settings.darkMode}
+                name="darkMode"
+              />
+            </label>
+          </div>
+        )}
+
+        {showDarkMode && showTestingLibrary && <Divider />}
 
         {showTestingLibrary && (
           <div>
