@@ -8,9 +8,12 @@ import usePlayground from '../hooks/usePlayground';
 import Layout from './Layout';
 import Loader from './Loader';
 
-function Paper({ children }) {
+function Paper({ children, settings }) {
   return (
-    <div className="editor p-4 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+    <div
+      style={settings.darkMode ? { background: 'black' } : null}
+      className="editor p-4 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2"
+    >
       {children}
     </div>
   );
@@ -39,7 +42,7 @@ function Playground() {
           isLoading ? 'opacity-0' : 'opacity-100',
         ].join(' ')}
       >
-        <Paper>
+        <Paper settings={settings}>
           <div className="flex-auto relative h-56 md:h-full">
             <MarkupEditor markup={markup} dispatch={dispatch} />
           </div>
@@ -56,7 +59,7 @@ function Playground() {
 
         <div className="flex-none h-8" />
 
-        <Paper>
+        <Paper settings={settings}>
           <div className="flex-auto relative h-56 md:h-full">
             <Query query={query} result={result} dispatch={dispatch} />
           </div>

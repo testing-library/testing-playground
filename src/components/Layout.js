@@ -12,7 +12,12 @@ function Layout({
   settings,
 }) {
   return (
-    <div className="flex flex-col h-screen">
+    <div
+      className={[
+        'flex flex-col h-screen',
+        settings.darkMode && 'bg-gray-900',
+      ].join(' ')}
+    >
       <div className="mb-8 flex-none">
         <Header
           gistId={gistId}
