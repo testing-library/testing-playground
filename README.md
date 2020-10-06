@@ -81,6 +81,38 @@ To configure your playground even further, add one or more of the following attr
 | data-width   | number &#124; string                               | '100% '                                  | width of the element                            |
 | data-loading | eager &#124; lazy                                  | 'lazy'                                   | load the frame eager or lazy (see iframe specs) |
 
+#### dynamic updates
+
+Playground can be updated using [cross-window messaging](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+after it has been loaded. After the playground is loaded, you can update it with following message: `{type: 'UPDATE_DATA', markup: 'new markup', query: 'new query'}` with both `markup` and `query` being optional.
+
+To find out, if playground is ready, you can listen for a message `{source: 'embedded-testing-playground', type: 'READY'}`
+in window from which are you embedding the playground.
+
+Example:
+
+```html
+<template data-testing-playground data-class="messaging-iframe"></template>
+<script type="text/javascript">
+  function updatePlayground() {
+    const iframe = document.querySelector('.messaging-iframe');
+    iframe.contentWindow.postMessage(
+      { type: 'UPDATE_DATA', markup: 'new markup', query: 'new query' },
+      'https://testing-playground.com',
+    );
+  }
+
+  window.addEventListener('message', ({ data }) => {
+    if (
+      data.source === 'embedded-testing-playground' &&
+      data.type === 'READY'
+    ) {
+      updatePlayground();
+    }
+  });
+</script>
+```
+
 ## Roadmap
 
 Future ideas are maintained in [roadmap.md]. Please use the [issue tracker] to discuss any questions or suggestions you have.
@@ -127,6 +159,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
