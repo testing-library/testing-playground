@@ -1,26 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Input from './Input';
 import CopyButton from './CopyButton';
+import { SyncIcon } from '@primer/octicons-react';
 
-function Share({ dirty }) {
+function Share({ dirty, dispatch, gistId, gistVersion }) {
+  useEffect(() => {
+    if (!dirty) {
+      return;
+    }
+
+    dispatch({ type: 'SAVE' });
+  }, [dirty, gistId, dispatch]);
+
+  // it is possible to have a clean state, and still no gistId. This happens
+  // on either empty playgrounds, or when using statefull urls.
+  const shareUrl = gistId
+    ? [location.origin, 'gist', gistId, gistVersion].filter(Boolean).join('/')
+    : location.href;
+
+  console.log('share url');
   return (
     <div className="settings text-sm pb-2">
       <div>
         <h3 className="text-sm font-bold mb-2">Share</h3>
 
-        {dirty && (
-          <div className="bg-blue-100 p-2 text-xs rounded my-2 text-blue-800">
-            Please note that this playground has
-            <strong> unsaved changes </strong>. The link below
-            <strong> will not include </strong> your latest changes!
+        <label className="text-xs">playground link:</label>
+        {dirty ? (
+          <div className="flex space-x-4 items-center border rounded w-full py-2 px-3 bg-white text-gray-800 leading-tight">
+            <SyncIcon size={12} className="spinner" />
+            <span>one sec...</span>
+          </div>
+        ) : (
+          <div className="flex space-x-4">
+            <Input key={shareUrl} defaultValue={shareUrl} readOnly name="url" />
+            <CopyButton text={shareUrl} />
           </div>
         )}
-
-        <label className="text-xs">playground link:</label>
-        <div className="flex space-x-4">
-          <Input defaultValue={window.location.href} name="url" />
-          <CopyButton text={window.location.href} />
-        </div>
       </div>
     </div>
   );
