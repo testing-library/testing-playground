@@ -52,6 +52,22 @@ async function getGist({ id, version }) {
   return { id, version, files };
 }
 
+const placeholderValues = {
+  js: '// your query',
+  html: '<!-- your markup -->',
+  json: '{}',
+};
+
+function ensureContent(files) {
+  for (let name of Object.keys(files)) {
+    if (files[name].content.length === 0) {
+      files[name].content = placeholderValues[name.split('.').pop()] || 'o.O';
+    }
+  }
+
+  return files;
+}
+
 /**
  * @param id {string}
  * @param description {string}
@@ -59,6 +75,9 @@ async function getGist({ id, version }) {
  * @returns {Promise<{id: *, version: *, url: string}>}
  */
 async function saveGist({ id, description, files }) {
+  // we can't save empty files to github gists. So we'll make sure they ain't empty.
+  ensureContent(files);
+
   // if the id is given, we assume an update and thereby just correct the method.
   const response = await fetch([ENDPOINT, id].filter(Boolean).join('/'), {
     method: id ? 'PATCH' : 'POST',
