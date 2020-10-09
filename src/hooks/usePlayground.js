@@ -278,7 +278,7 @@ function getInitialState(props) {
     // try get state from url (legacy fallback)
     else {
       const params = url.load();
-      if (params.markup && params.query) {
+      if (params) {
         return {
           ...state,
           ...params,
