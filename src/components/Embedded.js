@@ -5,6 +5,7 @@ import Preview from './Preview';
 import Query from './Query';
 import Result from './Result';
 import MarkupEditor from './MarkupEditor';
+import useParentMessaging from '../hooks/useParentMessaging';
 import usePlayground from '../hooks/usePlayground';
 import Loader from './Loader';
 
@@ -66,6 +67,8 @@ function Embedded(props) {
     document.body.classList.add('embedded');
     return () => document.body.classList.remove('embedded');
   }, []);
+
+  useParentMessaging(dispatch);
 
   return (
     <div className="relative w-full h-full">
