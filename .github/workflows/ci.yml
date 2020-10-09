@@ -8,16 +8,6 @@ env:
   NODE_VERSION: '12.x'
 
 jobs:
-  meta:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Assign PR to author
-        uses: samspills/assign-pr-to-author@v1.0
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        with:
-          repo-token: '${{ secrets.ACTION_TOKEN }}'
-
   setup:
     name: Setup
     runs-on: ubuntu-latest
