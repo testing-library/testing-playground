@@ -9,14 +9,24 @@
     body {
       background: #ccc;
     }
+
+    #interactive-embed {
+      position: relative;
+    }
+
+    button#update-interactive-embed {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+    }
   </style>
   <body>
     <!--
-    This is a test file to test the embed mode,
-    to try this run `npm run start`, and after that run
-    `npm run start:embed` in a second terminal
+This is a test file to test the embed mode,
+to try this run `npm run start`, and after that run
+`npm run start:embed` in a second terminal
 
-  -->
+-->
 
     <div
       data-testing-playground
@@ -55,23 +65,28 @@
       </script>
     </template>
 
-    <template data-testing-playground data-class="messaging-iframe"></template>
-    <script type="text/javascript">
-      function updatePlayground() {
-        const iframe = document.querySelector('.messaging-iframe');
-        iframe.contentWindow.postMessage(
-          { type: 'UPDATE_DATA', markup: 'new markup', query: 'new query' },
-          'http://localhost:1234',
-        );
-      }
+    <div id="interactive-embed">
+      <template data-testing-playground data-class="messaging-iframe"></template>
+      <button id="update-interactive-embed">update-content</button>
 
-      window.addEventListener('message', ({ data }) => {
-        if (data.source === 'embedded-testing-playground' && data.type === 'READY') {
-          updatePlayground();
+      <script type="text/javascript">
+        function updatePlayground() {
+          const iframe = document.querySelector('.messaging-iframe');
+          iframe.contentWindow.postMessage(
+            { type: 'UPDATE_DATA', markup: `<div>${Date.now()}</div>`, query: `// ${Date.now()}` },
+            'http://localhost:1234',
+          );
         }
-      });
-    </script>
 
+        document.getElementById('update-interactive-embed').addEventListener('click', updatePlayground);
+
+        window.addEventListener('message', ({ data }) => {
+          if (data.source === 'embedded-testing-playground' && data.type === 'READY') {
+            updatePlayground();
+          }
+        });
+      </script>
+    </div>
     <script async src="embed.js"></script>
   </body>
 </html>
