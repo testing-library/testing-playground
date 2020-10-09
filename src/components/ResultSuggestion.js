@@ -1,6 +1,7 @@
 import React from 'react';
 import { messages } from '../constants';
 import CopyButton from './CopyButton';
+import { ShieldIcon } from '@primer/octicons-react';
 
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
@@ -125,6 +126,12 @@ function ResultSuggestion({ queries, result, dispatch }) {
         )}
       </div>
       <div className="min-h-8">{message}</div>
+      {suggestion.warning && (
+        <div className="min-h-8 text-yellow-700">
+          <ShieldIcon />
+          {suggestion.warning}
+        </div>
+      )}
     </div>
   );
 }
