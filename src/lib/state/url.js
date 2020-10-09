@@ -41,22 +41,23 @@ function save({ markup, query }) {
 }
 
 function load() {
-  const { hash, search } = window.location;
+  // .com?markup=...&query=...
+  let params = queryString.parse(location.search);
 
-  // try to migrate old hash based format
-  // .com/#markupLz&queryLz
-  if (hash.includes('&')) {
-    const [markup, query] = hash.slice(1).split('&');
-    const decompressed = decompress({ markup, query });
-
-    if (decompressed.markup && decompressed.query) {
-      save(decompressed);
-    }
+  // .com#markup=...&query=...
+  if (!params.markup && !params.query) {
+    params = queryString.parse(location.hash);
   }
 
-  // .com?markup=markupLz&query=queryLz
-  const { markup, query } = queryString.parse(search);
-  return decompress({ markup, query });
+  if (!params.markup && !params.query) {
+    return;
+  }
+
+  const { markup, query } = decompress(params);
+  // we could call `save({ markup, query })` here to force migration. Should we?
+  // not migrating them can be confusing, as the url style doesn't update on change
+
+  return { markup, query };
 }
 
 export default {
