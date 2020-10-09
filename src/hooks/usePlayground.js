@@ -122,7 +122,6 @@ function reducer(state, action, exec) {
 
       return {
         ...state,
-        dirty: false,
         status: 'saving',
       };
     }
@@ -132,8 +131,15 @@ function reducer(state, action, exec) {
 
       return {
         ...state,
-        dirty: false,
         status: 'saving',
+      };
+    }
+
+    case 'SAVED': {
+      return {
+        ...state,
+        dirty: false,
+        status: 'idle',
       };
     }
 
@@ -230,7 +236,7 @@ const effectMap = {
     });
 
     history.push(`/gist/${id}/${version}`);
-    dispatch({ type: 'SET_STATUS', status: 'idle' });
+    dispatch({ type: 'SAVED' });
   },
 
   FORK: async (state, effect, dispatch) => {
@@ -244,7 +250,7 @@ const effectMap = {
     });
 
     history.push(`/gist/${id}/${version}`);
-    dispatch({ type: 'SET_STATUS', status: 'idle' });
+    dispatch({ type: 'SAVED' });
   },
 
   REDIRECT: (state, effect) => {
