@@ -175,7 +175,7 @@ function Header({
                 href="https://github.com/testing-library/testing-playground/issues"
                 target="_blank"
               >
-                Issue tracker
+                GitHub
               </MenuLink>
               <MenuLink
                 href="https://github.com/sponsors/smeijer"
