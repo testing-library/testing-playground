@@ -92,13 +92,18 @@ function Header({
 
               <Modal>
                 <ModalOpenButton>
-                  <MenuLink as="button" disabled={!gistId}>
+                  <MenuLink as="button">
                     <ShareAndroidIcon size={12} />
                     <span>Share</span>
                   </MenuLink>
                 </ModalOpenButton>
                 <ModalContents>
-                  <Share dirty={dirty} />
+                  <Share
+                    dirty={dirty}
+                    dispatch={dispatch}
+                    gistId={gistId}
+                    gistVersion={gistVersion}
+                  />
                 </ModalContents>
               </Modal>
 

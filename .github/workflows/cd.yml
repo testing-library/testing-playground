@@ -56,4 +56,4 @@ jobs:
           release_name: ${{ env.APP_NAME }} ${{ env.VERSION }}
           body: ${{ steps.release_notes.outputs.changelog }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
