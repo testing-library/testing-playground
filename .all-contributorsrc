@@ -134,6 +134,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "michal-kocarek",
+      "name": "Michal Kočárek",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/762095?v=4",
+      "profile": "http://brainbox.cz/",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
