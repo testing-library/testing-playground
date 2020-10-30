@@ -33,6 +33,8 @@ function Embedded(props) {
   });
   const { markup, query, result, status } = state;
   const isLoading = status === 'loading';
+  // props.height because it describes better, params.maxheight because oembed
+  const height = props.height || params.maxheight || params.height;
 
   const location = useLocation();
   const searchParams = queryString.parse(location.search);
@@ -71,7 +73,10 @@ function Embedded(props) {
   useParentMessaging(dispatch);
 
   return (
-    <div className="relative w-full h-full">
+    <div
+      className="relative w-full h-screen"
+      style={height ? { height } : undefined}
+    >
       <Loader loading={isLoading} />
       <div
         className={[

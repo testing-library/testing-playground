@@ -18,7 +18,6 @@ function Share({ dirty, dispatch, gistId, gistVersion }) {
     ? [location.origin, 'gist', gistId, gistVersion].filter(Boolean).join('/')
     : location.href;
 
-  console.log('share url');
   return (
     <div className="settings text-sm pb-2">
       <div>

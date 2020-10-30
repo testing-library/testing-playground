@@ -117,6 +117,7 @@ function Header({
                 <ModalContents>
                   <Embed
                     dirty={dirty}
+                    dispatch={dispatch}
                     gistId={gistId}
                     gistVersion={gistVersion}
                   />
