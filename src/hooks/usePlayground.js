@@ -207,7 +207,12 @@ const effectMap = {
   },
 
   SAVE_SETTINGS: (state) => {
-    localStorage.setItem('playground_settings', JSON.stringify(state.settings));
+    if (navigator.cookieEnabled) {
+      localStorage.setItem(
+        'playground_settings',
+        JSON.stringify(state.settings),
+      );
+    }
   },
 
   APPLY_SETTINGS: (state, effect, dispatch) => {
@@ -259,7 +264,9 @@ const effectMap = {
 };
 
 function getInitialState(props) {
-  const localSettings = JSON.parse(localStorage.getItem('playground_settings'));
+  const localSettings = navigator.cookieEnabled
+    ? JSON.parse(localStorage.getItem('playground_settings'))
+    : {};
 
   const state = {
     ...props,

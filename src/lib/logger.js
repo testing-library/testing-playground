@@ -71,7 +71,8 @@ function renderDiff(diff) {
 // when debug is `undefined` and can be enabled by setting it to either `true`
 // or `diff`. On develop, it's enabled when `undefined`, and can be disabled
 // by setting it to `false`.
-const debug = localStorage.getItem('debug');
+const debug = navigator.cookieEnabled ? localStorage.getItem('debug') : 'false';
+
 const logLevel = debug === 'false' ? false : debug === 'true' ? true : debug;
 const isLoggingEnabled =
   process.env.NODE_ENV === 'development' ? logLevel !== false : !!logLevel;

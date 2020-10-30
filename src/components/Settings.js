@@ -22,9 +22,18 @@ function Settings({ settings, dispatch }) {
 
   const showBehavior = typeof settings.autoRun !== 'undefined';
   const showTestingLibrary = typeof settings.testIdAttribute !== 'undefined';
+  const isCookieEanbled = navigator.cookieEnabled;
 
   return (
-    <div className="settings text-sm pb-2">
+    <div className="settings text-sm pb-2 ">
+      {!isCookieEanbled && (
+        <p
+          className="text-sm font-bold text-orange-600 border border-orange-600 px-3 py-1"
+          role="alert"
+        >
+          Cookie are not enabled, settings will not be saved.
+        </p>
+      )}
       <form onChange={handleChange} onSubmit={(e) => e.preventDefault()}>
         {showBehavior && (
           <div>

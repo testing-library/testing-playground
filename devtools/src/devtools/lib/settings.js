@@ -1,6 +1,9 @@
 import Bridge from 'crx-bridge';
 
-const localSettings = JSON.parse(localStorage.getItem('playground_settings'));
+const localSettings = navigator.cookieEnabled
+  ? JSON.parse(localStorage.getItem('playground_settings'))
+  : {};
+
 let _settings = Object.assign(
   {
     testIdAttribute: 'data-testid',
@@ -17,5 +20,7 @@ export function getSettings() {
 export function setSettings(settings) {
   Object.assign(_settings, settings);
   Bridge.sendMessage('SET_SETTINGS', _settings, 'content-script');
-  localStorage.setItem('playground_settings', JSON.stringify(_settings));
+  if (navigator.cookieEnabled) {
+    localStorage.setItem('playground_settings', JSON.stringify(_settings));
+  }
 }
