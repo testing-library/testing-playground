@@ -35,7 +35,7 @@ function handler(event, context, callback) {
 
   const oembedLink = [
     `<link rel="alternate" type="application/json+oembed" href="${host}/oembed?${oembedSearch}" title="Testing Playground" />`,
-    `<link rel="iframely player" type="text/html" href="${frameSrc}" media="height: 300" />`,
+    `<link rel="iframely player" type="text/html" href="${frameSrc}" media="height: 450" />`,
   ].join('');
 
   let body = indexHtml.replace(

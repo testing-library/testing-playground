@@ -34,7 +34,7 @@ function handler(event, context, callback) {
     );
   }
 
-  const { url, referrer, maxwidth = 900, maxheight = 300 } = params;
+  const { url, referrer, maxwidth = 900, maxheight = 450 } = params;
 
   callback(null, {
     statusCode: 200,
