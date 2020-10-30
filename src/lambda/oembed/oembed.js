@@ -35,7 +35,6 @@ function handler(event, context, callback) {
   }
 
   const { url, referrer, maxwidth = 900, maxheight = 300 } = params;
-  const iframeSrc = `${url.replace('gist', 'embed')}?panes=preview,result`;
 
   callback(null, {
     statusCode: 200,
@@ -48,7 +47,7 @@ function handler(event, context, callback) {
         provider_name: 'testing-playground.com',
         provider_url: host,
 
-        html: `<iframe src="${iframeSrc}" height="${maxheight}" width="${maxwidth}" scrolling="no" frameBorder="0" allowTransparency="true" title="Testing Playground" style="overflow: hidden; display: block; width: 100%"></iframe>`,
+        html: `<iframe src="${url}" height="${maxheight}" width="${maxwidth}" scrolling="no" frameBorder="0" allowTransparency="true" title="Testing Playground" style="overflow: hidden; display: block; width: 100%"></iframe>`,
         width: maxwidth,
         height: maxheight,
 

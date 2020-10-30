@@ -3,7 +3,12 @@ const path = require('path');
 const queryString = require('query-string');
 
 const filename = path.join(__dirname, './index.html');
-const indexHtml = fs.readFileSync(filename, 'utf8');
+const indexHtml = fs.existsSync(filename)
+  ? fs.readFileSync(filename, 'utf8')
+  : fs.readFileSync(
+      path.join(__dirname, '../../../dist/client/index.html'),
+      'utf8',
+    );
 
 function getHostname(event, context) {
   if (event.headers.host) {
@@ -19,7 +24,8 @@ function handler(event, context, callback) {
   const { panes, markup, query } = event.queryStringParameters;
   const host = getHostname(event, context);
 
-  const frameSrc = `${host}/embed?${queryString.stringify({
+  const embedPath = event.path.replace('/gist/', '/embed/');
+  const frameSrc = `${host}${embedPath}?${queryString.stringify({
     panes,
     markup,
     query,
