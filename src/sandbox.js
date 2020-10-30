@@ -16,6 +16,7 @@ const state = {
   settings: {
     testIdAttribute: 'data-testid',
   },
+  pointerInside: false,
 };
 
 function postMessage(action) {
@@ -106,12 +107,16 @@ function Sandbox() {
     <div
       className="pr-1 relative w-screen h-screen overflow-hidden"
       onMouseEnter={() => {
+        state.pointerInside = true;
         state.highlighter?.clear();
         state.highlighter?.start({ stopOnClick: false, blockEvents: false });
       }}
       onMouseLeave={() => {
         state.highlighter?.stop();
         state.highlighter.highlight({ nodes: state.queriedNodes });
+        state.pointerInside = false;
+
+        postMessage({ type: 'HOVER_NODE', payload: null });
       }}
     >
       <Scrollable forwardedRef={setRootNode} id="sandbox" />
@@ -120,7 +125,11 @@ function Sandbox() {
 }
 
 function onSelectNode(node, { origin }) {
-  if (!origin || origin === 'script') {
+  // onSelectNode can be triggered after onMouseLeave has already been called.
+  // This makes it impossible to clear hover state. That's why we maintain and
+  // check a boolean to see if the pointer is inside the sandbox, before
+  // dispatching events.
+  if (!origin || origin === 'script' || !state.pointerInside) {
     return;
   }
 
