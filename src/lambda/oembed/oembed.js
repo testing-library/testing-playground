@@ -52,7 +52,7 @@ function handler(event, context, callback) {
 
   // map /gist urls to /embed
   const url = pathname.startsWith('/gist/')
-    ? `${params.url.replace('/gist/', '/embed/')}?panes=query,preview`
+    ? params.url.replace('/gist/', '/embed/')
     : params.url;
 
   callback(null, {
