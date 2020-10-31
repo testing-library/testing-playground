@@ -1,5 +1,3 @@
-const URL = require('url');
-
 function incorrectParams(error) {
   return {
     statusCode: 501, // oembed status // 422, // Unprocessable Entity
@@ -40,7 +38,7 @@ function handler(event, context, callback) {
     );
   }
 
-  const { hostname, pathname } = URL.parse(params.url);
+  const { hostname, pathname } = new URL(params.url);
 
   // verify if the url is supported, basically we only allow localhost if we're
   // running at localhost, and testing-playground.com as host. And either no
