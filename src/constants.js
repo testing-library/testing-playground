@@ -113,3 +113,5 @@ export const links = {
     url: 'https://testing-library.com/docs/guide-which-query',
   },
 };
+
+export const defaultPanes = ['preview', 'result'];
