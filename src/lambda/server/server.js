@@ -25,11 +25,8 @@ function handler(event, context, callback) {
   const host = getHostname(event, context);
 
   const embedPath = event.path.replace('/gist/', '/embed/');
-  const frameSrc = `${host}${embedPath}?${queryString.stringify({
-    panes,
-    markup,
-    query,
-  })}`;
+  const frameSearch = queryString.stringify({ panes, markup, query });
+  const frameSrc = host + embedPath + (frameSearch ? `?${frameSearch}` : '');
 
   const oembedSearch = queryString.stringify({ url: frameSrc });
 

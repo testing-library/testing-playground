@@ -1,3 +1,5 @@
+const URL = require('url');
+
 function incorrectParams(error) {
   return {
     statusCode: 501, // oembed status // 422, // Unprocessable Entity
@@ -8,7 +10,7 @@ function incorrectParams(error) {
 
 function getHostname(event, context) {
   if (event.headers.host) {
-    return `http://${event.headers.host}`;
+    return `https://${event.headers.host}`;
   }
 
   const { netlify } = context.clientContext.custom || {};
@@ -16,11 +18,15 @@ function getHostname(event, context) {
   return JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8')).site_url;
 }
 
+const allowedPathsRegexp = new RegExp(/^\/(gist|embed)\/.*/);
+
 function handler(event, context, callback) {
   const host = getHostname(event, context);
-  const params = event.queryStringParameters;
 
-  if (params.format === 'xml') {
+  const params = event.queryStringParameters;
+  const { format, referrer, maxwidth = 900, maxheight = 450 } = params;
+
+  if (format && format !== 'json') {
     return callback(
       null,
       incorrectParams('unsupported format, only json is supported'),
@@ -34,7 +40,22 @@ function handler(event, context, callback) {
     );
   }
 
-  const { url, referrer, maxwidth = 900, maxheight = 450 } = params;
+  const { hostname, pathname } = URL.parse(params.url);
+
+  // verify if the url is supported, basically we only allow localhost if we're
+  // running at localhost, and testing-playground.com as host. And either no
+  // path or /gist and /embed paths.
+  if (
+    (!host.includes(hostname) && hostname !== 'testing-playground.com') ||
+    (pathname && !allowedPathsRegexp.test(pathname))
+  ) {
+    return callback(null, incorrectParams('unsupported url provided :/'));
+  }
+
+  // map /gist urls to /embed
+  const url = pathname.startsWith('/gist/')
+    ? params.url.replace('/gist/', '/embed/')
+    : params.url;
 
   callback(null, {
     statusCode: 200,
