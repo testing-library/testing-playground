@@ -16,6 +16,7 @@ function getHostname(event, context) {
   return JSON.parse(Buffer.from(netlify, 'base64').toString('utf-8')).site_url;
 }
 
+const PROVIDER = 'testing-playground.com';
 const allowedPathsRegexp = new RegExp(/^\/(gist|embed)\/.*/);
 
 function handler(event, context, callback) {
@@ -38,22 +39,28 @@ function handler(event, context, callback) {
     );
   }
 
-  const { hostname, pathname } = new URL(params.url);
+  const url = new URL(params.url);
 
   // verify if the url is supported, basically we only allow localhost if we're
   // running at localhost, and testing-playground.com as host. And either no
   // path or /gist and /embed paths.
   if (
-    (!host.includes(hostname) && hostname !== 'testing-playground.com') ||
-    (pathname && !allowedPathsRegexp.test(pathname))
+    (!host.includes(url.hostname) && url.hostname !== PROVIDER) ||
+    (url.pathname !== '/' && !allowedPathsRegexp.test(url.pathname))
   ) {
     return callback(null, incorrectParams('unsupported url provided :/'));
   }
 
-  // map /gist urls to /embed
-  const url = pathname.startsWith('/gist/')
-    ? params.url.replace('/gist/', '/embed/')
-    : params.url;
+  // map / and /gist to /embed
+  url.pathname =
+    url.pathname === '/'
+      ? '/embed'
+      : url.pathname.replace(/^\/gist\//, '/embed/');
+
+  // set default panes if no panes are provided, KEEP IN SYNC WITH /constants#defaultPanes !
+  if (!url.searchParams.has('panes')) {
+    url.searchParams.set('panes', 'query,preview');
+  }
 
   callback(null, {
     statusCode: 200,
@@ -63,7 +70,7 @@ function handler(event, context, callback) {
         type: 'rich',
         success: true,
 
-        provider_name: 'testing-playground.com',
+        provider_name: PROVIDER,
         provider_url: host,
 
         html: `<iframe src="${url}" height="${maxheight}" width="${maxwidth}" scrolling="no" frameBorder="0" allowTransparency="true" title="Testing Playground" style="overflow: hidden; display: block; width: 100%"></iframe>`,

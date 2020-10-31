@@ -4,6 +4,8 @@ import CopyButton from './CopyButton';
 import Embedded from './Embedded';
 import { SyncIcon, XIcon } from '@primer/octicons-react';
 
+import { defaultPanes } from '../constants';
+
 function TabButton({ children, active, onClick, disabled }) {
   return (
     <button
@@ -40,7 +42,7 @@ function Embed({ dispatch, dirty, gistId, gistVersion }) {
     dispatch({ type: 'SAVE' });
   }, [dirty, gistId, dispatch]);
 
-  const [panes, setPanes] = useState(['preview', 'result']);
+  const [panes, setPanes] = useState(defaultPanes);
 
   const embedUrl =
     [location.origin, 'embed', gistId, gistVersion].filter(Boolean).join('/') +

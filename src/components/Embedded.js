@@ -9,6 +9,8 @@ import useParentMessaging from '../hooks/useParentMessaging';
 import usePlayground from '../hooks/usePlayground';
 import Loader from './Loader';
 
+import { defaultPanes } from '../constants';
+
 const SUPPORTED_PANES = {
   markup: true,
   preview: true,
@@ -46,7 +48,7 @@ function Embedded(props) {
         .split(',')
         .map((x) => x.trim())
         .filter((x) => SUPPORTED_PANES[x])
-    : ['query', 'preview'];
+    : defaultPanes;
 
   // TODO: we should add tabs to handle > 2 panes
   const areaCount = panes.length;
