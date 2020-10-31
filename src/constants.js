@@ -114,4 +114,4 @@ export const links = {
   },
 };
 
-export const defaultPanes = ['preview', 'result'];
+export const defaultPanes = ['query', 'preview'];
