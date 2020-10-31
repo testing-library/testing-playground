@@ -46,7 +46,7 @@ function Embedded(props) {
         .split(',')
         .map((x) => x.trim())
         .filter((x) => SUPPORTED_PANES[x])
-    : ['markup', 'preview', 'query', 'result'];
+    : ['query', 'preview'];
 
   // TODO: we should add tabs to handle > 2 panes
   const areaCount = panes.length;
