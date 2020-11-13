@@ -2,24 +2,17 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import Preview from './Preview';
 import MarkupEditor from './MarkupEditor';
-import Result from './Result';
-import Query from './Query';
 import usePlayground from '../hooks/usePlayground';
 import Layout from './Layout';
 import Loader from './Loader';
-
-function Paper({ children }) {
-  return (
-    <div className="editor p-4 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
-      {children}
-    </div>
-  );
-}
+import PlaygroundPanels from './PlaygroundPanels';
+import { usePreviewEvents } from '../context/PreviewEvents';
 
 function Playground() {
   const { gistId, gistVersion } = useParams();
   const [state, dispatch] = usePlayground({ gistId, gistVersion });
-  const { markup, query, result, status, dirty, settings } = state;
+  const { markup, result, status, dirty, settings } = state;
+  const { previewRef } = usePreviewEvents();
 
   const isLoading = status === 'loading';
 
@@ -39,32 +32,24 @@ function Playground() {
           isLoading ? 'opacity-0' : 'opacity-100',
         ].join(' ')}
       >
-        <Paper>
+        <div className="editor p-4 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
           <div className="flex-auto relative h-56 md:h-full">
             <MarkupEditor markup={markup} dispatch={dispatch} />
           </div>
 
           <div className="flex-auto h-56 md:h-full">
             <Preview
+              forwardedRef={previewRef}
               markup={markup}
               elements={result?.elements}
               accessibleRoles={result?.accessibleRoles}
               dispatch={dispatch}
             />
           </div>
-        </Paper>
+        </div>
 
-        <div className="flex-none h-8" />
-
-        <Paper>
-          <div className="flex-auto relative h-56 md:h-full">
-            <Query query={query} result={result} dispatch={dispatch} />
-          </div>
-
-          <div className="flex-auto h-56 md:h-full overflow-hidden">
-            <Result result={result} dispatch={dispatch} />
-          </div>
-        </Paper>
+        <div className="flex-none h-3" />
+        <PlaygroundPanels />
       </div>
     </Layout>
   );

@@ -6,7 +6,7 @@ function Loader({ loading }) {
     <div
       className={[
         'w-full h-full absolute top-0 left-0 flex flex-col justify-center items-center w-full h-full space-y-4 fade',
-        loading ? 'opacity-100' : 'opacity-0',
+        loading ? 'opacity-100' : 'hidden opacity-0',
       ].join(' ')}
     >
       <img className="opacity-50" src={frog} />
