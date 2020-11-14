@@ -184,6 +184,12 @@ function handleChange(cm, change) {
     case 'paste': {
       formatValue(cm);
       cm.onChange(cm.getValue(), { origin: change.origin });
+      const text = change.text;
+      const textLastPos = text.length - 1;
+      cm.getDoc().setCursor({
+        line: change.to.line + textLastPos,
+        ch: text[textLastPos].length,
+      });
       break;
     }
 
