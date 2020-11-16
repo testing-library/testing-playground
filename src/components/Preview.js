@@ -34,8 +34,18 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
 
   const frameRef = useRef();
 
-  const refSetter = useCallback((node) => {
-    frameRef.current = node;
+  useEffect(() => {
+    if (!frameRef.current) {
+      return;
+    }
+
+    frameRef.current.contentWindow.addEventListener('click', () => {
+      const click = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+      });
+      document.body.dispatchEvent(click);
+    });
   }, []);
 
   const handleLoadIframe = useCallback(() => {
@@ -88,7 +98,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
   return (
     <div className="w-full h-full flex flex-col relative">
       <iframe
-        ref={refSetter}
+        ref={frameRef}
         src="/sandbox.html"
         security="restricted"
         className="flex-auto"
