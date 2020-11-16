@@ -37,6 +37,10 @@ There are git hooks set up with this project that are automatically installed
 when you install dependencies. They're really handy, and will take care of linting
 and formatting for you.
 
+## Thinking of a new feature?
+
+Make sure you read our [features guidelines](/docs/features.md).
+
 ## Help needed
 
 Please checkout the [the open issues][issues]
