@@ -157,7 +157,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://brainbox.cz/"><img src="https://avatars1.githubusercontent.com/u/762095?v=4" width="100px;" alt=""/><br /><sub><b>Michal Kočárek</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=michal-kocarek" title="Code">💻</a> <a href="#ideas-michal-kocarek" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://aganglada.com"><img src="https://avatars0.githubusercontent.com/u/922348?v=4" width="100px;" alt=""/><br /><sub><b>Alejandro Garcia Anglada</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=aganglada" title="Code">💻</a></td>
+    <td align="center"><a href="https://aganglada.com"><img src="https://avatars0.githubusercontent.com/u/922348?v=4" width="100px;" alt=""/><br /><sub><b>Alejandro Garcia Anglada</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=aganglada" title="Code">💻</a> <a href="https://github.com/testing-library/testing-playground/commits?author=aganglada" title="Documentation">📖</a></td>
   </tr>
 </table>
 
