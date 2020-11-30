@@ -8,3 +8,6 @@ node_modules/
 # Local Netlify folder
 .netlify
 .env
+
+# Webstorm config files
+.idea
