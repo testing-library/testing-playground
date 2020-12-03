@@ -48,7 +48,6 @@ function Playground() {
           </div>
         </div>
 
-        <div className="flex-none h-3" />
         <PlaygroundPanels />
       </div>
     </Layout>

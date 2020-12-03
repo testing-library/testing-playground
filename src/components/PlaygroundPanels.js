@@ -28,19 +28,20 @@ function PlaygroundPanels() {
 
   return (
     <>
-      <div className="px-4 gap-4 flex py-2">
-        {panels.map((panelName) => (
-          <div key={panelName} className="flex items-center">
-            <div className="text-left space-x-2">
+      <div className="px-4 gap-4 flex pt-3 pb-1 h-8">
+        <div className="flex items-center">
+          <div className="text-left space-x-2">
+            {panels.map((panelName) => (
               <TabButton
+                key={panelName}
                 onClick={() => setPanel(panelName)}
                 active={panelName === panel}
               >
                 {panelName}
               </TabButton>
-            </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
       <Suspense fallback={null}>
         {panel === panels[0] && (
