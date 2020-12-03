@@ -10,7 +10,7 @@ VERSION=$(echo "${REF#refs/tags/}")
 
 # export some data
 set-env () {
-  echo "::set-env name=$1::$2"
+  echo "$1=$2" >> $GITHUB_ENV
   export $1="$2"
 }
 
