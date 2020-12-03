@@ -5,24 +5,7 @@ import Embedded from './Embedded';
 import { SyncIcon, XIcon } from '@primer/octicons-react';
 
 import { defaultPanes } from '../constants';
-
-function TabButton({ children, active, onClick, disabled }) {
-  return (
-    <button
-      disabled={disabled}
-      className={[
-        'text-xs select-none border-b-2',
-        disabled ? '' : 'hover:text-blue-400 hover:border-blue-400',
-        active
-          ? 'border-blue-600 text-blue-600'
-          : 'border-transparent text-gray-800',
-      ].join(' ')}
-      onClick={disabled ? undefined : onClick}
-    >
-      {children}
-    </button>
-  );
-}
+import TabButton from './TabButton';
 
 const possiblePanes = ['markup', 'preview', 'query', 'result'];
 
