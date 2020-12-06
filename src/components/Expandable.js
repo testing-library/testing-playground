@@ -46,6 +46,7 @@ function Expandable({ excerpt, children, className, variant }) {
         className="bg-inherit"
         variant={variant}
         onClick={() => setExpanded(!expanded)}
+        title="expand"
       >
         <ChevronUpIcon />
       </IconButton>

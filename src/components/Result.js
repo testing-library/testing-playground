@@ -26,7 +26,10 @@ function Result({ result, dispatch }) {
 
   const { queries } = result.elements[0];
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden">
+    <div
+      className="flex flex-col w-full h-full overflow-hidden"
+      data-testid="result"
+    >
       <Scrollable>
         <div className="pb-4 border-b">
           <ResultSuggestion
