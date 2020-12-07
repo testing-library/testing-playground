@@ -45,28 +45,20 @@ describe('The initial load of Testing Playground', () => {
       cy.findByRole('button', { name: 'Submit' }).should('exist');
     });
 
-    cy.findByText('accessible roles:')
-      .parent()
-      .should('have.text', 'accessible roles: generic');
-
-    //This is really ugly, but it's the only way to select without an Expandable having an identifier
-    cy.findByText('accessible roles:')
-      .parent()
-      .parent()
-      .parent()
-      .within(() => {
-        cy.findByRole('button', { name: 'expand' }).should('exist');
-      });
+    cy.findByRole('region', { name: 'html preview' }).within(() => {
+      cy.findByRole('button', { name: 'expand' }).should('exist');
+      cy.findByText('accessible roles:').should('exist');
+      cy.findByText('generic').should('exist');
+    });
 
     cy.getQueryEditor().should('exist');
 
-    cy.findByText('> <button type="submit" > Submit </button>').should('exist');
-
-    cy.findByText('> <button type="submit" > Submit </button>')
-      .parent()
-      .within(() => {
-        cy.findByRole('button', { name: 'expand' }).should('exist');
-      });
+    cy.findByRole('region', { name: 'query suggestion' }).within(() => {
+      cy.findByText('> <button type="submit" > Submit </button>').should(
+        'exist',
+      );
+      cy.findByRole('button', { name: 'expand' }).should('exist');
+    });
 
     cy.getResult().within(() => {
       cy.findByText('suggested query').should('exist');
