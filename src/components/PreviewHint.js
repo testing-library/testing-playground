@@ -26,6 +26,7 @@ function PreviewHint({ roles, suggestion }) {
     <Expandable
       excerpt={excerpt}
       className="bg-gray-200 text-gray-800 font-mono text-xs rounded fle"
+      labelText="html preview"
     >
       {expression}
       {snapshot}
