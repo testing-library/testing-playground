@@ -105,7 +105,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
         scrolling="no"
         frameBorder="0"
         onLoad={handleLoadIframe}
-        data-testid="sandbox"
+        title="sandbox"
       />
 
       {markup && variant !== 'minimal' && (

@@ -22,7 +22,7 @@ Cypress.Commands.add('getSandboxBody', () => {
   cy.log('getSandboxBody');
 
   return cy
-    .get('iframe[data-testid=sandbox]', { log: false })
+    .findByTitle('sandbox')
     .its('0.contentDocument.body', { log: false })
     .should('not.be.empty')
     .then((body) => cy.wrap(body, { log: false }));
