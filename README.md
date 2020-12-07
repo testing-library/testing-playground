@@ -158,7 +158,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://aganglada.com"><img src="https://avatars0.githubusercontent.com/u/922348?v=4" width="100px;" alt=""/><br /><sub><b>Alejandro Garcia Anglada</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=aganglada" title="Code">💻</a> <a href="https://github.com/testing-library/testing-playground/commits?author=aganglada" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/ddehart"><img src="https://avatars3.githubusercontent.com/u/901215?v=4" width="100px;" alt=""/><br /><sub><b>ddehart</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=ddehart" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ddehart"><img src="https://avatars3.githubusercontent.com/u/901215?v=4" width="100px;" alt=""/><br /><sub><b>ddehart</b></sub></a><br /><a href="https://github.com/testing-library/testing-playground/commits?author=ddehart" title="Code">💻</a> <a href="https://github.com/testing-library/testing-playground/commits?author=ddehart" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
