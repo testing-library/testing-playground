@@ -6,6 +6,7 @@ function QueryOutput({ error, result }) {
     <Expandable
       className="query-result bg-gray-800 text-gray-100 font-mono text-xs z-10"
       variant="dark"
+      labelText="query suggestion"
     >
       {error ? `Error: ${error}` : '> ' + (result || 'undefined')}
     </Expandable>

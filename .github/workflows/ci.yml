@@ -57,8 +57,8 @@ jobs:
       - name: Run Eslint
         run: npm run ci:lint -- $(git diff --diff-filter d --name-only origin/${{ github.base_ref }}...HEAD -- '*.js' '*.ts' '*.tsx')
 
-  tests:
-    name: Tests
+  unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
     needs: [setup]
     timeout-minutes: 5
@@ -77,3 +77,17 @@ jobs:
 
       - name: Run Tests
         run: npm run ci:test
+  e2e-tests:
+    name: e2e Tests
+    runs-on: ubuntu-latest
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm start
+          wait-on: http://localhost:1234
+          command: npm run cypress:run
