@@ -48,7 +48,7 @@ function Playground() {
           </div>
         </div>
 
-        <PlaygroundPanels />
+        <PlaygroundPanels state={state} dispatch={dispatch} />
       </div>
     </Layout>
   );
