@@ -3,11 +3,11 @@ import IconButton from './IconButton';
 import Scrollable from './Scrollable';
 import { ChevronUpIcon, ChevronDownIcon } from '@primer/octicons-react';
 
-function Expandable({ excerpt, children, className, variant }) {
+function Expandable({ excerpt, children, className, variant, labelText }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div
+    <section
       className={[
         'flex-none py-2 px-4 flex justify-between w-full',
         expanded ? 'expanded items-start' : 'collapsed items-center',
@@ -15,6 +15,7 @@ function Expandable({ excerpt, children, className, variant }) {
       ]
         .filter(Boolean)
         .join(' ')}
+      aria-label={labelText}
     >
       {expanded && (
         <div className="absolute bottom-0 -ml-4 h-full w-full overflow-hidden bg-inherit rounded-inherit">
@@ -46,10 +47,11 @@ function Expandable({ excerpt, children, className, variant }) {
         className="bg-inherit"
         variant={variant}
         onClick={() => setExpanded(!expanded)}
+        title="expand"
       >
         <ChevronUpIcon />
       </IconButton>
-    </div>
+    </section>
   );
 }
 

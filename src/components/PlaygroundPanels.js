@@ -1,8 +1,5 @@
 import React, { Suspense } from 'react';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-
-import usePlayground from '../hooks/usePlayground';
 
 import Query from './Query';
 import Result from './Result';
@@ -20,9 +17,7 @@ function Paper({ children }) {
   );
 }
 
-function PlaygroundPanels() {
-  const { gistId, gistVersion } = useParams();
-  const [state, dispatch] = usePlayground({ gistId, gistVersion });
+function PlaygroundPanels({ state, dispatch }) {
   const { query, result } = state;
   const [panel, setPanel] = useState(panels[0]);
 

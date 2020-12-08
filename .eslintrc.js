@@ -5,6 +5,7 @@ module.exports = {
     'plugin:prettier/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:cypress/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2020,

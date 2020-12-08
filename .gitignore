@@ -1,6 +1,7 @@
 .rts2_cache*
 .cache
 .parcel-cache
+cypress
 
 dist/
 node_modules/
