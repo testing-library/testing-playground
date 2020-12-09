@@ -43,7 +43,7 @@
   "dependencies": {
     "@primer/octicons-react": "^10.0.0",
     "@reach/dialog": "^0.10.5",
-    "@reach/menu-button": "^0.9.1",
+    "@reach/menu-button": "^0.12.1",
     "@testing-library/dom": "^7.28.1",
     "@testing-library/user-event": "^12.1.2",
     "codemirror": "5.54.0",
