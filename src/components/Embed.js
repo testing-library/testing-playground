@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Input from './Input';
 import CopyButton from './CopyButton';
-import Embedded from './Embedded';
+import Embedded from '../pages/Embedded';
 import { SyncIcon, XIcon } from '@primer/octicons-react';
 
 import { defaultPanes } from '../constants';

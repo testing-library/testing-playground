@@ -1,11 +1,11 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Preview from './Preview';
-import MarkupEditor from './MarkupEditor';
+import Preview from '../components/Preview';
+import MarkupEditor from '../components/MarkupEditor';
 import usePlayground from '../hooks/usePlayground';
-import Layout from './Layout';
-import Loader from './Loader';
-import PlaygroundPanels from './PlaygroundPanels';
+import Layout from '../components/Layout';
+import Loader from '../components/Loader';
+import PlaygroundPanels from '../components/PlaygroundPanels';
 import { usePreviewEvents } from '../context/PreviewEvents';
 
 function Playground() {
@@ -48,7 +48,7 @@ function Playground() {
           </div>
         </div>
 
-        <PlaygroundPanels />
+        <PlaygroundPanels state={state} dispatch={dispatch} />
       </div>
     </Layout>
   );
