@@ -1,22 +1,6 @@
 it('renders Testing Playground with an example', () => {
   cy.visit('/');
 
-  cy.findByRole('heading', {
-    level: 1,
-    name: 'Testing Playground mascot Froggy ️ Testing Playground',
-  }).should('exist');
-
-  cy.findByRole('link', {
-    name: 'Testing Playground mascot Froggy ️ Testing Playground',
-  })
-    .should('exist')
-    .and('have.attr', 'href', '/');
-
-  cy.findByRole('button', { name: 'playground' }).should('exist');
-  cy.findByRole('button', { name: 'run' }).should('exist');
-  cy.findByRole('button', { name: 'settings' }).should('exist');
-  cy.findByRole('button', { name: 'kebab menu' }).should('exist');
-
   cy.getMarkupEditor().should('exist');
 
   cy.getSandboxBody().within(() => {

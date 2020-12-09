@@ -156,7 +156,7 @@ function Header({
           </Menu>
 
           <Menu>
-            <MenuButton title="kebab menu">
+            <MenuButton title="more info">
               <span>
                 <KebabHorizontalIcon
                   size={12}
