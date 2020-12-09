@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import queryString from 'query-string';
 import { useLocation, useParams } from 'react-router-dom';
-import Preview from './Preview';
-import Query from './Query';
-import Result from './Result';
-import MarkupEditor from './MarkupEditor';
+import Preview from '../components/Preview';
+import Query from '../components/Query';
+import Result from '../components/Result';
+import MarkupEditor from '../components/MarkupEditor';
 import useParentMessaging from '../hooks/useParentMessaging';
 import usePlayground from '../hooks/usePlayground';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 
 import { defaultPanes } from '../constants';
 
