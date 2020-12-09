@@ -54,10 +54,13 @@ function Settings({ settings, dispatch }) {
         {showTestingLibrary && (
           <div>
             <h3 className="text-sm font-bold mb-2">Testing-Library</h3>
-            <label className="text-xs">test-id attribute:</label>
+            <label htmlFor="test-id" className="text-xs">
+              test-id attribute:
+            </label>
             <Input
               defaultValue={settings.testIdAttribute}
               name="testIdAttribute"
+              id="test-id"
             />
           </div>
         )}
