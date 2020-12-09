@@ -1,7 +1,7 @@
 .rts2_cache*
 .cache
 .parcel-cache
-cypress
+cypress/videos
 
 dist/
 node_modules/
