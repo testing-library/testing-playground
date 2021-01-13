@@ -2,9 +2,17 @@ const { join, resolve } = require('path');
 const { copy, remove } = require('fs-extra');
 const { build } = require('./build');
 const chromeLaunch = require('chrome-launch');
+const webExt = require('web-ext');
+
+const isFirefox = process.env.BROWSER_ENV == 'firefox';
 
 async function main() {
-  const dest = resolve('dist/chrome-extension');
+  let dest;
+  if (isFirefox) {
+    dest = resolve('dist/firefox-extension');
+  } else {
+    dest = resolve('dist/chrome-extension');
+  }
   await remove(dest);
 
   const parcel = await build({
@@ -31,9 +39,15 @@ async function main() {
   );
 
   if (parcel.watching) {
-    chromeLaunch('https://google.com', {
-      args: [`--load-extension=${dest}`, '--auto-open-devtools-for-tabs'],
-    });
+    if (isFirefox) {
+      webExt.cmd.run({
+        sourceDir: dest,
+      });
+    } else {
+      chromeLaunch('https://google.com', {
+        args: [`--load-extension=${dest}`, '--auto-open-devtools-for-tabs'],
+      });
+    }
   }
 }
 

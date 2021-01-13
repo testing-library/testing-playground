@@ -17,10 +17,12 @@
     "start": "run-s start:client",
     "start:client": "cross-env NODE_ENV=development node ./scripts/build-client",
     "start:devtools": "cross-env NODE_ENV=development node ./scripts/build-devtools",
+    "start:devtools:firefox": "cross-env NODE_ENV=development BROWSER_ENV=firefox node ./scripts/build-devtools",
     "build": "run-s clean build:*",
     "build:client": "cross-env NODE_ENV=production node ./scripts/build-client",
     "build:server": "cross-env NODE_ENV=production node ./scripts/build-lambda",
     "build:devtools": "cross-env NODE_ENV=production node ./scripts/build-devtools",
+    "build:devtools:firefox": "cross-env NODE_ENV=production BROWSER_ENV=firefox node ./scripts/build-devtools && web-ext build -s ./dist/firefox-extension -a ./dist",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint . --quiet --fix",
     "lint:prettier": "prettier . --write",
@@ -107,6 +109,7 @@
     "react-test-renderer": "^16.14.0",
     "rimraf": "^3.0.2",
     "tailwindcss": "^1.9.6",
+    "web-ext": "^5.5.0",
     "workbox-build": "^5.1.4"
   },
   "jest": {
