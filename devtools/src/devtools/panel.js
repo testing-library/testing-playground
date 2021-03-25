@@ -12,8 +12,8 @@ function Panel() {
 
   useEffect(() => {
     Bridge.onMessage('SELECT_NODE', ({ data }) => {
-      setResult({ elements: [data] });
-      editor.current.setValue(data.suggestion?.snippet || '');
+      setResult(data);
+      editor.current.setValue(data.query);
     });
   }, [setResult]);
 

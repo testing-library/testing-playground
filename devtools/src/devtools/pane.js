@@ -10,7 +10,7 @@ function Panel() {
 
   useEffect(() => {
     Bridge.onMessage('SELECT_NODE', ({ data }) => {
-      setResult({ elements: [data] });
+      setResult(data);
     });
   }, [setResult]);
 

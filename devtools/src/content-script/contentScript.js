@@ -6,7 +6,6 @@ import { getAllPossibleQueries } from '../../../src/lib';
 import inject from './lib/inject';
 import { setup } from '../window/testing-library';
 import onDocReady from './lib/onDocReady';
-import cssPath from '../../../src/lib/cssPath';
 
 function init() {
   inject('../window/testing-library.js');
@@ -25,15 +24,12 @@ function init() {
 
     const suggestion = Object.values(queries).find(Boolean);
 
-    Bridge.sendMessage(
-      'SELECT_NODE',
-      {
-        suggestion,
-        queries,
-        cssPath: cssPath(node, true).toString(),
-      },
-      'devtools',
-    );
+    const result = parser.parse({
+      rootNode: document.body,
+      query: suggestion?.snippet || '',
+    });
+
+    Bridge.sendMessage('SELECT_NODE', result, 'devtools');
   }
 
   Bridge.onMessage('PARSE_QUERY', function ({ data }) {
