@@ -39,9 +39,15 @@ function init() {
     });
 
     if (data.highlight) {
+      const selector = result.elements.map((x) => x.cssPath).join(', ');
+      const nodes =
+        result.elements.length > 0
+          ? Array.from(document.body.querySelectorAll(selector))
+          : [];
+
       hook.highlighter.highlight({
-        nodes: (result.elements || []).map((x) => x.target),
-        hideAfterTimeout: data.hideAfterTimeout,
+        nodes,
+        hideAfterTimeout: data.hideAfterTimeout ?? 1500,
       });
     }
 
