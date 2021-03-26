@@ -196,6 +196,12 @@ function Header({
               >
                 Chrome Extension
               </MenuLink>
+              <MenuLink
+                href="https://addons.mozilla.org/en-US/firefox/addon/testing-playground"
+                target="_blank"
+              >
+                Firefox Extension
+              </MenuLink>
 
               <div className="border-b border-gray-200 mx-4 my-2" />
 
