@@ -1,6 +1,6 @@
 {
   "name": "testing-playground",
-  "version": "1.15.1",
+  "version": "1.15.2",
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
   "author": "Stephan Meijer <stephan.meijer@gmail.com>",
   "homepage": "https://testing-playground.com",
