@@ -202,6 +202,12 @@ function Header({
               >
                 Firefox Extension
               </MenuLink>
+              <MenuLink
+                href="https://marketplace.visualstudio.com/items?itemName=aganglada.vscode-testing-playground"
+                target="_blank"
+              >
+                VSCode Extension
+              </MenuLink>
 
               <div className="border-b border-gray-200 mx-4 my-2" />
 
