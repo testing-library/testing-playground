@@ -7,6 +7,9 @@ import inject from './lib/inject';
 import { setup } from '../window/testing-library';
 import onDocReady from './lib/onDocReady';
 
+// HACK: mock out console warn for https://github.com/testing-library/testing-playground/issues/330
+console.warn = () => undefined;
+
 function init() {
   inject('../window/testing-library.js');
   setup(window);
