@@ -93,7 +93,7 @@ function getLastExpression(code) {
   };
 }
 
-function createEvaluator({ rootNode }) {
+function createEvaluator({ rootNode }, source) {
   const context = Object.assign({}, queries, {
     screen: getScreen(rootNode),
     userEvent,
@@ -125,7 +125,7 @@ function createEvaluator({ rootNode }) {
     result.elements = ensureArray(result.data)
       .filter((x) => x?.nodeType === Node.ELEMENT_NODE)
       .map((element) => {
-        const queries = getAllPossibleQueries({ rootNode, element });
+        const queries = getAllPossibleQueries({ rootNode, element }, source);
         const suggestion = Object.values(queries).find(Boolean);
 
         return {
@@ -149,8 +149,8 @@ function createEvaluator({ rootNode }) {
   return { context, evaluator, exec, wrap };
 }
 
-function runUnsafe({ rootNode, query }) {
-  const evaluator = createEvaluator({ rootNode });
+function runUnsafe({ rootNode, query }, source) {
+  const evaluator = createEvaluator({ rootNode }, source);
 
   const result = evaluator.wrap(
     () => evaluator.exec(evaluator.context, query),
@@ -167,12 +167,12 @@ function configure({ testIdAttribute }) {
   testingLibraryConfigure({ testIdAttribute });
 }
 
-function parse({ rootNode, query, prevResult }) {
+function parse({ rootNode, query, prevResult }, source) {
   if (!rootNode) {
     throw new Error(`rootNode should be provided`);
   }
 
-  const result = runUnsafe({ rootNode, query });
+  const result = runUnsafe({ rootNode, query }, source);
 
   result.expression = getLastExpression(query);
 

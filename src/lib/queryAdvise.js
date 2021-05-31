@@ -92,7 +92,7 @@ const queryMethods = [
   'TestId',
 ];
 
-export function getAllPossibleQueries({ rootNode, element }) {
+export function getAllPossibleQueries({ rootNode, element }, source) {
   const result = {};
 
   for (const method of queryMethods) {
@@ -110,13 +110,22 @@ export function getAllPossibleQueries({ rootNode, element }) {
   }
 
   const path = cssPath(element, true).toString();
+
   result.Selector = {
     queryMethod: 'querySelector',
     queryName: 'Selector',
     queryArgs: [path],
     snippet: `container.querySelector('${path}')`,
     excerpt: `querySelector('${path}')`,
-    snapshot: getSnapshot(element),
+    // When opening devtools, an initial "selection changed" event is triggered,
+    // with the `<body>` element as being the "selected node". This causes a
+    // snapshot to be created for the whole document. Depending on the size of
+    // the document, this can become quite the expensive computation, with a
+    // noticeable impact on the browser performance. I've considered to only
+    // create snapshots for the first 10 nodes (add limit=n to `flattenDOM`),
+    // but as we don't show snapshots in the devtools, it seemed better to simply
+    // don't compute them there.
+    snapshot: source === 'DEVTOOLS' ? undefined : getSnapshot(element),
   };
 
   return result;

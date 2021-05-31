@@ -20,17 +20,23 @@ function init() {
   hook.highlighter = setupHighlighter({ view: window, onSelectNode });
 
   function onSelectNode(node) {
-    const queries = getAllPossibleQueries({
-      rootNode: document.body,
-      element: node,
-    });
+    const queries = getAllPossibleQueries(
+      {
+        rootNode: document.body,
+        element: node,
+      },
+      'DEVTOOLS',
+    );
 
     const suggestion = Object.values(queries).find(Boolean);
 
-    const result = parser.parse({
-      rootNode: document.body,
-      query: suggestion?.snippet || '',
-    });
+    const result = parser.parse(
+      {
+        rootNode: document.body,
+        query: suggestion?.snippet || '',
+      },
+      'DEVTOOLS',
+    );
 
     Bridge.sendMessage('SELECT_NODE', result, 'devtools');
   }
