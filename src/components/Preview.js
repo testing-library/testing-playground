@@ -30,7 +30,7 @@ function getSandbox(ref) {
 
 function Preview({ markup, variant, forwardedRef, dispatch }) {
   const [roles, setRoles] = useState([]);
-  const [suggestion, setSuggestion] = useState();
+  const [suggestion, setSuggestion] = useState({});
 
   const frameRef = useRef();
 
@@ -81,11 +81,12 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
             query: suggestion.snippet,
             origin: 'SANDBOX',
           });
+          setSuggestion({ selected: suggestion });
           break;
         }
 
         case 'HOVER_NODE': {
-          setSuggestion(suggestion);
+          setSuggestion((state) => ({ ...state, hovered: suggestion }));
           break;
         }
       }
@@ -109,7 +110,10 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
       />
 
       {markup && variant !== 'minimal' && (
-        <PreviewHint roles={roles} suggestion={suggestion} />
+        <PreviewHint
+          roles={roles}
+          suggestion={suggestion.hovered || suggestion.selected}
+        />
       )}
 
       {!markup && (
