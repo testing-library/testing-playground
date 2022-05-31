@@ -1,8 +1,8 @@
 import React from 'react';
 
 const variants = {
-  dark: 'text-gray-600 hover:text-gray-400',
-  light: 'text-gray-400 hover:text-gray-600',
+  dark: 'text-gray-500 hover:text-gray-400',
+  light: 'text-gray-500 hover:text-gray-700',
   white: 'text-white hover:text-white',
 };
 
