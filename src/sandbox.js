@@ -127,9 +127,8 @@ function Sandbox() {
 function checkQuery(queries) {
   const suggestions = Object.values(queries).filter(Boolean);
   const suggestion = Object.values(queries).find(Boolean);
-  let anotherSuggestion;
 
-  anotherSuggestion = suggestions.find(
+  const anotherSuggestion = suggestions.find(
     (query) =>
       query?.queryName && !query.snippet?.startsWith('// sorry, I failed'),
   );
