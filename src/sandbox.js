@@ -124,6 +124,19 @@ function Sandbox() {
   );
 }
 
+function checkQuery(queries) {
+  const suggestions = Object.values(queries).filter(Boolean);
+  const suggestion = Object.values(queries).find(Boolean);
+  let anotherSuggestion;
+
+  anotherSuggestion = suggestions.find(
+    (query) =>
+      query?.queryName && !query.snippet?.startsWith('// sorry, I failed'),
+  );
+
+  return anotherSuggestion ? anotherSuggestion : suggestion;
+}
+
 function onSelectNode(node, { origin }) {
   // onSelectNode can be triggered after onMouseLeave has already been called.
   // This makes it impossible to clear hover state. That's why we maintain and
@@ -138,7 +151,8 @@ function onSelectNode(node, { origin }) {
     rootNode: state.rootNode,
   });
 
-  const suggestion = Object.values(queries).find(Boolean);
+  const suggestion = checkQuery(queries);
+
   if (!suggestion) {
     return;
   }
