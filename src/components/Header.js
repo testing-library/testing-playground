@@ -167,12 +167,6 @@ function Header({
 
             <MenuList>
               <MenuLink
-                href="https://github.com/testing-library/testing-playground/projects/1"
-                target="_blank"
-              >
-                Roadmap
-              </MenuLink>
-              <MenuLink
                 href="https://github.com/testing-library/testing-playground/issues"
                 target="_blank"
               >
