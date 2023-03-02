@@ -167,12 +167,6 @@ function Header({
 
             <MenuList>
               <MenuLink
-                href="https://github.com/testing-library/testing-playground/projects/1"
-                target="_blank"
-              >
-                Roadmap
-              </MenuLink>
-              <MenuLink
                 href="https://github.com/testing-library/testing-playground/issues"
                 target="_blank"
               >
@@ -195,12 +189,6 @@ function Header({
                 target="_blank"
               >
                 Chrome Extension
-              </MenuLink>
-              <MenuLink
-                href="https://addons.mozilla.org/en-US/firefox/addon/testing-playground"
-                target="_blank"
-              >
-                Firefox Extension
               </MenuLink>
 
               <div className="border-b border-gray-200 mx-4 my-2" />
