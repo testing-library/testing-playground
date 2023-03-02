@@ -43,7 +43,6 @@ it('renders Testing Playground Header', () => {
   cy.findByLabelText(/test-id attribute:/i).should('not.be.visible');
 
   // more info menu shows
-  cy.findByRole('menuitem', { name: /roadmap/i }).should('exist').and('have.attr', 'href', 'https://github.com/testing-library/testing-playground/projects/1');
   cy.findByRole('menuitem', { name: /github/i }).should('exist').and('have.attr', 'href', 'https://github.com/testing-library/testing-playground/issues');
   cy.findByRole('menuitem', { name: /support us/i }).should('exist').and('have.attr', 'href', 'https://github.com/sponsors/smeijer');
   cy.findByRole('menuitem', { name: /twitter/i }).should('exist').and('have.attr', 'href', 'https://twitter.com/meijer_s');
@@ -55,7 +54,6 @@ it('renders Testing Playground Header', () => {
   // click outside
   cy.findByRole('button', { name: /more info/i }).parent().click();
   // previous menu disappear
-  cy.findByRole('menuitem', { name: /roadmap/i }).should('not.exist');
   cy.findByRole('menuitem', { name: /github/i }).should('not.exist');
   cy.findByRole('menuitem', { name: /support us/i }).should('not.exist');
   cy.findByRole('menuitem', { name: /twitter/i }).should('not.exist');
