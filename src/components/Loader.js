@@ -1,5 +1,5 @@
 import React from 'react';
-import frog from 'url:~/public/128-production.png';
+import frog from '~/public/icons/128-production.png';
 
 function Loader({ loading }) {
   return (

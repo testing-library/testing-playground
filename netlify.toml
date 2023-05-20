@@ -4,7 +4,10 @@
   publish = "./dist/client"
 
 [dev]
+  command = "npm run dev:public"
   functions = "./src/lambda"
+  autoLaunch = false
+  publish = "."
 
 [template.environment]
   GITHUB_GIST_TOKEN = "set token that has gist access"

@@ -1,4 +1,4 @@
 /oembed       /.netlify/functions/oembed 200!
-/api/gist/*   /.netlify/functions/gist 200!
+/api/*        /.netlify/functions/:splat 200!
 /             /.netlify/functions/server 200!
 /*            /.netlify/functions/server 200

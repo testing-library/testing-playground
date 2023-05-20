@@ -1,5 +1,5 @@
 import React from 'react';
-import icon from 'url:~/public/36-production.png';
+import icon from '~/public/icons/36-production.png';
 import { links } from '../constants';
 import { Menu, MenuList, MenuButton, MenuLink, MenuPopover } from './Menu';
 import { Modal, ModalContents, ModalOpenButton } from './Modal';

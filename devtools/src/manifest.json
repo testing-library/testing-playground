@@ -4,7 +4,7 @@
   "description": "Simple and complete DOM testing playground that encourage good testing practices.",
   "version": "1.16.0",
   "version_name": "1.16.3",
-  "minimum_chrome_version": "49",
+  "minimum_chrome_version": "58",
   "icons": {
     "16": "icons/16-production.png",
     "32": "icons/32-production.png",
@@ -30,7 +30,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content-script/contentScript.js"],
+      "js": ["content-script/content-script.js"],
       "run_at": "document_start"
     }
   ]

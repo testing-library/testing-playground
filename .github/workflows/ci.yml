@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  NODE_VERSION: '12.x'
+  NODE_VERSION: '18.x'
 
 jobs:
   setup:
@@ -89,5 +89,5 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: npm start
-          wait-on: http://localhost:1234
+          wait-on: http://localhost:5173
           command: npm run cypress:run
