@@ -61,7 +61,7 @@ function Header({
               ) : (
                 <FileCodeIcon size={12} />
               )}
-              <span>playground</span>
+              <span>Playground</span>
             </MenuButton>
 
             <MenuList>
@@ -142,13 +142,13 @@ function Header({
               <PaperAirplaneIcon size={12} />
             )}
 
-            <span>run</span>
+            <span>Run</span>
           </button>
 
           <Menu>
             <MenuButton>
               <SettingsIcon size={12} />
-              <span>settings</span>
+              <span>Settings</span>
             </MenuButton>
             <MenuPopover>
               <Settings dispatch={dispatch} settings={settings} />
@@ -176,7 +176,7 @@ function Header({
                 href="https://github.com/sponsors/smeijer"
                 target="_blank"
               >
-                Support us
+                Support Us
               </MenuLink>
               <MenuLink href="https://twitter.com/meijer_s" target="_blank">
                 Twitter
