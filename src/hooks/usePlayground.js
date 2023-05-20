@@ -7,7 +7,7 @@ import parser from '../parser';
 import { initialValues as defaultValues } from '../constants';
 import { withLogging } from '../lib/logger';
 import postMessage from '../lib/postMessage';
-import gist from '../api/gist';
+import gist from '../gh-api/gist';
 import url from '../lib/state/url';
 
 let history;

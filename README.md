@@ -127,7 +127,7 @@ Please see [contributing.md] for more details. If you just want to run the playg
 git clone git@github.com:testing-library/testing-playground.git
 cd testing-playground
 npm ci
-npm run start
+npm run dev
 ```
 
 ## Contributors
@@ -165,6 +165,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

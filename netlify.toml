@@ -1,10 +1,13 @@
 [build]
-  command = "npm run build"
+  command = "npm run build:public && npm run build:lambda"
   functions = "./dist/server"
-  publish = "./dist/client"
+  publish = "./dist/public"
 
 [dev]
+  command = "npm run dev:public"
   functions = "./src/lambda"
+  autoLaunch = false
+  publish = "."
 
 [template.environment]
   GITHUB_GIST_TOKEN = "set token that has gist access"

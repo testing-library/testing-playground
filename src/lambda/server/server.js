@@ -6,7 +6,7 @@ const filename = path.join(__dirname, './index.html');
 const indexHtml = fs.existsSync(filename)
   ? fs.readFileSync(filename, 'utf8')
   : fs.readFileSync(
-      path.join(__dirname, '../../../dist/client/index.html'),
+      path.join(__dirname, '../../../dist/public/index.html'),
       'utf8',
     );
 
