@@ -12,4 +12,7 @@ module.exports = {
       },
     },
   },
+  variants: {
+    scale: ['focus', 'hover', 'group-hover'],
+  },
 };
