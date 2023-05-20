@@ -1,7 +1,7 @@
 [build]
-  command = "npm run build"
+  command = "npm run build:public && npm run build:lambda"
   functions = "./dist/server"
-  publish = "./dist/client"
+  publish = "./dist/public"
 
 [dev]
   command = "npm run dev:public"
