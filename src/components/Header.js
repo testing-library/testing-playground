@@ -76,7 +76,7 @@ function Header({
               style={{ backgroundColor: '#1d9bf0' }}
               target="_blank"
               rel="noopener noreferrer"
-              href="https://meijer.ws/twitter"
+              href="https://go.meijer.ws/twitter"
             >
               <TwitterBird />
               <span>@meijer_s</span>
