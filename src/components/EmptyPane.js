@@ -3,10 +3,10 @@ import icon from '~/public/code_thinking.png';
 
 function EmptyPane() {
   return (
-    <div className="flex-auto absolute overflow-hidden h-full w-full flex flex-col justify-center items-center">
-      <div className="h-48 overflow-hidden w-full flex item-center">
+    <div className="absolute flex h-full w-full flex-auto flex-col items-center justify-center overflow-hidden">
+      <div className="item-center flex h-48 w-full overflow-hidden">
         <img
-          className="flex-auto resize opacity-50 object-contain max-h-full min-h-0"
+          className="max-h-full min-h-0 flex-auto resize object-contain opacity-50"
           src={icon}
         />
       </div>

@@ -5,7 +5,7 @@
 
 .CodeMirror.cm-s-dracula {
   /* border-radius doesn't work on CM without a border :( */
-  @apply bg-gray-800 border-solid border-4 border-gray-800 !important;
+  @apply border-4 border-solid border-gray-800 bg-gray-800 !important;
   border-radius: 4px;
 
   /* this shouldn't be required but I can't get the thing to accept height:100% */

@@ -21,8 +21,8 @@ function MarkupEditor({ markup, dispatch }) {
   );
 
   return (
-    <div className="h-full w-full flex flex-col">
-      <div className="markup-editor flex-auto relative overflow-hidden">
+    <div className="flex h-full w-full flex-col">
+      <div className="markup-editor relative flex-auto overflow-hidden">
         <Editor
           mode="htmlmixed"
           initialValue={initialValue}

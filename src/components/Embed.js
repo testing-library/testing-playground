@@ -35,14 +35,14 @@ function Embed({ dispatch, dirty, gistId, gistVersion }) {
   const canAddPane = panes.length < 3;
 
   const loader = (
-    <div className="flex space-x-4 items-center border rounded w-full py-2 px-3 bg-white text-gray-800 leading-tight">
+    <div className="border rounded flex w-full items-center space-x-4 bg-white px-3 py-2 leading-tight text-gray-800">
       <SyncIcon size={12} className="spinner" />
       <span>one sec...</span>
     </div>
   );
 
   return (
-    <div className="settings text-sm pb-2">
+    <div className="settings pb-2 text-sm">
       <div className="space-y-6">
         <section className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
@@ -61,11 +61,11 @@ function Embed({ dispatch, dirty, gistId, gistVersion }) {
           </div>
 
           {/* overflow-hidden is required hide the hidden preview panel */}
-          <div className="bg-gray-200 px-4 pb-4 -mx-4 overflow-hidden">
-            <div className="px-4 gap-4 grid grid-flow-col py-1">
+          <div className="-mx-4 overflow-hidden bg-gray-200 px-4 pb-4">
+            <div className="grid grid-flow-col gap-4 px-4 py-1">
               {panes.map((selected, idx) => (
                 <div key={idx} className="flex items-center justify-between">
-                  <div className="text-left space-x-2">
+                  <div className="space-x-2 text-left">
                     {possiblePanes.map((name) => (
                       <TabButton
                         key={name}
@@ -132,8 +132,8 @@ function Embed({ dispatch, dirty, gistId, gistVersion }) {
             {dirty ? (
               loader
             ) : (
-              <div className="w-full flex space-x-4">
-                <code className="p-4 rounded bg-gray-200 text-gray-800 font-mono text-xs">
+              <div className="flex w-full space-x-4">
+                <code className="rounded bg-gray-200 p-4 font-mono text-xs text-gray-800">
                   {embedCode}
                 </code>
                 <CopyButton text={embedCode} />

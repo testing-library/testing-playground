@@ -19,18 +19,18 @@ function EventRecord({ index, style, data }) {
 
   return (
     <div
-      className={`w-full h-8 flex items-center text-sm ${
+      className={`flex h-8 w-full items-center text-sm ${
         index % 2 ? 'bg-gray-100' : ''
       }`}
       style={style}
     >
-      <div className="p-2 flex-none w-16">{id}</div>
+      <div className="w-16 flex-none p-2">{id}</div>
 
-      <div className="p-2 flex-none w-32">{type}</div>
-      <div className="p-2 flex-none w-32">{name}</div>
+      <div className="w-32 flex-none p-2">{type}</div>
+      <div className="w-32 flex-none p-2">{name}</div>
 
-      <div className="p-2 flex-none w-40">{element}</div>
-      <div className="p-2 flex-auto whitespace-no-wrap">{selector}</div>
+      <div className="w-40 flex-none p-2">{element}</div>
+      <div className="whitespace-no-wrap flex-auto p-2">{selector}</div>
     </div>
   );
 }
@@ -56,21 +56,21 @@ function DomEvents() {
       .join('\n');
 
   return (
-    <div className="editor p-4 h-56 flex-auto overflow-hidden">
-      <div className="h-full w-full flex flex-col">
-        <div className="h-8 flex items-center w-full text-sm font-bold">
+    <div className="editor h-56 flex-auto overflow-hidden p-4">
+      <div className="flex h-full w-full flex-col">
+        <div className="flex h-8 w-full items-center text-sm font-bold">
           <div
-            className="p-2 w-16 cursor-pointer flex justify-between items-center"
+            className="flex w-16 cursor-pointer items-center justify-between p-2"
             onClick={changeSortDirection}
           >
             # {getSortIcon()}
           </div>
 
-          <div className="p-2 w-32 ">type</div>
-          <div className="p-2 w-32 ">name</div>
+          <div className="w-32 p-2 ">type</div>
+          <div className="w-32 p-2 ">name</div>
 
-          <div className="p-2 w-40 ">element</div>
-          <div className="flex-auto p-2 flex justify-between">
+          <div className="w-40 p-2 ">element</div>
+          <div className="flex flex-auto justify-between p-2">
             <span>selector</span>
             <div>
               <CopyButton
@@ -85,9 +85,9 @@ function DomEvents() {
           </div>
         </div>
 
-        <div className="flex-auto relative overflow-hidden">
+        <div className="relative flex-auto overflow-hidden">
           {buffer.current.length === 0 ? (
-            <div className="flex w-full h-full opacity-50 items-end justify-center">
+            <div className="flex h-full w-full items-end justify-center opacity-50">
               <EmptyStreetImg height="80%" />
             </div>
           ) : (

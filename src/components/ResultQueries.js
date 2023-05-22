@@ -24,7 +24,7 @@ const Field = React.memo(function Field({ method, query, dispatch, active }) {
 
   return (
     <div
-      className={`text-xs field ${active ? 'active' : ''}`}
+      className={`field text-xs ${active ? 'active' : ''}`}
       data-clickable={!!handleClick}
       onClick={handleClick}
     >

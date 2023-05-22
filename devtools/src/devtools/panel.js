@@ -47,14 +47,14 @@ function Panel() {
   );
 
   return (
-    <div className="bg-white w-screen h-screen flex flex-col">
-      <div className="flex-none w-full">
+    <div className="flex h-screen w-screen flex-col bg-white">
+      <div className="w-full flex-none">
         <MenuBar
           cssPath={result.elements?.[0]?.cssPath}
           suggestion={result.expression}
         />
       </div>
-      <div className="grid relative p-2 gap-4 flex-auto grid-cols-1 md:grid-cols-2 grid-equal-cells overflow-hidden">
+      <div className="grid-equal-cells relative grid flex-auto grid-cols-1 gap-4 overflow-hidden p-2 md:grid-cols-2">
         <div className="relative">
           <Query
             query={''}

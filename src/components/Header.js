@@ -28,7 +28,7 @@ const headerLinks = [
 
 const TwitterBird = () => (
   <svg
-    className="w-4 h-4 group-hover:scale-110 duration-150 transform"
+    className="h-4 w-4 transform duration-150 group-hover:scale-110"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 72 72"
   >
@@ -52,14 +52,14 @@ function Header({
   dispatch,
 }) {
   return (
-    <nav className="text-white w-full h-16">
+    <nav className="h-16 w-full text-white">
       <div
-        className="grid grid-cols-2 items-center bg-gray-900 px-8 h-16"
+        className="grid h-16 grid-cols-2 items-center bg-gray-900 px-8"
         style={{ gridTemplateColumns: '1fr 1fr' }}
       >
-        <div className="flex items-center justify-between flex-shrink-0 text-white h-full space-x-8 pr-4">
+        <div className="flex h-full flex-shrink-0 items-center justify-between space-x-8 pr-4 text-white">
           <a className="title" href="/">
-            <h1 className="font-light text-xl tracking-tight flex space-x-4 items-center justify-start">
+            <h1 className="flex items-center justify-start space-x-4 text-xl font-light tracking-tight">
               <img
                 width={24}
                 height={24}
@@ -72,7 +72,7 @@ function Header({
 
           <div className="flex items-center gap-2">
             <a
-              className="rounded-md text-white group text-sm px-2 py-1 flex items-center space-x-2 no-underline"
+              className="group flex items-center space-x-2 rounded-md px-2 py-1 text-sm text-white no-underline"
               style={{ backgroundColor: '#1d9bf0' }}
               target="_blank"
               rel="noopener noreferrer"
@@ -84,7 +84,7 @@ function Header({
           </div>
         </div>
 
-        <div className="flex items-center justify-end text-sm h-full relative">
+        <div className="relative flex h-full items-center justify-end text-sm">
           <Menu>
             <MenuButton>
               {status === 'saving' ? (
@@ -119,7 +119,7 @@ function Header({
                 <span>Fork</span>
               </MenuLink>
 
-              <div className="border-b border-gray-200 mx-4 my-2" />
+              <div className="border-b mx-4 my-2 border-gray-200" />
 
               <Modal>
                 <ModalOpenButton>
@@ -190,7 +190,7 @@ function Header({
               <span>
                 <KebabHorizontalIcon
                   size={12}
-                  className="transform rotate-90"
+                  className="rotate-90 transform"
                 />
               </span>
             </MenuButton>
@@ -212,7 +212,7 @@ function Header({
                 Twitter
               </MenuLink>
 
-              <div className="border-b border-gray-200 mx-4 my-2" />
+              <div className="border-b mx-4 my-2 border-gray-200" />
 
               <MenuLink
                 href="https://chrome.google.com/webstore/detail/testing-playground/hejbmebodbijjdhflfknehhcgaklhano"
@@ -221,7 +221,7 @@ function Header({
                 Chrome Extension
               </MenuLink>
 
-              <div className="border-b border-gray-200 mx-4 my-2" />
+              <div className="border-b mx-4 my-2 border-gray-200" />
 
               {headerLinks.map((x) => (
                 <MenuLink key={x.title} href={x.url} target="_blank">

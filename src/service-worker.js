@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
               <p>
                 A new version is available!{' '}
                 <button
-                  className="btn font-bold ml-2 pl-2 text-gray-800"
+                  className="btn ml-2 pl-2 font-bold text-gray-800"
                   onClick={() => window.location.reload()}
                 >
                   REFRESH

@@ -11,7 +11,7 @@ const DomEvents = React.lazy(() => import('./DomEvents'));
 
 function Paper({ children }) {
   return (
-    <div className="editor p-4 gap-4 md:gap-8 md:h-56 flex-auto grid-cols-1 md:grid-cols-2">
+    <div className="editor flex-auto grid-cols-1 gap-4 p-4 md:h-56 md:grid-cols-2 md:gap-8">
       {children}
     </div>
   );
@@ -23,9 +23,9 @@ function PlaygroundPanels({ state, dispatch }) {
 
   return (
     <>
-      <div className="px-4 gap-4 flex pt-3 pb-1 h-8">
+      <div className="flex h-8 gap-4 px-4 pb-1 pt-3">
         <div className="flex items-center">
-          <div className="text-left space-x-2">
+          <div className="space-x-2 text-left">
             {panels.map((panelName) => (
               <TabButton
                 key={panelName}
@@ -41,11 +41,11 @@ function PlaygroundPanels({ state, dispatch }) {
       <Suspense fallback={null}>
         {panel === panels[0] && (
           <Paper>
-            <div className="flex-auto relative h-56 md:h-full">
+            <div className="relative h-56 flex-auto md:h-full">
               <Query query={query} result={result} dispatch={dispatch} />
             </div>
 
-            <div className="flex-auto h-56 md:h-full overflow-hidden">
+            <div className="h-56 flex-auto overflow-hidden md:h-full">
               <Result result={result} dispatch={dispatch} />
             </div>
           </Paper>

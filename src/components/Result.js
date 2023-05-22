@@ -18,7 +18,7 @@ function Result({ result, dispatch }) {
     result.elements.length === 0
   ) {
     return (
-      <div className="flex flex-col relative w-full h-full top-0 left-0">
+      <div className="relative left-0 top-0 flex h-full w-full flex-col">
         <EmptyPane />
       </div>
     );
@@ -27,11 +27,11 @@ function Result({ result, dispatch }) {
   const { queries } = result.elements[0];
   return (
     <div
-      className="flex flex-col w-full h-full overflow-hidden"
+      className="flex h-full w-full flex-col overflow-hidden"
       data-testid="result"
     >
       <Scrollable>
-        <div className="pb-4 border-b">
+        <div className="border-b pb-4">
           <ResultSuggestion
             result={result}
             dispatch={dispatch}

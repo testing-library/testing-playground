@@ -24,7 +24,7 @@ function Panel() {
   };
 
   return (
-    <div className="bg-white p-2 w-screen h-screen">
+    <div className="h-screen w-screen bg-white p-2">
       {result && <Result result={result} dispatch={dispatch} />}
     </div>
   );
