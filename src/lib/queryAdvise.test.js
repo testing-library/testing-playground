@@ -7,14 +7,14 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
   let suggestedQueries = getAllPossibleQueries({ rootNode, element });
 
   expect(suggestedQueries).toMatchInlineSnapshot(`
-    Object {
+    {
       "AltText": undefined,
       "DisplayValue": undefined,
       "LabelText": undefined,
       "PlaceholderText": undefined,
-      "Role": Object {
+      "Role": {
         "excerpt": "getByRole('button')",
-        "queryArgs": Array [
+        "queryArgs": [
           "button",
         ],
         "queryMethod": "getByRole",
@@ -23,9 +23,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "variant": "get",
         "warning": "",
       },
-      "Selector": Object {
+      "Selector": {
         "excerpt": "querySelector('div > button')",
-        "queryArgs": Array [
+        "queryArgs": [
           "div > button",
         ],
         "queryMethod": "querySelector",
@@ -56,10 +56,10 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
   suggestedQueries = getAllPossibleQueries({ rootNode, element: input });
 
   expect(suggestedQueries).toMatchInlineSnapshot(`
-    Object {
-      "AltText": Object {
+    {
+      "AltText": {
         "excerpt": "getByAltText(/enter your username/i)",
-        "queryArgs": Array [
+        "queryArgs": [
           /enter your username/i,
         ],
         "queryMethod": "getByAltText",
@@ -68,9 +68,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "variant": "get",
         "warning": "",
       },
-      "DisplayValue": Object {
+      "DisplayValue": {
         "excerpt": "getByDisplayValue(/john\\\\-doe/i)",
-        "queryArgs": Array [
+        "queryArgs": [
           /john\\\\-doe/i,
         ],
         "queryMethod": "getByDisplayValue",
@@ -79,9 +79,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "variant": "get",
         "warning": "",
       },
-      "LabelText": Object {
+      "LabelText": {
         "excerpt": "getByLabelText(/username/i)",
-        "queryArgs": Array [
+        "queryArgs": [
           /username/i,
         ],
         "queryMethod": "getByLabelText",
@@ -90,9 +90,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "variant": "get",
         "warning": "",
       },
-      "PlaceholderText": Object {
+      "PlaceholderText": {
         "excerpt": "getByPlaceholderText(/how should i call you\\\\?/i)",
-        "queryArgs": Array [
+        "queryArgs": [
           /how should i call you\\\\\\?/i,
         ],
         "queryMethod": "getByPlaceholderText",
@@ -101,11 +101,11 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "variant": "get",
         "warning": "",
       },
-      "Role": Object {
+      "Role": {
         "excerpt": "getByRole('textbox', { name: /username/i })",
-        "queryArgs": Array [
+        "queryArgs": [
           "textbox",
-          Object {
+          {
             "name": /username/i,
           },
         ],
@@ -117,9 +117,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "variant": "get",
         "warning": "",
       },
-      "Selector": Object {
+      "Selector": {
         "excerpt": "querySelector('#username')",
-        "queryArgs": Array [
+        "queryArgs": [
           "#username",
         ],
         "queryMethod": "querySelector",
@@ -127,9 +127,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "snapshot": "screen.getByRole('textbox', { name: /username/i });",
         "snippet": "container.querySelector('#username')",
       },
-      "TestId": Object {
+      "TestId": {
         "excerpt": "getByTestId('uname')",
-        "queryArgs": Array [
+        "queryArgs": [
           "uname",
         ],
         "queryMethod": "getByTestId",
@@ -139,9 +139,9 @@ it('[getAllPossibleQueries] should return an object with all possibile queries',
         "warning": "",
       },
       "Text": undefined,
-      "Title": Object {
+      "Title": {
         "excerpt": "getByTitle(/enter your username/i)",
-        "queryArgs": Array [
+        "queryArgs": [
           /enter your username/i,
         ],
         "queryMethod": "getByTitle",

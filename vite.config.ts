@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import { join, resolve } from 'path';
 import { copy } from 'fs-extra';
 import { generateSW } from 'workbox-build';
@@ -78,5 +78,11 @@ export default defineConfig(() => {
         },
       },
     ],
+
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: '../tests/setupTests',
+    },
   };
 });
