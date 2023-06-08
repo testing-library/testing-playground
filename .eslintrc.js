@@ -1,4 +1,5 @@
 module.exports = {
+  ignorePatterns: ['!**/*'],
   parser: '@typescript-eslint/parser',
   extends: [
     'eslint:recommended',

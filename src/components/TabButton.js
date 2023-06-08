@@ -5,8 +5,8 @@ function TabButton({ children, active, onClick, disabled }) {
     <button
       disabled={disabled}
       className={[
-        'text-xs select-none border-b-2',
-        disabled ? '' : 'hover:text-blue-400 hover:border-blue-400',
+        'select-none border-b-2 text-xs',
+        disabled ? '' : 'hover:border-blue-400 hover:text-blue-400',
         active
           ? 'border-blue-600 text-blue-600'
           : 'border-transparent text-gray-800',

@@ -42,7 +42,7 @@ function ModalContents({ title, children, ...props }) {
       {...props}
     >
       {title && (
-        <div className="flex justify-between items-center mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <h3 className="text-md font-bold">{title}</h3>
 
           <ModalDismissButton>

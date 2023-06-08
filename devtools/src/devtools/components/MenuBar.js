@@ -15,7 +15,7 @@ import { getSettings, setSettings } from '../lib/settings';
 
 function MenuBar({ cssPath, suggestion }) {
   return (
-    <div className="h-8 p-2 border-b space-x-4 flex">
+    <div className="border-b flex h-8 space-x-4 p-2">
       <button
         className="focus:outline-none"
         title="select element"

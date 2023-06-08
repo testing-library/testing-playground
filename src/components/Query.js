@@ -6,8 +6,8 @@ function Query({ query, result, dispatch, variant }) {
   const [initialValue] = useState(query);
 
   return (
-    <div className="relative h-full w-full flex flex-col">
-      <div className="query-editor flex-auto relative">
+    <div className="relative flex h-full w-full flex-col">
+      <div className="query-editor relative flex-auto">
         <QueryEditor
           variant={variant}
           initialValue={initialValue}

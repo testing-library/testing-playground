@@ -9,7 +9,7 @@ function Expandable({ excerpt, children, className, variant, labelText }) {
   return (
     <section
       className={[
-        'flex-none py-2 px-4 flex justify-between w-full',
+        'flex w-full flex-none justify-between px-4 py-2',
         expanded ? 'expanded items-start' : 'collapsed items-center',
         className,
       ]
@@ -18,10 +18,10 @@ function Expandable({ excerpt, children, className, variant, labelText }) {
       aria-label={labelText}
     >
       {expanded && (
-        <div className="absolute bottom-0 -ml-4 h-full w-full overflow-hidden bg-inherit rounded-inherit">
+        <div className="bg-inherit rounded-inherit absolute bottom-0 -ml-4 h-full w-full overflow-hidden">
           <Scrollable variant={variant}>
             <div className="whitespace-pre-wrap p-4">
-              {children} <div className="py-2 px-4">&nbsp;</div>
+              {children} <div className="px-4 py-2">&nbsp;</div>
             </div>
           </Scrollable>
 
@@ -38,7 +38,7 @@ function Expandable({ excerpt, children, className, variant, labelText }) {
       {expanded || !children ? (
         <div>&nbsp;</div>
       ) : (
-        <div className="truncate mr-8 w-full flex justify-between direction">
+        <div className="truncate direction mr-8 flex w-full justify-between">
           {excerpt || children}
         </div>
       )}

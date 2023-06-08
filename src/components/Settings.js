@@ -4,7 +4,7 @@ import Toggle from 'react-toggle';
 import Input from './Input';
 
 function Divider() {
-  return <div className="border-b border-gray-300 my-4" />;
+  return <div className="border-b my-4 border-gray-300" />;
 }
 
 function Settings({ settings, dispatch }) {
@@ -25,10 +25,10 @@ function Settings({ settings, dispatch }) {
   const isCookieEanbled = navigator.cookieEnabled;
 
   return (
-    <div className="settings text-sm pb-2 ">
+    <div className="settings pb-2 text-sm ">
       {!isCookieEanbled && (
         <p
-          className="text-sm font-bold text-orange-600 border border-orange-600 px-3 py-1"
+          className="border border-orange-600 px-3 py-1 text-sm font-bold text-orange-600"
           role="alert"
         >
           Cookie are not enabled, settings will not be saved.
@@ -37,8 +37,8 @@ function Settings({ settings, dispatch }) {
       <form onChange={handleChange} onSubmit={(e) => e.preventDefault()}>
         {showBehavior && (
           <div>
-            <h3 className="text-sm font-bold mb-2">Behavior</h3>
-            <label className="flex space-x-4 items-center">
+            <h3 className="mb-2 text-sm font-bold">Behavior</h3>
+            <label className="flex items-center space-x-4">
               <Toggle
                 icons={false}
                 defaultChecked={settings.autoRun}
@@ -53,7 +53,7 @@ function Settings({ settings, dispatch }) {
 
         {showTestingLibrary && (
           <div>
-            <h3 className="text-sm font-bold mb-2">Testing-Library</h3>
+            <h3 className="mb-2 text-sm font-bold">Testing-Library</h3>
             <label htmlFor="test-id" className="text-xs">
               test-id attribute:
             </label>
