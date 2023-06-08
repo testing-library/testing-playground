@@ -2,8 +2,8 @@ import React from 'react';
 
 function Quote({ heading, content, source, href }) {
   return (
-    <blockquote className="text-sm mb-4 italic w-full">
-      <p className="font-bold text-xs mb-2">{heading}:</p>
+    <blockquote className="mb-4 w-full text-sm italic">
+      <p className="mb-2 text-xs font-bold">{heading}:</p>
       <p>{content}</p>
       <cite>
         <a href={href}>{source}</a>

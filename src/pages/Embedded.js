@@ -76,13 +76,13 @@ function Embedded(props) {
 
   return (
     <div
-      className="relative w-full h-screen"
+      className="relative h-screen w-full"
       style={height ? { height } : undefined}
     >
       <Loader loading={isLoading} />
       <div
         className={[
-          `h-full overflow-hidden grid grid-flow-col gap-4 p-4 bg-white shadow rounded fade`,
+          `shadow rounded fade grid h-full grid-flow-col gap-4 overflow-hidden bg-white p-4`,
           columnClass,
           isLoading ? 'opacity-0' : 'opacity-100',
         ].join(' ')}

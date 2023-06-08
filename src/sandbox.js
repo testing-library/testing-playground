@@ -105,7 +105,7 @@ function Sandbox() {
 
   return (
     <div
-      className="pr-1 relative w-screen h-screen overflow-hidden"
+      className="relative h-screen w-screen overflow-hidden pr-1"
       onMouseEnter={() => {
         state.pointerInside = true;
         state.highlighter?.clear();

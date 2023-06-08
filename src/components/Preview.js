@@ -97,7 +97,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
   }, [dispatch, forwardedRef, markup]);
 
   return (
-    <div className="w-full h-full flex flex-col relative">
+    <div className="relative flex h-full w-full flex-col">
       <iframe
         ref={frameRef}
         src="/sandbox.html"
@@ -117,7 +117,7 @@ function Preview({ markup, variant, forwardedRef, dispatch }) {
       )}
 
       {!markup && (
-        <div className="absolute w-full h-full top-0 left-0">
+        <div className="absolute left-0 top-0 h-full w-full">
           <EmptyPane />
         </div>
       )}

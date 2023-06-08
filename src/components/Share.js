@@ -19,13 +19,13 @@ function Share({ dirty, dispatch, gistId, gistVersion }) {
     : location.href;
 
   return (
-    <div className="settings text-sm pb-2">
+    <div className="settings pb-2 text-sm">
       <div>
-        <h3 className="text-sm font-bold mb-2">Share</h3>
+        <h3 className="mb-2 text-sm font-bold">Share</h3>
 
         <label className="text-xs">playground link:</label>
         {dirty ? (
-          <div className="flex space-x-4 items-center border rounded w-full py-2 px-3 bg-white text-gray-800 leading-tight">
+          <div className="border rounded flex w-full items-center space-x-4 bg-white px-3 py-2 leading-tight text-gray-800">
             <SyncIcon size={12} className="spinner" />
             <span>one sec...</span>
           </div>

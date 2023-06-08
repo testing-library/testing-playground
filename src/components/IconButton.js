@@ -11,7 +11,7 @@ function IconButton({ children, title, variant, onClick, className }) {
   return (
     <button
       className={[
-        `pointer inline-flex focus:outline-none rounded-full flex items-center justify-center`,
+        `pointer focus:outline-none flex inline-flex items-center justify-center rounded-full`,
         cssVariant,
         className,
       ]

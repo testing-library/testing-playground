@@ -6,7 +6,7 @@ import { ShieldIcon } from '@primer/octicons-react';
 const colors = ['bg-blue-600', 'bg-yellow-600', 'bg-orange-600', 'bg-red-600'];
 
 function Code({ children }) {
-  return <span className="font-bold font-mono">{children}</span>;
+  return <span className="font-mono font-bold">{children}</span>;
 }
 
 const levels = {
@@ -101,12 +101,12 @@ function ResultSuggestion({ queries, result, dispatch }) {
 
   return (
     <div className="space-y-4 text-sm">
-      <div className={['text-white p-4 rounded space-y-2', color].join(' ')}>
-        <div className="font-bold text-xs">suggested query</div>
+      <div className={['rounded space-y-2 p-4 text-white', color].join(' ')}>
+        <div className="text-xs font-bold">suggested query</div>
         {suggestion.excerpt && (
           <div className="flex justify-between">
             <div
-              className="font-mono cursor-pointer text-xs"
+              className="cursor-pointer font-mono text-xs"
               onClick={() =>
                 dispatch({
                   type: 'SET_QUERY',

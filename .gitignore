@@ -1,8 +1,4 @@
-.rts2_cache*
-.cache
-.parcel-cache
 cypress/videos
-
 dist/
 node_modules/
 

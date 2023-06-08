@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  @apply text-base bg-gray-300;
+  @apply bg-gray-300 text-base;
 }
 
 /* purgecss ignore */
@@ -17,7 +17,7 @@ body.sandbox {
 }
 
 body.sandbox {
-  @apply w-full h-full overflow-hidden;
+  @apply h-full w-full overflow-hidden;
 }
 
 /* purgecss ignore */
@@ -36,7 +36,7 @@ nav button {
 }
 
 nav button:after {
-  @apply block w-full bg-blue-400 absolute pointer-events-none rounded opacity-0 scale-95;
+  @apply rounded pointer-events-none absolute block w-full scale-95 bg-blue-400 opacity-0;
   content: '';
   height: 4px;
   bottom: 0;
@@ -45,7 +45,7 @@ nav button:after {
 }
 
 nav button:hover:after {
-  @apply opacity-100 scale-100;
+  @apply scale-100 opacity-100;
 }
 
 div[data-reach-dialog-overlay] {
@@ -141,7 +141,7 @@ div[data-reach-menu-popover] {
 }
 
 .editor {
-  @apply bg-white rounded shadow grid relative;
+  @apply rounded shadow relative grid bg-white;
 }
 
 .editor > .h-full-within {
@@ -182,7 +182,7 @@ blockquote:before {
 }
 
 blockquote cite {
-  @apply text-gray-400 text-sm mt-2 block;
+  @apply mt-2 block text-sm text-gray-400;
 }
 
 blockquote cite:before {
@@ -190,7 +190,7 @@ blockquote cite:before {
 }
 
 .field {
-  @apply relative cursor-default p-1 rounded border border-transparent;
+  @apply rounded border relative cursor-default border-transparent p-1;
   z-index: 0;
   transition: background-color 0.2s ease;
 }
@@ -212,18 +212,18 @@ blockquote cite:before {
 }
 
 .output {
-  @apply text-gray-100 p-4 font-mono text-sm bg-gray-800 bg-gray-800 whitespace-pre-wrap;
+  @apply whitespace-pre-wrap bg-gray-800 bg-gray-800 p-4 font-mono text-sm text-gray-100;
   overflow-x: auto;
   margin-top: -4px; /* compensate CM border */
   border-radius: 0 0 4px 4px;
 }
 
 .error {
-  @apply border text-white bg-red-600 p-4 rounded;
+  @apply border rounded bg-red-600 p-4 text-white;
 }
 
 button {
-  @apply inline-flex justify-center items-center;
+  @apply inline-flex items-center justify-center;
 }
 
 button:focus {
@@ -254,7 +254,7 @@ button:disabled {
  */
 
 .preview {
-  @apply text-base p-1 mb-2;
+  @apply mb-2 p-1 text-base;
 }
 
 .preview hr {
@@ -267,15 +267,15 @@ button:disabled {
 .preview h4,
 .preview h5,
 .preview h6 {
-  @apply font-bold mb-2;
+  @apply mb-2 font-bold;
 }
 
 .preview .highlight {
-  @apply shadow-outline rounded;
+  @apply rounded shadow-outline;
 }
 
 .preview a {
-  @apply inline-block align-baseline font-bold text-sm text-blue-500;
+  @apply inline-block align-baseline text-sm font-bold text-blue-500;
 }
 
 .preview a:hover {
@@ -283,13 +283,13 @@ button:disabled {
 }
 
 .preview label {
-  @apply block text-gray-700 text-sm font-bold mb-2;
+  @apply mb-2 block text-sm font-bold text-gray-700;
 }
 
 .preview input,
 .preview textarea,
 .preview select {
-  @apply block appearance-none border rounded w-full py-2 px-3 mb-2 bg-white text-gray-700 leading-tight;
+  @apply border rounded mb-2 block w-full appearance-none bg-white px-3 py-2 leading-tight text-gray-700;
 }
 
 .preview input:focus,
@@ -314,7 +314,7 @@ button:disabled {
 }
 
 .preview button {
-  @apply border border-gray-300 bg-gray-300 text-gray-800 text-sm py-2 px-4 rounded;
+  @apply border rounded border-gray-300 bg-gray-300 px-4 py-2 text-sm text-gray-800;
 }
 
 .preview button:hover {

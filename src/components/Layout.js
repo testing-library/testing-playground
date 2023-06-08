@@ -12,7 +12,7 @@ function Layout({
   settings,
 }) {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex h-screen flex-col">
       <div className="mb-8 flex-none">
         <Header
           gistId={gistId}
@@ -27,7 +27,7 @@ function Layout({
       </div>
 
       {/*not sure why, but safari needs a height here*/}
-      <div className="px-8 mb-8 md:h-0 flex-grow flex-shrink relative">
+      <div className="flex-grow flex-shrink relative mb-8 px-8 md:h-0">
         {children}
       </div>
 

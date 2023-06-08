@@ -4,7 +4,7 @@ import queryString from 'query-string';
 function initPlaygrounds() {
   const playgrounds = document.querySelectorAll('[data-testing-playground]');
 
-  // TODO: figure out how to run / build statics with parcel
+  // TODO: figure out how to run / build statics with vite
   const host =
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1234'
