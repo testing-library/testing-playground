@@ -17,7 +17,7 @@ it('renders without crashing given default props', () => {
 });
 
 it('attempts to copy to clipboard through navigator.clipboard', async () => {
-  const clipboardSpy = jest.fn();
+  const clipboardSpy = vi.fn();
 
   window.navigator.clipboard = {
     writeText: clipboardSpy,
@@ -34,7 +34,7 @@ it('attempts to copy to clipboard through navigator.clipboard', async () => {
 });
 
 it('attempts to copy with legacy methods if navigator.clipboard is unavailable', async () => {
-  const execCommandSpy = jest.fn();
+  const execCommandSpy = vi.fn();
 
   document.execCommand = execCommandSpy;
 
@@ -49,8 +49,8 @@ it('attempts to copy with legacy methods if navigator.clipboard is unavailable',
 });
 
 it('temporarily shows a different icon after copying', async () => {
-  jest.useFakeTimers();
-  const execCommandSpy = jest.fn();
+  vi.useFakeTimers();
+  const execCommandSpy = vi.fn();
 
   document.execCommand = execCommandSpy;
 
@@ -71,7 +71,7 @@ it('temporarily shows a different icon after copying', async () => {
 
   // same here
   await act(async () => {
-    jest.runAllTimers();
+    vi.runAllTimers();
   });
 
   await waitFor(() => {
@@ -80,7 +80,7 @@ it('temporarily shows a different icon after copying', async () => {
 });
 
 it('should accept funcition to get text to copy', async () => {
-  const execCommandSpy = jest.fn();
+  const execCommandSpy = vi.fn();
   const getTextToCopy = () => 'copy';
 
   document.execCommand = execCommandSpy;

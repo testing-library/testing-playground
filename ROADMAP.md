@@ -22,7 +22,7 @@ _Status: Ongoing ([#7](https://github.com/testing-library/testing-playground/iss
 
 A [testing-playground.com] without tests... I don't think that should be a thing, but at this moment it is.
 
-We should fix that, and use jest & testing-library to do it.
+We should fix that, and use Vitest & testing-library to do it.
 
 ## Usage instructions
 

@@ -76,7 +76,7 @@ jobs:
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run Tests
-        run: npm run ci:test
+        run: npm test
   e2e-tests:
     name: e2e Tests
     runs-on: ubuntu-latest

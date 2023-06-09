@@ -8,6 +8,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:cypress/recommended',
   ],
+  plugins: ['vitest-globals'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -21,7 +22,7 @@ module.exports = {
     browser: true,
     node: true,
     es6: true,
-    jest: true,
+    'vitest-globals/env': true,
   },
   rules: {
     'arrow-body-style': ['error', 'as-needed'],

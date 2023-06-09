@@ -1,8 +1,7 @@
-import { InlineConfig } from "vite";
-import { __DEV__, resolve as r } from "./utils.mjs";
-import * as fs from "fs-extra";
-import react from "@vitejs/plugin-react";
-import * as packageJson from '../package.json';
+import { InlineConfig } from 'vite';
+import { resolve as r } from './utils.mjs';
+import * as fs from 'fs-extra';
+import react from '@vitejs/plugin-react';
 
 export const config: InlineConfig = {
   envDir: r(),
@@ -11,11 +10,6 @@ export const config: InlineConfig = {
       '~': r(),
       events: 'rollup-plugin-node-polyfills/polyfills/events',
     },
-  },
-  define: {
-    '__DEV__': __DEV__,
-    '__NAME__': JSON.stringify(packageJson.name),
-    'process.env.NODE_ENV': JSON.stringify(__DEV__ ? 'development' : 'production'),
   },
   esbuild: { loader: 'jsx', include: /src\/.*\.jsx?$/, exclude: [] },
   optimizeDeps: {
@@ -34,4 +28,4 @@ export const config: InlineConfig = {
     },
   },
   plugins: [react()],
-}
+};
