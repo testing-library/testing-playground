@@ -15,6 +15,7 @@ export default defineConfig(() => {
     r('src', 'index.html'),
     r('src', 'sandbox.html'),
     __DEV__ && r('src', 'embed.html'),
+    r('src', 'embed.js'),
   ].filter(Boolean);
 
   return {
